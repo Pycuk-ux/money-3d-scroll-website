@@ -289,7 +289,7 @@ function start(renderer) {
   // Место стопки у колеса: справа на десктопе, сверху на телефоне
   function panelRect() {
     return view.portrait
-      ? { x: view.w * 0.5, y: view.h * 0.27, w: view.w * 0.56 * 1.05 }
+      ? { x: view.w * 0.5, y: view.h * 0.28, w: view.w * 0.74 }
       : { x: view.w * 0.72, y: view.h * 0.5 + CONFIG.stackDrop, w: Math.min(view.w * 0.34, 600) * 1.05 }; // +5%
   }
 

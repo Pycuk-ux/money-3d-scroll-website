@@ -299,6 +299,9 @@ html[data-view="detail"] .masthead { opacity: 0; }
   left: auto;
   right: max(16px, env(safe-area-inset-right, 0px));
   align-items: flex-end;
+  transform: none; /* top и height задаёт views.js */
+  justify-content: space-between;
+  gap: 0;
 }
 
 .wheel-view__list.is-flat ~ .wheel-progress .wheel-progress__tick {
@@ -809,7 +812,7 @@ html.lenis body { height: auto; }
     bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
     transform: translateX(-50%);
   }
-  .masthead__logo { width: 150px; transform: translate(-12px, 4px); }
+  .masthead__logo { width: 150px; transform: translate(-8px, 4px); }
   .masthead__lead { font-size: 12px; }
   .is-webgl .masthead { left: max(16px, env(safe-area-inset-left, 0px)); transform: none; align-items: flex-start; text-align: left; }
 

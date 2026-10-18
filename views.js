@@ -242,8 +242,8 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     const w = window.innerWidth;
     const h = window.innerHeight;
     const portrait = w <= 720 || w / h < 0.85;
-    // На телефоне — под левую колонку
-    const font = portrait ? Math.max(26, w * 0.075) : Math.min(88, Math.max(40, w * 0.045));
+    // На телефоне — под левую колонку, на 2pt (≈2.7px) меньше прежнего
+    const font = portrait ? Math.max(23, w * 0.075 - (2 * 4) / 3) : Math.min(88, Math.max(40, w * 0.045));
     geo.flat = portrait;
     geo.left = Math.max(16, w * 0.04);
     list.classList.toggle('is-flat', portrait);
@@ -257,7 +257,18 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     geo.fadeUp = portrait ? 0.48 : 0.09;
     geo.fadeDown = portrait ? 0.105 : 0.09;
     geo.rowsUp = portrait ? 2 : Infinity; // сколько строк видно над главной
-    geo.rowsDown = portrait ? 6 : Infinity; // и под ней
+    geo.rowsDown = portrait ? 4 : Infinity; // и под ней
+    // Телефон: крайние видимые строки сверху и снизу одинаково бледные
+    geo.edgeOpacity = 0.3;
+    if (portrait) {
+      // Прогресс параллелен списку: от верха последнего названия сверху до 32px над низом экрана
+      const top = geo.cy - geo.rowsUp * geo.lineH - font * 0.5;
+      progress.style.top = `${top}px`;
+      progress.style.height = `${Math.max(80, h - 32 - top)}px`;
+    } else {
+      progress.style.top = '';
+      progress.style.height = '';
+    }
     list.style.setProperty('--wheel-font', `${font}px`);
   }
 
@@ -297,7 +308,10 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
         const y = geo.cy + geo.r * Math.sin(angle);
         row.li.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}rad) translateY(-50%)`;
       }
-      row.li.style.opacity = String(Math.max(0, 1 - Math.max(0, dist - 0.5) * fade) * edge);
+      const fadeOpacity = geo.flat
+        ? 1 - (1 - geo.edgeOpacity) * Math.min(1, dist / limit) // главная 100% → крайняя edgeOpacity
+        : Math.max(0, 1 - Math.max(0, dist - 0.5) * fade);
+      row.li.style.opacity = String(fadeOpacity * edge);
       row.li.classList.toggle('is-active', dist < 0.5);
     });
 
