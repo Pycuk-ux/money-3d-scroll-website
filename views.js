@@ -218,7 +218,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
   container.append(list, info, progress);
 
   const state = { current: 0, target: 0 };
-  const geo = { r: 900, lineH: 80, cx: 0, cy: 0, fadeUp: 0.09, flat: false, left: 20 };
+  const geo = { r: 900, lineH: 80, cx: 0, cy: 0, fadeUp: 0.09, fadeDown: 0.09, rowsUp: Infinity, rowsDown: Infinity, flat: false, left: 20 };
   let active = false;
   let activeIndex = -1;
   let snapTimer = 0;
@@ -248,12 +248,16 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     geo.left = Math.max(16, w * 0.04);
     list.classList.toggle('is-flat', portrait);
     info.style.setProperty('--info-y', `${h * 0.68}px`);
-    geo.lineH = font * 1.12;
+    // Телефон: на одну строку меньше сверху и снизу, та же высота — шаг больше в 1.25 раза
+    geo.lineH = font * 1.12 * (portrait ? 1.25 : 1);
     geo.r = Math.max(h * 0.95, 640);
     geo.cy = h * (portrait ? 0.68 : 0.5);
     geo.cx = (portrait ? 20 : Math.max(24, w * 0.075)) - geo.r;
     // На телефоне купюра стоит над колесом — верхние строки гаснут быстрее
-    geo.fadeUp = portrait ? 0.32 : 0.09;
+    geo.fadeUp = portrait ? 0.48 : 0.09;
+    geo.fadeDown = portrait ? 0.105 : 0.09;
+    geo.rowsUp = portrait ? 2 : Infinity; // сколько строк видно над главной
+    geo.rowsDown = portrait ? 6 : Infinity; // и под ней
     list.style.setProperty('--wheel-font', `${font}px`);
   }
 
@@ -280,7 +284,10 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
       const d = slot - state.current;
       row.offset = slot;
       const dist = Math.abs(d);
-      const fade = d < 0 ? geo.fadeUp : 0.09;
+      const fade = d < 0 ? geo.fadeUp : geo.fadeDown;
+      // За последней видимой строкой — плавно в ноль
+      const limit = d < 0 ? geo.rowsUp : geo.rowsDown;
+      const edge = Math.min(1, Math.max(0, limit + 0.5 - dist) / 0.5);
       if (geo.flat) {
         // Телефон: прямой вертикальный список у левого края
         row.li.style.transform = `translate3d(${geo.left}px, ${geo.cy + d * geo.lineH}px, 0) translateY(-50%)`;
@@ -290,11 +297,11 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
         const y = geo.cy + geo.r * Math.sin(angle);
         row.li.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}rad) translateY(-50%)`;
       }
-      row.li.style.opacity = String(Math.max(0, 1 - Math.max(0, dist - 0.5) * fade));
+      row.li.style.opacity = String(Math.max(0, 1 - Math.max(0, dist - 0.5) * fade) * edge);
       row.li.classList.toggle('is-active', dist < 0.5);
     });
 
-    if (!geo.flat) updateProgress();
+    updateProgress();
 
     const next = mod(base, items.length);
     if (next !== activeIndex) {

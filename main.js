@@ -56,7 +56,7 @@ const CONFIG = {
   // Оборот на 360° за всю прокрутку страницы купюры; старт после 5% высоты страницы
   scrollSpin: { turns: 1, startAt: 0.05 },
   stackDrop: 44, // px: на столько стопка у колеса ниже центра экрана (≈ 2.75rem)
-  rateGap: 88, // px от нижнего края передней купюры до строки курса на главной
+  rateGap: 64, // px от нижнего края передней купюры до строки курса на главной
   fov: 32,
   cameraZ: 5,
   maxTexture: 1024,
@@ -309,7 +309,7 @@ function start(renderer) {
 
   // pose — центр и ширина главной купюры в пикселях; bind — к чему она привязана каждый кадр
   const pose = { x: 0, y: 0, w: 1, bind: 'center' };
-  const rot = { y: 0, flip: Math.PI / 2, vy: 0, dragging: false, scroll: 0, scrollOn: false };
+  const rot = { y: 0, base: 0, flip: Math.PI / 2, vy: 0, dragging: false, scroll: 0, scrollOn: false };
   const tilt = { x: 0, y: 0 };
   const fade = { stack: 0 }; // видимость стопки (кроме главной купюры)
 
@@ -408,6 +408,8 @@ function start(renderer) {
     if (e.target.closest('button, a')) return;
     e.preventDefault();
     drag = { id: e.pointerId, x: e.clientX, t: performance.now() };
+    // Переворот не дальше чем на 180° в любую сторону от стороны, видимой в начале
+    rot.base = Math.round(rot.y / Math.PI) * Math.PI;
     rot.dragging = true;
     rot.vy = 0;
     root.classList.add('is-flipping');
@@ -416,7 +418,7 @@ function start(renderer) {
     if (!drag || e.pointerId !== drag.id) return;
     const now = performance.now();
     const delta = (e.clientX - drag.x) * CONFIG.dragSpeed;
-    rot.y += delta;
+    rot.y = clamp(rot.y + delta, rot.base - Math.PI, rot.base + Math.PI);
     rot.vy = delta / Math.max(0.001, (now - drag.t) / 1000);
     drag.x = e.clientX;
     drag.t = now;
@@ -748,7 +750,7 @@ function start(renderer) {
 
     tl.to(reveal(), { opacity: 0, y: -16, duration: quick ? 0 : 0.3, ease: 'power2.in' }, 0)
       .to(pose, { x: to.x, y: to.y, w: to.w, duration: dur, ease: 'power2.inOut' }, 0)
-      .to(rot, { y: nearestTurn(rot.y), vy: 0, duration: quick ? 0 : 0.8, ease: 'power2.inOut', onComplete: () => { rot.y = 0; } }, 0)
+      .to(rot, { y: nearestTurn(rot.y), vy: 0, duration: quick ? 0 : 0.8, ease: 'power2.inOut', onComplete: () => { rot.y = 0; rot.base = 0; } }, 0)
       .to(switcher, { opacity: 1, duration: quick ? 0 : 0.4 }, quick ? 0 : dur * 0.6);
 
     if (toWheel) {
@@ -1072,7 +1074,9 @@ function start(renderer) {
 
     // Переворот на странице: инерция и доводка до лица или оборота
     if (mode === 'detail' && !busy && !rot.dragging) {
-      rot.y += rot.vy * dt;
+      const flung = rot.y + rot.vy * dt;
+      rot.y = clamp(flung, rot.base - Math.PI, rot.base + Math.PI);
+      if (rot.y !== flung) rot.vy = 0; // бросок упёрся в 180° — дальше не крутится
       rot.vy *= Math.pow(0.05, dt);
       if (Math.abs(rot.vy) < 0.6) {
         rot.vy = 0;
