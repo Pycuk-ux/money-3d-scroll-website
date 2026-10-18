@@ -569,6 +569,9 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   cursor: pointer;
 }
 
+.detail__step { white-space: nowrap; }
+.step-short { display: none; }
+
 .detail__step:hover span { text-decoration: underline; text-underline-offset: 4px; }
 
 /* Место купюры в потоке страницы: 3D-купюра встаёт на него и прилипает к верху при прокрутке */
@@ -805,6 +808,10 @@ html.lenis body { height: auto; }
 /* ---------- Мобильный ---------- */
 
 @media (max-width: 720px) {
+  /* Узкий экран: короткие подписи, чтобы стрелки и курс уместились в одну строку */
+  .step-long { display: none; }
+  .step-short { display: inline; }
+
   /* Телефон: вид коллекции остаётся внизу, логотип меньше */
   .switcher {
     position: fixed;
