@@ -1,6 +1,6 @@
 // Коллекция и тексты интерфейса на двух языках.
 // 46 стран, по одной банкноте от каждой. Порядок — как в колесе.
-// currency — код валюты ISO 4217 (для курса к доллару).
+// currency — код валюты ISO 4217 (для курса к доллару), currencyName — её название.
 // src / back — лицо и оборот. Пока картинки нет, сцена рисует заглушку с кодом валюты.
 // caption — номинал; пока он неизвестен, показывается название валюты.
 // details — текст страницы купюры; если его нет, страница показывает основные данные.
@@ -9,6 +9,7 @@ export const ITEMS = [
   {
     id: 'ukraine',
     currency: 'UAH',
+    currencyName: { ru: 'гривна', en: 'Hryvnia' },
     material: 'cotton',
     name: { ru: 'Украина', en: 'Ukraine' },
     src: 'assets/objects/06.png',
@@ -17,7 +18,7 @@ export const ITEMS = [
     issuer: { ru: 'Национальный банк Украины', en: 'National Bank of Ukraine' },
     details: {
       ru: {
-        title: '1 гривна (UAH) — Украина',
+        title: 'Гривна — Украина',
         facts: [
           ['Эмитент', 'Национальный банк Украины (НБУ)'],
           ['Материал', 'специальная банкнотная бумага'],
@@ -84,7 +85,7 @@ export const ITEMS = [
         },
       },
       en: {
-        title: '1 Hryvnia (UAH) — Ukraine',
+        title: 'Hryvnia — Ukraine',
         facts: [
           ['Issuer', 'National Bank of Ukraine (NBU)'],
           ['Material', 'special banknote paper'],
@@ -155,6 +156,7 @@ export const ITEMS = [
   {
     id: 'malaysia',
     currency: 'MYR',
+    currencyName: { ru: 'ринггит', en: 'Ringgit' },
     material: 'cotton',
     name: { ru: 'Малайзия', en: 'Malaysia' },
     caption: { ru: 'ринггит', en: 'Ringgit' },
@@ -162,6 +164,7 @@ export const ITEMS = [
   {
     id: 'azerbaijan',
     currency: 'AZN',
+    currencyName: { ru: 'манат', en: 'Manat' },
     material: 'cotton',
     name: { ru: 'Азербайджан', en: 'Azerbaijan' },
     caption: { ru: 'манат', en: 'Manat' },
@@ -169,6 +172,7 @@ export const ITEMS = [
   {
     id: 'united-states',
     currency: 'USD',
+    currencyName: { ru: 'доллар США', en: 'US Dollar' },
     material: 'cotton',
     name: { ru: 'США', en: 'United States' },
     caption: { ru: 'доллар США', en: 'US Dollar' },
@@ -176,6 +180,7 @@ export const ITEMS = [
   {
     id: 'trinidad-and-tobago',
     currency: 'TTD',
+    currencyName: { ru: 'доллар Тринидада и Тобаго', en: 'Trinidad and Tobago Dollar' },
     material: 'cotton',
     name: { ru: 'Тринидад и Тобаго', en: 'Trinidad and Tobago' },
     caption: { ru: 'доллар Тринидада и Тобаго', en: 'Trinidad and Tobago Dollar' },
@@ -183,6 +188,7 @@ export const ITEMS = [
   {
     id: 'brazil',
     currency: 'BRL',
+    currencyName: { ru: 'реал', en: 'Real' },
     material: 'cotton',
     name: { ru: 'Бразилия', en: 'Brazil' },
     caption: { ru: 'реал', en: 'Real' },
@@ -190,6 +196,7 @@ export const ITEMS = [
   {
     id: 'ghana',
     currency: 'GHS',
+    currencyName: { ru: 'седи', en: 'Cedi' },
     material: 'cotton',
     name: { ru: 'Гана', en: 'Ghana' },
     caption: { ru: 'седи', en: 'Cedi' },
@@ -197,6 +204,7 @@ export const ITEMS = [
   {
     id: 'singapore',
     currency: 'SGD',
+    currencyName: { ru: 'сингапурский доллар', en: 'Singapore Dollar' },
     material: 'cotton',
     name: { ru: 'Сингапур', en: 'Singapore' },
     caption: { ru: 'сингапурский доллар', en: 'Singapore Dollar' },
@@ -204,6 +212,7 @@ export const ITEMS = [
   {
     id: 'belarus',
     currency: 'BYN',
+    currencyName: { ru: 'белорусский рубль', en: 'Belarusian Ruble' },
     material: 'cotton',
     name: { ru: 'Беларусь', en: 'Belarus' },
     caption: { ru: 'белорусский рубль', en: 'Belarusian Ruble' },
@@ -211,6 +220,7 @@ export const ITEMS = [
   {
     id: 'scotland',
     currency: 'GBP',
+    currencyName: { ru: 'фунт стерлингов', en: 'Pound Sterling' },
     material: 'cotton',
     name: { ru: 'Шотландия', en: 'Scotland' },
     caption: { ru: 'фунт стерлингов', en: 'Pound Sterling' },
@@ -218,6 +228,7 @@ export const ITEMS = [
   {
     id: 'egypt',
     currency: 'EGP',
+    currencyName: { ru: 'египетский фунт', en: 'Egyptian Pound' },
     material: 'cotton',
     name: { ru: 'Египет', en: 'Egypt' },
     caption: { ru: 'египетский фунт', en: 'Egyptian Pound' },
@@ -225,6 +236,7 @@ export const ITEMS = [
   {
     id: 'saudi-arabia',
     currency: 'SAR',
+    currencyName: { ru: 'риял', en: 'Riyal' },
     material: 'cotton',
     name: { ru: 'Саудовская Аравия', en: 'Saudi Arabia' },
     caption: { ru: 'риял', en: 'Riyal' },
@@ -232,6 +244,7 @@ export const ITEMS = [
   {
     id: 'colombia',
     currency: 'COP',
+    currencyName: { ru: 'колумбийское песо', en: 'Colombian Peso' },
     material: 'cotton',
     name: { ru: 'Колумбия', en: 'Colombia' },
     caption: { ru: 'колумбийское песо', en: 'Colombian Peso' },
@@ -239,6 +252,7 @@ export const ITEMS = [
   {
     id: 'european-union',
     currency: 'EUR',
+    currencyName: { ru: 'евро', en: 'Euro' },
     material: 'cotton',
     name: { ru: 'Евросоюз', en: 'European Union' },
     caption: { ru: '5 евро', en: '5 Euro' },
@@ -246,6 +260,7 @@ export const ITEMS = [
   {
     id: 'uae',
     currency: 'AED',
+    currencyName: { ru: 'дирхам', en: 'Dirham' },
     material: 'cotton',
     name: { ru: 'ОАЭ', en: 'United Arab Emirates' },
     caption: { ru: 'дирхам', en: 'Dirham' },
@@ -253,6 +268,7 @@ export const ITEMS = [
   {
     id: 'tajikistan',
     currency: 'TJS',
+    currencyName: { ru: 'сомони', en: 'Somoni' },
     material: 'cotton',
     name: { ru: 'Таджикистан', en: 'Tajikistan' },
     caption: { ru: 'сомони', en: 'Somoni' },
@@ -260,6 +276,7 @@ export const ITEMS = [
   {
     id: 'bosnia-and-herzegovina',
     currency: 'BAM',
+    currencyName: { ru: 'конвертируемая марка', en: 'Convertible Mark' },
     material: 'cotton',
     name: { ru: 'Босния и Герцеговина', en: 'Bosnia and Herzegovina' },
     caption: { ru: 'конвертируемая марка', en: 'Convertible Mark' },
@@ -267,6 +284,7 @@ export const ITEMS = [
   {
     id: 'romania',
     currency: 'RON',
+    currencyName: { ru: 'лей', en: 'Leu' },
     material: 'cotton',
     name: { ru: 'Румыния', en: 'Romania' },
     caption: { ru: 'лей', en: 'Leu' },
@@ -274,6 +292,7 @@ export const ITEMS = [
   {
     id: 'hong-kong',
     currency: 'HKD',
+    currencyName: { ru: 'гонконгский доллар', en: 'Hong Kong Dollar' },
     material: 'cotton',
     name: { ru: 'Гонконг', en: 'Hong Kong' },
     src: 'assets/objects/04.png',
@@ -283,6 +302,7 @@ export const ITEMS = [
   {
     id: 'macau',
     currency: 'MOP',
+    currencyName: { ru: 'патака', en: 'Pataca' },
     material: 'cotton',
     name: { ru: 'Макао', en: 'Macau' },
     caption: { ru: 'патака', en: 'Pataca' },
@@ -290,6 +310,7 @@ export const ITEMS = [
   {
     id: 'south-africa',
     currency: 'ZAR',
+    currencyName: { ru: 'рэнд', en: 'Rand' },
     material: 'cotton',
     name: { ru: 'ЮАР', en: 'South Africa' },
     caption: { ru: 'рэнд', en: 'Rand' },
@@ -297,6 +318,7 @@ export const ITEMS = [
   {
     id: 'poland',
     currency: 'PLN',
+    currencyName: { ru: 'злотый', en: 'Złoty' },
     material: 'cotton',
     name: { ru: 'Польша', en: 'Poland' },
     caption: { ru: 'злотый', en: 'Złoty' },
@@ -304,6 +326,7 @@ export const ITEMS = [
   {
     id: 'russia',
     currency: 'RUB',
+    currencyName: { ru: 'рубль', en: 'Ruble' },
     material: 'cotton',
     name: { ru: 'Россия', en: 'Russia' },
     caption: { ru: 'рубль', en: 'Ruble' },
@@ -311,6 +334,7 @@ export const ITEMS = [
   {
     id: 'china',
     currency: 'CNY',
+    currencyName: { ru: 'юань', en: 'Yuan' },
     material: 'cotton',
     name: { ru: 'Китай', en: 'China' },
     caption: { ru: 'юань', en: 'Yuan' },
@@ -318,6 +342,7 @@ export const ITEMS = [
   {
     id: 'thailand',
     currency: 'THB',
+    currencyName: { ru: 'бат', en: 'Baht' },
     material: 'cotton',
     name: { ru: 'Таиланд', en: 'Thailand' },
     src: 'assets/objects/05.png',
@@ -327,6 +352,7 @@ export const ITEMS = [
   {
     id: 'turkey',
     currency: 'TRY',
+    currencyName: { ru: 'турецкая лира', en: 'Turkish Lira' },
     material: 'cotton',
     name: { ru: 'Турция', en: 'Türkiye' },
     caption: { ru: 'турецкая лира', en: 'Turkish Lira' },
@@ -334,6 +360,7 @@ export const ITEMS = [
   {
     id: 'nepal',
     currency: 'NPR',
+    currencyName: { ru: 'непальская рупия', en: 'Nepalese Rupee' },
     material: 'cotton',
     name: { ru: 'Непал', en: 'Nepal' },
     caption: { ru: 'непальская рупия', en: 'Nepalese Rupee' },
@@ -341,6 +368,7 @@ export const ITEMS = [
   {
     id: 'kyrgyzstan',
     currency: 'KGS',
+    currencyName: { ru: 'сом', en: 'Som' },
     material: 'cotton',
     name: { ru: 'Киргизия', en: 'Kyrgyzstan' },
     caption: { ru: 'сом', en: 'Som' },
@@ -348,6 +376,7 @@ export const ITEMS = [
   {
     id: 'mexico',
     currency: 'MXN',
+    currencyName: { ru: 'мексиканское песо', en: 'Mexican Peso' },
     material: 'cotton',
     name: { ru: 'Мексика', en: 'Mexico' },
     caption: { ru: 'мексиканское песо', en: 'Mexican Peso' },
@@ -355,6 +384,7 @@ export const ITEMS = [
   {
     id: 'georgia',
     currency: 'GEL',
+    currencyName: { ru: 'лари', en: 'Lari' },
     material: 'cotton',
     name: { ru: 'Грузия', en: 'Georgia' },
     caption: { ru: 'лари', en: 'Lari' },
@@ -362,6 +392,7 @@ export const ITEMS = [
   {
     id: 'serbia',
     currency: 'RSD',
+    currencyName: { ru: 'сербский динар', en: 'Serbian Dinar' },
     material: 'cotton',
     name: { ru: 'Сербия', en: 'Serbia' },
     caption: { ru: 'сербский динар', en: 'Serbian Dinar' },
@@ -369,6 +400,7 @@ export const ITEMS = [
   {
     id: 'bangladesh',
     currency: 'BDT',
+    currencyName: { ru: 'така', en: 'Taka' },
     material: 'cotton',
     name: { ru: 'Бангладеш', en: 'Bangladesh' },
     caption: { ru: 'така', en: 'Taka' },
@@ -376,6 +408,7 @@ export const ITEMS = [
   {
     id: 'morocco',
     currency: 'MAD',
+    currencyName: { ru: 'марокканский дирхам', en: 'Moroccan Dirham' },
     material: 'cotton',
     name: { ru: 'Марокко', en: 'Morocco' },
     caption: { ru: 'марокканский дирхам', en: 'Moroccan Dirham' },
@@ -383,6 +416,7 @@ export const ITEMS = [
   {
     id: 'philippines',
     currency: 'PHP',
+    currencyName: { ru: 'филиппинское песо', en: 'Philippine Peso' },
     material: 'cotton',
     name: { ru: 'Филиппины', en: 'Philippines' },
     caption: { ru: 'филиппинское песо', en: 'Philippine Peso' },
@@ -390,6 +424,7 @@ export const ITEMS = [
   {
     id: 'india',
     currency: 'INR',
+    currencyName: { ru: 'индийская рупия', en: 'Indian Rupee' },
     material: 'cotton',
     name: { ru: 'Индия', en: 'India' },
     caption: { ru: 'индийская рупия', en: 'Indian Rupee' },
@@ -397,6 +432,7 @@ export const ITEMS = [
   {
     id: 'czechia',
     currency: 'CZK',
+    currencyName: { ru: 'чешская крона', en: 'Czech Koruna' },
     material: 'cotton',
     name: { ru: 'Чехия', en: 'Czechia' },
     caption: { ru: 'чешская крона', en: 'Czech Koruna' },
@@ -404,6 +440,7 @@ export const ITEMS = [
   {
     id: 'sri-lanka',
     currency: 'LKR',
+    currencyName: { ru: 'шри-ланкийская рупия', en: 'Sri Lankan Rupee' },
     material: 'cotton',
     name: { ru: 'Шри-Ланка', en: 'Sri Lanka' },
     caption: { ru: 'шри-ланкийская рупия', en: 'Sri Lankan Rupee' },
@@ -411,6 +448,7 @@ export const ITEMS = [
   {
     id: 'kazakhstan',
     currency: 'KZT',
+    currencyName: { ru: 'тенге', en: 'Tenge' },
     material: 'cotton',
     name: { ru: 'Казахстан', en: 'Kazakhstan' },
     caption: { ru: 'тенге', en: 'Tenge' },
@@ -418,6 +456,7 @@ export const ITEMS = [
   {
     id: 'cambodia',
     currency: 'KHR',
+    currencyName: { ru: 'риель', en: 'Riel' },
     material: 'cotton',
     name: { ru: 'Камбоджа', en: 'Cambodia' },
     caption: { ru: 'риель', en: 'Riel' },
@@ -425,6 +464,7 @@ export const ITEMS = [
   {
     id: 'mongolia',
     currency: 'MNT',
+    currencyName: { ru: 'тугрик', en: 'Tögrög' },
     material: 'cotton',
     name: { ru: 'Монголия', en: 'Mongolia' },
     caption: { ru: 'тугрик', en: 'Tögrög' },
@@ -432,6 +472,7 @@ export const ITEMS = [
   {
     id: 'south-korea',
     currency: 'KRW',
+    currencyName: { ru: 'вона', en: 'Won' },
     material: 'cotton',
     name: { ru: 'Южная Корея', en: 'South Korea' },
     caption: { ru: 'вона', en: 'Won' },
@@ -439,6 +480,7 @@ export const ITEMS = [
   {
     id: 'armenia',
     currency: 'AMD',
+    currencyName: { ru: 'драм', en: 'Dram' },
     material: 'cotton',
     name: { ru: 'Армения', en: 'Armenia' },
     caption: { ru: 'драм', en: 'Dram' },
@@ -446,6 +488,7 @@ export const ITEMS = [
   {
     id: 'uzbekistan',
     currency: 'UZS',
+    currencyName: { ru: 'сум', en: 'Soʻm' },
     material: 'cotton',
     name: { ru: 'Узбекистан', en: 'Uzbekistan' },
     caption: { ru: 'сум', en: 'Soʻm' },
@@ -453,6 +496,7 @@ export const ITEMS = [
   {
     id: 'vietnam',
     currency: 'VND',
+    currencyName: { ru: 'донг', en: 'Dong' },
     material: 'cotton',
     name: { ru: 'Вьетнам', en: 'Vietnam' },
     caption: { ru: 'донг', en: 'Dong' },
@@ -460,6 +504,7 @@ export const ITEMS = [
   {
     id: 'indonesia',
     currency: 'IDR',
+    currencyName: { ru: 'рупия', en: 'Rupiah' },
     material: 'cotton',
     name: { ru: 'Индонезия', en: 'Indonesia' },
     caption: { ru: 'рупия', en: 'Rupiah' },
@@ -467,6 +512,7 @@ export const ITEMS = [
   {
     id: 'zimbabwe',
     currency: 'ZWG',
+    currencyName: { ru: 'зиг', en: 'ZiG' },
     material: 'cotton',
     name: { ru: 'Зимбабве', en: 'Zimbabwe' },
     caption: { ru: 'зиг', en: 'ZiG' },

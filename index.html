@@ -35,6 +35,8 @@
   </head>
   <body>
     <canvas class="dither" aria-hidden="true"></canvas>
+    <!-- Курс передней купюры под башней; лежит под сценой, чтобы купюры его перекрывали -->
+    <p class="home-rate rate-line" aria-live="polite"></p>
     <canvas class="stage" aria-hidden="true"></canvas>
 
     <div class="preloader" aria-hidden="true">
@@ -76,6 +78,7 @@
             <svg width="20" height="12" viewBox="0 0 20 12" aria-hidden="true"><path d="M19 6H2M6 1L1 6l5 5" stroke="currentColor" stroke-width="1.2" fill="none" /></svg>
             <span data-i18n="prev">К предыдущей</span>
           </button>
+          <p class="detail__rate rate-line" aria-live="polite"></p>
           <button class="detail__step" type="button" data-step="1">
             <span data-i18n="next">К следующей</span>
             <svg width="20" height="12" viewBox="0 0 20 12" aria-hidden="true"><path d="M1 6h17M14 1l5 5-5 5" stroke="currentColor" stroke-width="1.2" fill="none" /></svg>

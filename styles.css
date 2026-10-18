@@ -138,6 +138,32 @@ html.is-flipping * {
   mix-blend-mode: multiply;
 }
 
+/* ---------- Курс к доллару ---------- */
+
+.rate-line {
+  margin: 0;
+  font-size: var(--size-text);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.rate-line:empty { display: none; }
+
+/* Главная: под башней и под сценой — купюры при движении проходят поверх */
+.home-rate { display: none; }
+
+.is-webgl[data-view="wheel"]:not(.is-loading) .home-rate {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-stage);
+  pointer-events: none;
+}
+
+.detail__rate { text-align: center; }
+
 /* ---------- Прелоадер ---------- */
 
 .preloader { display: none; }

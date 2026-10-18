@@ -7,7 +7,7 @@ import { createGrid, createWheel } from './views.js';
 import { ITEMS, UI, LANGS } from './data.js';
 import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
-import { loadRates } from './rates.js';
+import { loadRates, usdPer } from './rates.js';
 
 /* ---------- Настройки ---------- */
 
@@ -56,6 +56,7 @@ const CONFIG = {
   // Оборот на 360° за всю прокрутку страницы купюры; старт после 5% высоты страницы
   scrollSpin: { turns: 1, startAt: 0.05 },
   stackDrop: 44, // px: на столько стопка у колеса ниже центра экрана (≈ 2.75rem)
+  rateGap: 88, // px от нижнего края передней купюры до строки курса на главной
   fov: 32,
   cameraZ: 5,
   maxTexture: 1024,
@@ -101,6 +102,19 @@ function saveLang(value) {
 }
 
 const t = () => UI[lang];
+// «1 UAH = $0.024»; пустая строка, если курса нет (claude.ai, локальный запуск, нет валюты в OXR)
+function rateLine(i) {
+  const code = ITEMS[i]?.currency;
+  const usd = code && usdPer(code);
+  if (!usd) return '';
+  const value = usd >= 1
+    ? usd.toFixed(2)
+    : usd.toLocaleString('en-US', { maximumSignificantDigits: 3, maximumFractionDigits: 10 });
+  return `1 ${code} = $${value}`;
+}
+
+const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const text = (i) => ({
   name: ITEMS[i].name[lang],
   caption: ITEMS[i].caption[lang],
@@ -492,7 +506,8 @@ function start(renderer) {
     const box = node('article', 'detail-text');
 
     const title = node('h1', 'detail-title');
-    title.append(node('span', '', d?.title ?? `${caption} — ${name}`));
+    // Заголовок: «Валюта — Страна»
+    title.append(node('span', '', d?.title ?? `${capitalize(ITEMS[i].currencyName[lang])} — ${name}`));
     box.append(title);
 
     const plate = node('section', 'plate');
@@ -658,6 +673,7 @@ function start(renderer) {
     root.dataset.view = 'detail';
     detail.hidden = false;
     swapBody(index, true);
+    detailRate.textContent = rateLine(index);
     noteSlot.style.setProperty('--note-aspect', String(cards[index].aspect));
     gsap.set(reveal(), { opacity: 0, y: 24 });
     lenis.scrollTo(0, { immediate: true, force: true });
@@ -763,6 +779,7 @@ function start(renderer) {
 
     noteSlot.style.setProperty('--note-aspect', String(coming.aspect));
     swapBody(current);
+    detailRate.textContent = rateLine(current);
   }
 
   /* --- Загрузка --- */
@@ -824,7 +841,14 @@ function start(renderer) {
     placeholders.forEach((texture) => { texture.needsUpdate = true; });
     grid.refresh();
   });
-  loadRates();
+  const homeRate = document.querySelector('.home-rate');
+  const detailRate = document.querySelector('.detail__rate');
+  let homeRateIndex = -1;
+  function updateRates() {
+    homeRateIndex = -1; // главная обновится в следующем кадре
+    detailRate.textContent = rateLine(current);
+  }
+  loadRates().then(updateRates);
 
   // Прелоадер: купюра ребром по центру → поворачивается в фас → уезжает к колесу, за ней собирается стопка
   cards[0].hero = 1;
@@ -1041,7 +1065,10 @@ function start(renderer) {
       const span = Math.max(1, doc - view.h - start);
       rot.scroll = clamp((window.scrollY - start) / span, 0, 1) * TAU * CONFIG.scrollSpin.turns;
     }
-    if (mode === 'wheel') placeHitArea();
+    if (mode === 'wheel') {
+      placeHitArea();
+      placeHomeRate();
+    }
 
     // Переворот на странице: инерция и доводка до лица или оборота
     if (mode === 'detail' && !busy && !rot.dragging) {
@@ -1156,6 +1183,18 @@ function start(renderer) {
       else mat.color.setHex(CONFIG.paperColor).multiplyScalar(1 - haze);
       mat.emissive.copy(hazeColor).multiplyScalar(haze);
     });
+  }
+
+  // Курс под передней купюрой башни; позиция — по высоте купюры, текст — при смене передней
+  function placeHomeRate() {
+    const front = deckFront();
+    if (front !== homeRateIndex) {
+      homeRateIndex = front;
+      homeRate.textContent = rateLine(front);
+    }
+    const r = panelRect();
+    const h = r.w / cards[front].aspect;
+    homeRate.style.transform = `translate(${r.x}px, ${r.y + h / 2 + CONFIG.rateGap}px) translateX(-50%)`;
   }
 
   // Прозрачная кнопка поверх передней купюры: клик открывает её страницу
