@@ -403,7 +403,284 @@ export const ITEMS = [
     currencyName: { ru: 'така', en: 'Taka' },
     material: 'cotton',
     name: { ru: 'Бангладеш', en: 'Bangladesh' },
-    caption: { ru: 'така', en: 'Taka' },
+    caption: { ru: '50 так', en: '50 Taka' },
+    issuer: { ru: 'Банк Бангладеш', en: 'Bangladesh Bank' },
+    details: {
+      "ru": {
+        "title": "Така — Бангладеш",
+        "facts": [
+          [
+            "Эмитент",
+            "Банк Бангладеш (Bangladesh Bank)"
+          ],
+          [
+            "Материал",
+            "Банкнотная бумага"
+          ],
+          [
+            "Размер",
+            "130 × 60 мм"
+          ],
+          [
+            "Образец дизайна",
+            "2011 год, введён в обращение в 2012 году."
+          ]
+        ],
+        "summary": [
+          "История в одном предложении",
+          "Портрет лидера независимости Бангладеш шейха Муджибура Рахмана и картина художника Зайнула Абедина, посвящённая сельскому труду, объединяют политическую историю страны с её художественным и культурным наследием."
+        ],
+        "sections": [
+          {
+            "title": "Лицевая сторона — Шейх Муджибур Рахман",
+            "text": [
+              "На банкноте изображён Шейх Муджибур Рахман (1920–1975) — один из главных деятелей движения за независимость Бангладеш и первый президент страны. За его портретом расположен Национальный мемориал мучеников в Саваре, посвящённый Освободительной войне 1971 года. Строгая треугольная архитектура памятника контрастирует с гравированным портретом, а красно-коричневая гамма, тонкая линейная графика и бенгальская письменность придают композиции национальный характер."
+            ]
+          },
+          {
+            "title": "Оборотная сторона — «Мой Дея», картина Зайнула Абедина",
+            "text": [
+              "Оборотная сторона воспроизводит произведение Moi Deya («Выравнивание вспаханного поля») бангладешского художника Зайнула Абедина. На картине показана сельскохозяйственная работа с участием крестьян и тягловых животных. Выразительная фигуративная композиция превращает повседневную жизнь деревни в часть визуальной истории национальной валюты. В отличие от монументальной архитектуры лицевой стороны, здесь главным становится человеческий труд."
+            ]
+          },
+          {
+            "title": "Визуальная концепция — Независимость и повседневная жизнь",
+            "text": [
+              "Две стороны банкноты противопоставляют образы национального лидерства и исторической памяти сельскохозяйственной жизни Бангладеш. Геометрическая архитектура мемориала, гравированный портрет и репродукция живописного произведения создают разные визуальные повествования. Вместе они формируют образ страны через её независимость, культуру и труд людей, обеспечивающих её существование.",
+              "Это обоснованная интерпретация визуальной композиции. Официального подтверждения именно такого авторского замысла не найдено."
+            ]
+          },
+          {
+            "title": "Три интересные детали дизайна",
+            "list": [
+              [
+                "Семь пар треугольных стен",
+                "Национальный мемориал мучеников спроектировал архитектор Саид Майнул Хоссейн. Семь пар треугольных стен символизируют ключевые этапы борьбы за независимость Бангладеш, завершившейся Освободительной войной 1971 года."
+              ],
+              [
+                "Живопись становится частью валюты",
+                "Вместо привычного изображения архитектурного памятника или природного пейзажа дизайнеры использовали произведение одного из наиболее известных художников Бангладеш. Картина превращает традиционный сельский труд в культурный символ, присутствующий на национальных деньгах."
+              ],
+              [
+                "Ошибка в имени художника",
+                "В одном из ранних тиражей имя Зайнула Абедина было напечатано с ошибкой. Банк Бангладеш признал неточность, а последующие выпуски содержали исправленную надпись. Это необычный пример того, как авторство художественного произведения стало частью истории производства банкноты."
+              ]
+            ]
+          },
+          {
+            "title": "Авторы дизайна и участники",
+            "people": [
+              [
+                "Зайнул Абедин (1914–1976)",
+                "Художник, чья картина Moi Deya воспроизведена на оборотной стороне банкноты. Его авторство оригинального произведения подтверждено. Однако нет оснований считать его автором всего графического дизайна банкноты."
+              ],
+              [
+                "Саид Майнул Хоссейн (1952–2014)",
+                "Архитектор Национального мемориала мучеников, изображённого на лицевой стороне. Его проект победил в национальном архитектурном конкурсе 1978 года. Авторство памятника подтверждено, но участие архитектора в графическом оформлении самой банкноты не установлено."
+              ],
+              [
+                "Банк Бангладеш (Bangladesh Bank)",
+                "Эмитент и учреждение, ответственное за выпуск банкноты. Дизайн с изображениями шейха Муджибура Рахмана и произведения Зайнула Абедина был введён в обращение в марте 2012 года."
+              ],
+              [
+                "Дизайнер банкноты / дизайн-студия",
+                "Информация об индивидуальных авторах графического дизайна данной банкноты и участвовавшей дизайн-студии не найдена. В публикациях упоминается комитет Банка Бангладеш, участвовавший в подготовке выпуска, однако персональная ответственность за финальную графическую композицию не установлена."
+              ]
+            ]
+          },
+          {
+            "title": "Исторический контекст",
+            "text": [
+              "Бангладеш обрёл независимость от Пакистана в 1971 году. Банкнота обращается к этой истории через портрет шейха Муджибура Рахмана и Национальный мемориал мучеников. На оборотной стороне произведение Зайнула Абедина подчёркивает значение художественного наследия страны и сельской жизни.",
+              "Дизайн с датой 2011 года был введён в обращение в 2012 году и использовался в последующих выпусках.",
+              "В 2025 году Банк Бангладеш представил новый дизайн 50 так с изображением дворца Ахсан-Манзил в Дакке и другой работы Зайнула Абедина — Songram («Борьба»)."
+            ]
+          }
+        ],
+        "sources": {
+          "title": "Источники и ссылки",
+          "groups": [
+            {
+              "title": "Официальные источники о банкноте",
+              "links": [
+                [
+                  "https://www.bb.org.bd/en/index.php/currency/fiftytaka",
+                  "Bangladesh Bank — 50 Taka Banknotes",
+                  "официальные описания лицевой и оборотной сторон, даты выпуска и варианты дизайна"
+                ],
+                [
+                  "https://beautifulbangladesh.gov.bd/loc/dhaka/93",
+                  "Bangladesh Tourism Board — National Martyrs' Memorial",
+                  "историческое значение мемориала, архитектура и автор проекта"
+                ]
+              ]
+            },
+            {
+              "title": "Художники и история дизайна",
+              "links": [
+                [
+                  "https://www.banknotes.com/bd56.htm",
+                  "Banknotes.com — Bangladesh 50 Taka, 2011",
+                  "каталог банкноты, описание изображений и характеристики"
+                ],
+                [
+                  "https://bangla.bdnews24.com/business/article529118.bdnews",
+                  "bdnews24 — Ошибка в имени художника на банкноте",
+                  "публикация об ошибке в имени Абедина и реакции Банка Бангладеш"
+                ],
+                [
+                  "https://www.pmgnotes.com/priceguide/world-note-prices.aspx?deid=1819192&subcat=2011-2019-issue",
+                  "PMG — Разновидности банкноты 50 так",
+                  "сведения о первоначальной и исправленной надписях"
+                ],
+                [
+                  "https://en.numista.com/208208",
+                  "Numista — 50 Taka (2011–2022)",
+                  "изображения, основные характеристики и описание банкноты"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "en": {
+        "title": "Taka — Bangladesh",
+        "facts": [
+          [
+            "Issuer",
+            "Bangladesh Bank"
+          ],
+          [
+            "Material",
+            "Banknote paper"
+          ],
+          [
+            "Size",
+            "130 × 60 mm"
+          ],
+          [
+            "Design sample",
+            "2011 design, introduced into circulation in 2012."
+          ]
+        ],
+        "summary": [
+          "History in one sentence",
+          "The portrait of Bangladesh's independence leader Sheikh Mujibur Rahman and a painting by artist Zainul Abedin depicting rural labour bring together the country's political history and its artistic and cultural heritage."
+        ],
+        "sections": [
+          {
+            "title": "Front — Sheikh Mujibur Rahman",
+            "text": [
+              "The banknote features Sheikh Mujibur Rahman (1920–1975), one of the leading figures in Bangladesh's independence movement and the country's first president. Behind his portrait stands the National Martyrs' Memorial in Savar, dedicated to the Liberation War of 1971. The monument's austere triangular architecture contrasts with the engraved portrait, while the reddish-brown palette, fine linework and Bengali script give the composition a distinctly national character."
+            ]
+          },
+          {
+            "title": "Back — Moi Deya, a painting by Zainul Abedin",
+            "text": [
+              "The reverse reproduces Moi Deya (“Levelling the Ploughed Field”) by Bangladeshi artist Zainul Abedin. The painting depicts agricultural work involving farmers and draught animals. Its expressive figurative composition makes everyday village life part of the national currency's visual story. In contrast to the monumental architecture on the front, the focus here is on human labour."
+            ]
+          },
+          {
+            "title": "Visual concept — Independence and everyday life",
+            "text": [
+              "The two sides of the banknote juxtapose images of national leadership and historical memory with Bangladesh's agricultural life. The memorial's geometric architecture, the engraved portrait and the reproduction of a painting create distinct visual narratives. Together, they portray the country through its independence, culture and the labour of the people who sustain it.",
+              "This is a reasoned interpretation of the visual composition. No official confirmation of this precise artistic intention was found."
+            ]
+          },
+          {
+            "title": "Three interesting design details",
+            "list": [
+              [
+                "Seven pairs of triangular walls",
+                "The National Martyrs' Memorial was designed by architect Syed Mainul Hossain. Its seven pairs of triangular walls symbolise key stages in Bangladesh's struggle for independence, which culminated in the Liberation War of 1971."
+              ],
+              [
+                "Painting becomes part of the currency",
+                "Instead of the familiar image of an architectural landmark or natural landscape, the designers used a work by one of Bangladesh's best-known artists. The painting turns traditional agricultural labour into a cultural symbol featured on the national currency."
+              ],
+              [
+                "A mistake in the artist's name",
+                "In one of the early print runs, Zainul Abedin's name was printed incorrectly. Bangladesh Bank acknowledged the error, and subsequent issues carried the corrected inscription. This is an unusual example of how attribution of an artwork became part of a banknote's production history."
+              ]
+            ]
+          },
+          {
+            "title": "Design authors and contributors",
+            "people": [
+              [
+                "Zainul Abedin (1914–1976)",
+                "The artist whose painting Moi Deya appears on the reverse of the banknote. His authorship of the original work is documented. However, there is no basis for identifying him as the designer of the banknote's entire graphic composition."
+              ],
+              [
+                "Syed Mainul Hossain (1952–2014)",
+                "Architect of the National Martyrs' Memorial depicted on the front. His design won a national architectural competition in 1978. His authorship of the memorial is established, but his involvement in the graphic design of the banknote has not been established."
+              ],
+              [
+                "Bangladesh Bank",
+                "The issuer and institution responsible for releasing the banknote. The design featuring Sheikh Mujibur Rahman and Zainul Abedin's artwork entered circulation in March 2012."
+              ],
+              [
+                "Banknote designer / design studio",
+                "No information was found identifying the individual graphic designers or design studio responsible for this banknote. Published accounts mention a Bangladesh Bank committee involved in preparing the issue, but do not establish who was personally responsible for the final graphic composition."
+              ]
+            ]
+          },
+          {
+            "title": "Historical context",
+            "text": [
+              "Bangladesh gained independence from Pakistan in 1971. The banknote refers to this history through Sheikh Mujibur Rahman's portrait and the National Martyrs' Memorial. On the reverse, Zainul Abedin's work emphasises the importance of the country's artistic heritage and rural life.",
+              "The 2011-dated design entered circulation in 2012 and was used in subsequent issues.",
+              "In 2025, Bangladesh Bank introduced a new 50-taka design featuring Ahsan Manzil palace in Dhaka and another work by Zainul Abedin, Songram (“Struggle”)."
+            ]
+          }
+        ],
+        "sources": {
+          "title": "Sources and links",
+          "groups": [
+            {
+              "title": "Official sources on the banknote",
+              "links": [
+                [
+                  "https://www.bb.org.bd/en/index.php/currency/fiftytaka",
+                  "Bangladesh Bank — 50 Taka Banknotes",
+                  "official descriptions of the front and back, dates of issue and design variants"
+                ],
+                [
+                  "https://beautifulbangladesh.gov.bd/loc/dhaka/93",
+                  "Bangladesh Tourism Board — National Martyrs' Memorial",
+                  "historical significance of the memorial, its architecture and designer"
+                ]
+              ]
+            },
+            {
+              "title": "Artists and design history",
+              "links": [
+                [
+                  "https://www.banknotes.com/bd56.htm",
+                  "Banknotes.com — Bangladesh 50 Taka, 2011",
+                  "banknote catalogue entry, description of imagery and specifications"
+                ],
+                [
+                  "https://bangla.bdnews24.com/business/article529118.bdnews",
+                  "bdnews24 — Error in the artist's name on the banknote",
+                  "reporting on the error in Abedin's name and Bangladesh Bank's response"
+                ],
+                [
+                  "https://www.pmgnotes.com/priceguide/world-note-prices.aspx?deid=1819192&subcat=2011-2019-issue",
+                  "PMG — Varieties of the 50-taka banknote",
+                  "details of the original and corrected inscriptions"
+                ],
+                [
+                  "https://en.numista.com/208208",
+                  "Numista — 50 Taka (2011–2022)",
+                  "imagery, specifications and description of the banknote"
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
   },
   {
     id: 'morocco',
