@@ -9,6 +9,9 @@ export const SANITY = {
   apiVersion: '2025-02-19',
   timeout: 3000, // мс: дольше прелоадер не ждёт
   imageWidth: 1024,
+  // apicdn — кэш Sanity, быстрее и дешевле по лимитам; api — всегда свежие данные.
+  // Сейчас api: после пересоздания датасета CDN долго отдавал «Dataset not found».
+  useCdn: false,
 };
 
 const QUERY = `*[_type == "banknote" && !(_id in path("drafts.**"))] | order(order asc) {
@@ -66,7 +69,8 @@ function toItem(doc) {
 
 // Подмешивает купюры из Sanity в items (меняет массив на месте). Возвращает их число.
 export async function mergeSanity(items) {
-  const url = `https://${SANITY.projectId}.apicdn.sanity.io/v${SANITY.apiVersion}/data/query/${SANITY.dataset}`
+  const host = SANITY.useCdn ? 'apicdn' : 'api';
+  const url = `https://${SANITY.projectId}.${host}.sanity.io/v${SANITY.apiVersion}/data/query/${SANITY.dataset}`
     + `?query=${encodeURIComponent(QUERY)}`;
   let docs;
   try {
