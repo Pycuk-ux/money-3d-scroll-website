@@ -32,3 +32,14 @@ npx serve
 `sanity.js` при загрузке берёт опубликованные «Банкноты» и подмешивает их в `data.js`: запись с тем же кодом валюты заменяется, новые добавляются, порядок — по полю «Порядок в колесе». Пустые поля Sanity данные из `data.js` не затирают. Если Sanity не ответил за 3 с, сайт работает на `data.js`.
 
 В Sanity → API → CORS origins должен быть адрес сайта (`https://my-money-collection.vercel.app`).
+
+### Вся коллекция одним файлом
+
+`scripts/sanity-md.mjs` выгружает коллекцию из Sanity в `collection.md` и заливает правки обратно:
+
+```
+node sanity-md.mjs export collection.md                  # токен не нужен
+SANITY_TOKEN=... node sanity-md.mjs import collection.md # токен Editor
+```
+
+Заливаются только заполненные поля; пустые не трогают Sanity. Формат описан в начале скрипта.
