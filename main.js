@@ -8,10 +8,6 @@ import { ITEMS, UI, LANGS } from './data.js';
 import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
 import { loadRates, usdPer } from './rates.js';
-import { mergeSanity } from './sanity.js';
-
-// Контент из Sanity — до того, как строится сцена; при ошибке остаётся data.js
-await mergeSanity(ITEMS);
 
 /* ---------- Настройки ---------- */
 

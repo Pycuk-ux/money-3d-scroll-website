@@ -25,21 +25,3 @@ npx serve
 5. Deploy. Проверить функцию: `https://<проект>.vercel.app/api/rates`.
 
 Браузер обращается к `/api/rates` только на хостах из `RATES.hosts` в `rates.js`. Если подключишь свой домен, добавь его туда.
-
-## Контент в Sanity
-
-Проект Sanity `6xkrruwb`, датасет `production`. Studio лежит отдельно (`my-money-collection` у автора).
-`sanity.js` при загрузке берёт опубликованные «Банкноты» и подмешивает их в `data.js`: запись с тем же кодом валюты заменяется, новые добавляются, порядок — по полю «Порядок в колесе». Пустые поля Sanity данные из `data.js` не затирают. Если Sanity не ответил за 3 с, сайт работает на `data.js`.
-
-В Sanity → API → CORS origins должен быть адрес сайта (`https://my-money-collection.vercel.app`).
-
-### Вся коллекция одним файлом
-
-`scripts/sanity-md.mjs` выгружает коллекцию из Sanity в `collection.md` и заливает правки обратно:
-
-```
-node sanity-md.mjs export collection.md                  # токен не нужен
-SANITY_TOKEN=... node sanity-md.mjs import collection.md # токен Editor
-```
-
-Заливаются только заполненные поля; пустые не трогают Sanity. Формат описан в начале скрипта.
