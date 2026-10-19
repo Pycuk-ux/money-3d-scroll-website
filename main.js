@@ -8,6 +8,10 @@ import { ITEMS, UI, LANGS } from './data.js';
 import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
 import { loadRates, usdPer } from './rates.js';
+import { mergeSanity } from './sanity.js';
+
+// Контент из Sanity — до того, как строится сцена; при ошибке остаётся data.js
+await mergeSanity(ITEMS);
 
 /* ---------- Настройки ---------- */
 
@@ -575,7 +579,8 @@ function start(renderer) {
           if (note) li.append(node('span', 'sources__note', ` — ${note}`));
           ol.append(li);
         });
-        g.append(node('h3', 'label', group.title), ol);
+        if (group.title) g.append(node('h3', 'label', group.title));
+        g.append(ol);
         sources.append(g);
       });
       box.append(sources);
