@@ -404,6 +404,7 @@ export const ITEMS = [
     material: 'cotton',
     name: { ru: 'Бангладеш', en: 'Bangladesh' },
     src: 'assets/objects/bangladesh-front.webp',
+    back: 'assets/objects/bangladesh-back.webp',
     caption: { ru: '50 так', en: '50 Taka' },
     issuer: { ru: 'Банк Бангладеш', en: 'Bangladesh Bank' },
     details: {
