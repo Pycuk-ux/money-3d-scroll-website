@@ -65,13 +65,17 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     list.classList.toggle('is-flat', portrait);
     info.style.setProperty('--info-y', `${h * 0.68}px`);
     // Телефон: на одну строку меньше сверху и снизу, та же высота — шаг больше в 1.25 раза
-    geo.lineH = font * 1.12 * (portrait ? 1.25 : 1);
+    // На десктопе между названиями ещё 0.5rem
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    geo.lineH = portrait ? font * 1.12 * 1.25 : font * 1.12 + rem * 0.5;
     geo.r = Math.max(h * 0.95, 640);
     geo.cy = h * (portrait ? 0.68 : 0.5);
     geo.cx = (portrait ? 20 : Math.max(24, w * 0.075)) - geo.r;
     // На телефоне купюра стоит над колесом — верхние строки гаснут быстрее
-    geo.fadeUp = portrait ? 0.48 : 0.09;
-    geo.fadeDown = portrait ? 0.105 : 0.09;
+    // Десктоп: строки гаснут к краю экрана — у края почти ноль (кривая в fadeOpacity)
+    const toEdge = ((h / 2) / geo.lineH) * 0.85;
+    geo.fadeUp = portrait ? 0.48 : 1 / toEdge;
+    geo.fadeDown = portrait ? 0.105 : 1 / toEdge;
     geo.rowsUp = portrait ? 2 : Infinity; // сколько строк видно над главной
     geo.rowsDown = portrait ? 4 : Infinity; // и под ней
     // Телефон: крайние видимые строки сверху и снизу одинаково бледные
@@ -126,7 +130,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
       }
       const fadeOpacity = geo.flat
         ? 1 - (1 - geo.edgeOpacity) * Math.min(1, dist / limit) // главная 100% → крайняя edgeOpacity
-        : Math.max(0, 1 - Math.max(0, dist - 0.5) * fade);
+        : Math.max(0, 1 - Math.max(0, dist - 0.5) * fade) ** 2;
       row.li.style.opacity = String(fadeOpacity * edge);
       row.li.classList.toggle('is-active', dist < 0.5);
     });
