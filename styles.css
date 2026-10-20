@@ -262,16 +262,21 @@ html.is-flipping * {
 }
 
 .masthead__lead {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: inherit; /* по центру на колесе, слева на карте — как у шапки */
   font-size: 14px;
   line-height: 1.45;
   color: var(--color-ink-soft);
   white-space: nowrap;
 }
 
-/* Строки подписи — отдельные блоки: каждая едет к своему месту при смене раскладки */
-.masthead__lead span { display: block; }
-.masthead__lead br { display: none; }
+/* Две строки подписи — отдельные элементы по ширине текста: каждая едет к своему месту
+   при смене раскладки, а не перескакивает внутри общей строки */
+.masthead__line {
+  margin: 0;
+  width: max-content;
+}
 
 .is-webgl.is-loading .masthead,
 html[data-view="detail"] .masthead { opacity: 0; }

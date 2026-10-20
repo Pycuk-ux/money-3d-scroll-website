@@ -636,7 +636,7 @@ function start(renderer) {
   // Логотип и подпись переезжают между центром (колесо) и левым краем (карта): FLIP —
   // запоминаем, где были, меняем раскладку и плавно доводим с прежнего места
   function moveMasthead(toMap, quick) {
-    const parts = [masthead.querySelector('.masthead__logo'), ...masthead.querySelectorAll('.masthead__lead span')];
+    const parts = [masthead.querySelector('.masthead__logo'), ...masthead.querySelectorAll('.masthead__line')];
     parts.forEach((p) => { gsap.killTweensOf(p); gsap.set(p, { clearProps: 'transform' }); });
     const before = parts.map((p) => p.getBoundingClientRect().left);
     root.classList.toggle('is-map-layout', toMap);
@@ -670,13 +670,16 @@ function start(renderer) {
             fly.x = 0;
             gsap.set(canvas, { opacity: 0 });
             gsap.set(wheelLayer, { clearProps: 'transform,opacity' });
+            wheelRows().forEach((li) => gsap.set(li.children, { clearProps: 'transform,opacity' }));
+            gsap.set(wheelProgress(), { clearProps: 'opacity' });
             gsap.set(map.parts.stage, { clearProps: 'transform' });
             gsap.set(listRows(), { clearProps: 'transform,opacity' });
             busy = false;
           },
         });
         tl.to(fly, { x: 1, duration: quick ? 0 : 1.1, ease: 'none' }, 0)
-          .to(wheelLayer, { x: -40, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in' }, 0)
+          .add(() => staggerWheelOut(quick), 0)
+          .to(wheelProgress(), { opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in' }, 0)
           .fromTo(map.parts.stage, { xPercent: 100 }, { xPercent: 0, duration: quick ? 0 : 1.2, ease: 'power3.inOut' }, quick ? 0 : 0.15)
           // Страны выезжают слева по очереди сверху вниз
           .fromTo(listRows(), { x: -64, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.8, ease: 'power3.out', stagger: quick ? 0 : 0.012 }, quick ? 0 : 0.35);
@@ -704,29 +707,44 @@ function start(renderer) {
     tl.to(map.parts.stage, { xPercent: 100, duration: quick ? 0 : 1.1, ease: 'power3.inOut' }, 0)
       .to(listRows(), { x: -64, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in', stagger: quick ? 0 : 0.008 }, 0)
       .to(fly, { x: 0, duration: quick ? 0 : 1.1, ease: 'none' }, quick ? 0 : 0.2)
-      .add(() => staggerWheel(0, quick), quick ? 0 : 0.55);
+      .add(() => staggerWheel(0, quick), quick ? 0 : 0.55)
+      .fromTo(wheelProgress(), { opacity: 0 }, { opacity: 1, duration: quick ? 0 : 0.6, ease: 'power2.out', clearProps: 'opacity' }, quick ? 0 : 0.55);
     gsap.set(wheelLayer, { clearProps: 'transform,opacity' });
     staggerWheel(-1, quick); // строки спрятаны до своей очереди
   }
 
-  // Страны колеса проявляются сверху вниз, каждая чуть позже предыдущей.
+  // Страны колеса появляются и уходят сверху вниз, каждая чуть позже предыдущей, со сдвигом
+  // влево — как список стран на карте
+  const wheelProgress = () => wheelLayer.querySelector('.wheel-progress');
+  const WHEEL_STAGGER = { x: -64, step: 0.05, in: 0.8, out: 0.45 };
+  const wheelRows = () => [...wheel.list.children]
+    .filter((li) => Number(li.style.opacity || 1) > 0.01)
+    .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+
   // delay < 0 — только спрятать строки (появление запустится позже)
   function staggerWheel(delay, quick) {
-    const rows = [...wheel.list.children]
-      .filter((li) => Number(li.style.opacity || 1) > 0.01)
-      .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    const rows = wheelRows();
     rows.forEach((li) => gsap.killTweensOf(li.children));
     if (quick) {
       rows.forEach((li) => gsap.set(li.children, { clearProps: 'transform,opacity' }));
       return;
     }
     if (delay < 0) {
-      rows.forEach((li) => gsap.set(li.children, { x: -48, opacity: 0 }));
+      rows.forEach((li) => gsap.set(li.children, { x: WHEEL_STAGGER.x, opacity: 0 }));
       return;
     }
     rows.forEach((li, i) => {
-      gsap.fromTo(li.children, { x: -48, opacity: 0 }, {
-        x: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: delay + i * 0.04, clearProps: 'transform,opacity',
+      gsap.fromTo(li.children, { x: WHEEL_STAGGER.x, opacity: 0 }, {
+        x: 0, opacity: 1, duration: WHEEL_STAGGER.in, ease: 'power3.out', delay: delay + i * WHEEL_STAGGER.step, clearProps: 'transform,opacity',
+      });
+    });
+  }
+
+  function staggerWheelOut(quick) {
+    wheelRows().forEach((li, i) => {
+      gsap.killTweensOf(li.children);
+      gsap.to(li.children, {
+        x: WHEEL_STAGGER.x, opacity: 0, duration: quick ? 0 : WHEEL_STAGGER.out, ease: 'power2.in', delay: quick ? 0 : i * WHEEL_STAGGER.step * 0.6,
       });
     });
   }
