@@ -927,21 +927,29 @@ function start(renderer) {
       card.aspect = texture.image.width / texture.image.height;
       card.front.map = texture;
       card.front.needsUpdate = true;
-      if (!item.back) {
-        // Оборота нет — на обороте повторяется лицо
+      if (!card.backReady) {
+        // Пока оборот не загружен (или его нет), на обороте повторяется лицо
         card.back.map = texture;
         card.back.needsUpdate = true;
       }
     });
-    if (item.back) {
-      loader.load(item.back, (texture) => {
+  });
+
+  // Обороты грузятся после заставки: прелоадер ждёт только лица — вдвое меньше данных на старте
+  function loadBacks() {
+    const backLoader = new THREE.TextureLoader();
+    ITEMS.forEach((item, i) => {
+      if (!item.back) return;
+      backLoader.load(item.back, (texture) => {
         prepareTexture(texture, maxAnisotropy);
         renderer.initTexture(texture);
+        const card = cards[i];
+        card.backReady = true;
         card.back.map = texture;
         card.back.needsUpdate = true;
       });
-    }
-  });
+    });
+  }
 
   whenFontsReady(ITEMS, () => {
     placeholders.forEach((texture) => { texture.needsUpdate = true; });
@@ -968,6 +976,7 @@ function start(renderer) {
         root.dataset.view = 'wheel';
         pose.bind = 'panel';
         busy = false;
+        loadBacks();
         // Карту готовим заранее, пока на главной ничего не происходит
         (window.requestIdleCallback ?? setTimeout)(() => map.prepare());
       },
