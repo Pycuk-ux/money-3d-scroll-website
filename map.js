@@ -140,7 +140,18 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   const canvas = el('canvas', 'map-view__globe');
   const badgeLayer = el('div', 'map-view__badges');
   const tip = el('div', 'map-tip');
-  stage.append(canvas, badgeLayer, tip);
+  // Номинал над купюрой на глобусе при наведении — та же плашка, что у списка
+  const flag = el('div', 'map-flag');
+  const flagIn = el('div', 'map-flag__in');
+  const flagChip = el('button', 'map-pick__chip');
+  const flagArrow = el('button', 'map-pick__arrow', '↗');
+  [flagChip, flagArrow].forEach((b) => {
+    b.type = 'button';
+    b.addEventListener('click', () => { if (flagItem >= 0) open(flagItem); });
+  });
+  flagIn.append(flagChip, flagArrow);
+  flag.append(flagIn);
+  stage.append(canvas, badgeLayer, flag, tip);
   const list = el('ol', 'map-view__list');
   list.dataset.lenisPrevent = ''; // колесо прокручивает список, а не страницу (Lenis иначе гасит событие)
   // Купюра и номинал у страны в списке: при наведении и у выбранной
@@ -193,8 +204,16 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     img.draggable = false;
     img.decoding = 'async';
     node.append(img);
-    node.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHover(i); });
-    node.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setHover(-1); });
+    node.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse' || drag.moved) return;
+      setHover(i);
+      showFlag(i);
+    });
+    node.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      setHover(-1);
+      leaveFlag();
+    });
     node.addEventListener('click', () => {
       if (drag.moved) return;
       open(i);
@@ -203,6 +222,56 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     return { node, img, x: 0, y: 0, shown: false, facing: 0 };
   });
   const BADGE = { w: 40, h: 20 }; // размер миниатюры на карте
+  let flagItem = -1;
+  let flagTimer = 0;
+
+  function showFlag(i) {
+    clearTimeout(flagTimer);
+    if (flagItem !== i || !flag.classList.contains('is-shown')) {
+      flagItem = i;
+      flagChip.textContent = text(i).caption;
+      // Плашка мгновенно встаёт под место и въезжает снизу
+      flag.classList.remove('is-shown', 'is-leaving');
+      flag.classList.add('no-anim');
+      placeFlag();
+      void flag.offsetWidth;
+      flag.classList.remove('no-anim');
+    }
+    flag.classList.add('is-shown');
+  }
+
+  // Уход с купюры — с задержкой, чтобы успеть перевести курсор на плашку
+  function leaveFlag() {
+    clearTimeout(flagTimer);
+    flagTimer = setTimeout(hideFlag, 160);
+  }
+
+  function hideFlag() {
+    clearTimeout(flagTimer);
+    if (flag.classList.contains('is-shown')) flag.classList.add('is-leaving'); // уезжает вверх
+    flag.classList.remove('is-shown');
+    flagItem = -1;
+  }
+
+  flag.addEventListener('pointerenter', () => {
+    clearTimeout(flagTimer);
+    if (flagItem >= 0) setHover(flagItem);
+  });
+  flag.addEventListener('pointerleave', () => {
+    setHover(-1);
+    leaveFlag();
+  });
+
+  function placeFlag() {
+    if (flagItem < 0) return;
+    const b = badges[flagItem];
+    if (!b.shown) {
+      hideFlag();
+      return;
+    }
+    const top = b.y - (BADGE.h / 2) * 1.15 - 6 - flag.offsetHeight;
+    flag.style.transform = `translate(${Math.round(b.x - flag.offsetWidth / 2)}px, ${Math.round(top)}px)`;
+  }
 
   // from — картинка, из которой вырастает купюра на странице
   function open(i, from = badges[i].img) {
@@ -213,8 +282,8 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   /* --- Список стран по алфавиту --- */
 
   function renderList() {
-    const code = lang();
-    const order = items.map((_, i) => i).sort((a, b) => text(a).name.localeCompare(text(b).name, code));
+    // По английскому алфавиту на любом языке — как в колесе
+    const order = items.map((_, i) => i).sort((a, b) => items[a].name.en.localeCompare(items[b].name.en, 'en'));
     list.setAttribute('aria-label', labels().countries);
     list.style.setProperty('--rows', String(Math.ceil(items.length / 2))); // две колонки на телефоне
     list.replaceChildren(...order.map((i) => {
@@ -640,6 +709,14 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   window.addEventListener('pointerup', endDrag);
   window.addEventListener('keydown', (e) => { if (active && e.key === 'Escape') deselect(); });
 
+  // Клик по пустому месту (не кнопка, не купюра, не собранная страна) снимает выбор:
+  // на карте снова все купюры. Клики по самому глобусу разбирает endDrag
+  container.addEventListener('click', (e) => {
+    if (!active || drag.moved || e.target.closest('button')) return;
+    if (Math.hypot(e.clientX - view.cx, e.clientY - view.cy) < view.r) return;
+    deselect();
+  });
+
   function deselect() {
     if (selected < 0) return;
     selected = -1;
@@ -768,6 +845,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       b.node.style.transform = `translate(${b.x - BADGE.w / 2}px, ${b.y - BADGE.h / 2}px)`;
       b.node.classList.toggle('is-hover', i === hoverItem || i === selected);
     });
+      placeFlag();
   }
 
   function setActive(on) {
@@ -782,6 +860,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       hideTip();
       clearTimeout(pickTimer);
       listHover = -1;
+      hideFlag();
       setHover(-1);
     }
     updatePick();

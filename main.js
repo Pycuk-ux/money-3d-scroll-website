@@ -117,16 +117,12 @@ function rateLine(i) {
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// Порядок колеса, башни и листания на странице купюры — по алфавиту на текущем языке.
+// Порядок колеса, башни и листания на странице купюры — по английскому алфавиту на любом языке
+// (на русском те же места, только названия переведены).
 // seq — номера купюр по порядку, rank — место купюры в этом порядке
-let seq = [];
-let rank = [];
-function sortCollection() {
-  seq = ITEMS.map((_, i) => i).sort((a, b) => ITEMS[a].name[lang].localeCompare(ITEMS[b].name[lang], lang));
-  rank = [];
-  seq.forEach((item, position) => { rank[item] = position; });
-}
-sortCollection();
+const seq = ITEMS.map((_, i) => i).sort((a, b) => ITEMS[a].name.en.localeCompare(ITEMS[b].name.en, 'en'));
+const rank = [];
+seq.forEach((item, position) => { rank[item] = position; });
 
 const text = (i) => ({
   name: ITEMS[i].name[lang],
@@ -483,13 +479,6 @@ function start(renderer) {
     if (!LANGS.includes(next) || next === lang) return;
     lang = next;
     saveLang(next);
-    // Новый алфавит: колесо и башня остаются на той же купюре, остальные встают по новому порядку
-    sortCollection();
-    if (mode !== 'intro') {
-      const front = deckFront();
-      wheel.jumpTo(front);
-      deckJump(front);
-    }
     applyLanguage();
   }
 
@@ -641,7 +630,23 @@ function start(renderer) {
 
   // На карту: купюры башни улетают вправо, глобус въезжает справа налево, список — слева.
   // Обратно — наоборот.
-  const listOut = () => -map.parts.list.getBoundingClientRect().right - 24;
+  const listRows = () => map.parts.list.children;
+  const masthead = document.querySelector('.masthead');
+
+  // Логотип и подпись переезжают между центром (колесо) и левым краем (карта): FLIP —
+  // запоминаем, где были, меняем раскладку и плавно доводим с прежнего места
+  function moveMasthead(toMap, quick) {
+    const parts = [masthead.querySelector('.masthead__logo'), ...masthead.querySelectorAll('.masthead__lead span')];
+    parts.forEach((p) => { gsap.killTweensOf(p); gsap.set(p, { clearProps: 'transform' }); });
+    const before = parts.map((p) => p.getBoundingClientRect().left);
+    root.classList.toggle('is-map-layout', toMap);
+    if (quick) return;
+    parts.forEach((p, i) => {
+      const dx = before[i] - p.getBoundingClientRect().left;
+      if (Math.abs(dx) < 0.5) return; // телефон: логотип и так слева
+      gsap.fromTo(p, { x: dx }, { x: 0, duration: 1.1, delay: i * 0.04, ease: 'power3.inOut', clearProps: 'transform' });
+    });
+  }
 
   function switchView(next) {
     if (busy || next === mode || (mode !== 'wheel' && mode !== 'map')) return;
@@ -654,6 +659,7 @@ function start(renderer) {
         root.classList.add('is-transit');
         wheel.setActive(false);
         map.setActive(true);
+        moveMasthead(true, quick);
         const tl = gsap.timeline({
           onComplete: () => {
             mode = 'map';
@@ -664,20 +670,23 @@ function start(renderer) {
             fly.x = 0;
             gsap.set(canvas, { opacity: 0 });
             gsap.set(wheelLayer, { clearProps: 'transform,opacity' });
-            gsap.set([map.parts.stage, map.parts.list], { clearProps: 'transform' });
+            gsap.set(map.parts.stage, { clearProps: 'transform' });
+            gsap.set(listRows(), { clearProps: 'transform,opacity' });
             busy = false;
           },
         });
         tl.to(fly, { x: 1, duration: quick ? 0 : 1.1, ease: 'none' }, 0)
           .to(wheelLayer, { x: -40, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in' }, 0)
           .fromTo(map.parts.stage, { xPercent: 100 }, { xPercent: 0, duration: quick ? 0 : 1.2, ease: 'power3.inOut' }, quick ? 0 : 0.15)
-          .fromTo(map.parts.list, { x: listOut }, { x: 0, duration: quick ? 0 : 0.9, ease: 'power3.out' }, quick ? 0 : 0.45);
+          // Страны выезжают слева по очереди сверху вниз
+          .fromTo(listRows(), { x: -64, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.8, ease: 'power3.out', stagger: quick ? 0 : 0.012 }, quick ? 0 : 0.35);
       });
       return;
     }
 
     root.classList.add('is-transit');
     map.setActive(false);
+    moveMasthead(false, quick);
     mode = 'wheel';
     root.dataset.view = 'wheel';
     wheel.setActive(true);
@@ -687,12 +696,13 @@ function start(renderer) {
     const tl = gsap.timeline({
       onComplete: () => {
         root.classList.remove('is-transit');
-        gsap.set([map.parts.stage, map.parts.list], { clearProps: 'transform' });
+        gsap.set(map.parts.stage, { clearProps: 'transform' });
+        gsap.set(listRows(), { clearProps: 'transform,opacity' });
         busy = false;
       },
     });
     tl.to(map.parts.stage, { xPercent: 100, duration: quick ? 0 : 1.1, ease: 'power3.inOut' }, 0)
-      .to(map.parts.list, { x: listOut, duration: quick ? 0 : 0.6, ease: 'power3.in' }, 0)
+      .to(listRows(), { x: -64, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in', stagger: quick ? 0 : 0.008 }, 0)
       .to(fly, { x: 0, duration: quick ? 0 : 1.1, ease: 'none' }, quick ? 0 : 0.2)
       .fromTo(wheelLayer, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.6, ease: 'power2.out' }, quick ? 0 : 0.7);
   }

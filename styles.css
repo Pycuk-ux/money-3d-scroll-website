@@ -269,6 +269,10 @@ html.is-flipping * {
   white-space: nowrap;
 }
 
+/* Строки подписи — отдельные блоки: каждая едет к своему месту при смене раскладки */
+.masthead__lead span { display: block; }
+.masthead__lead br { display: none; }
+
 .is-webgl.is-loading .masthead,
 html[data-view="detail"] .masthead { opacity: 0; }
 
@@ -339,18 +343,19 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 
 /* Переход колесо ↔ карта: купюры улетают поверх въезжающей карты, лишнее прячется */
 .is-webgl.is-transit .stage { z-index: var(--z-detail); }
-.is-transit .masthead,
 .is-transit .home-rate { opacity: 0; }
 .is-transit .switcher { pointer-events: none; }
 
-/* На карте логотип и подпись — слева сверху */
+/* На карте логотип и подпись — слева сверху (класс ставится в начале перехода,
+   main.js переводит логотип и строки подписи с места на место) */
 @media (min-width: 721px) {
-  .is-webgl[data-view="map"] .masthead {
+  .is-webgl.is-map-layout .masthead {
     left: calc(var(--gutter) + env(safe-area-inset-left, 0px));
     transform: none;
     align-items: flex-start;
     text-align: left;
   }
+  .is-map-layout .masthead__logo { margin-left: -8px; }
 }
 
 /* Карта */
@@ -410,7 +415,29 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   transition: transform 0.25s;
 }
 
-.map-badge.is-hover .map-badge__thumb { transform: scale(1.25); }
+.map-badge.is-hover .map-badge__thumb { transform: scale(1.15); }
+
+/* Номинал над купюрой на глобусе: въезжает снизу с появлением, уезжает вверх с исчезанием */
+.map-flag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.map-flag__in {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.map-flag.is-shown { pointer-events: auto; }
+.map-flag.is-shown .map-flag__in { opacity: 1; transform: none; }
+.map-flag.is-leaving .map-flag__in { transform: translateY(-6px); }
+.map-flag.no-anim .map-flag__in { transition: none; }
 
 /* Купюра и номинал справа от страны в списке; клик открывает страницу купюры */
 .map-pick {
@@ -433,7 +460,8 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 
 .is-transit .map-pick { opacity: 0; }
 
-.map-pick button {
+.map-pick button,
+.map-flag button {
   border: 0;
   font: 500 14px/1 var(--font-text);
   letter-spacing: var(--tracking-text);
