@@ -13,7 +13,8 @@ function el(tag, className = '', text = '') {
 
 /* ---------- Колесо ---------- */
 
-export function createWheel(container, items, { lerp, isReduced, text, labels, onChange, onHover, onOpen }) {
+// order() — номера купюр в порядке колеса (по алфавиту на текущем языке)
+export function createWheel(container, items, { lerp, isReduced, text, labels, order, onChange, onHover, onOpen }) {
   const RADIUS_STEPS = 9; // видимых строк в каждую сторону
   const list = el('ul', 'wheel-view__list');
   // Название и номинал активной купюры справа — только в мобильном прямом списке
@@ -106,7 +107,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     const step = geo.lineH / geo.r; // угол на одну строку
     rows.forEach((row) => {
       const slot = base + row.k;
-      fill(row, mod(slot, items.length));
+      fill(row, order()[mod(slot, items.length)]);
       const d = slot - state.current;
       row.offset = slot;
       const dist = Math.abs(d);
@@ -132,7 +133,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
 
     updateProgress();
 
-    const next = mod(base, items.length);
+    const next = order()[mod(base, items.length)];
     if (next !== activeIndex) {
       activeIndex = next;
       showInfo(next);
@@ -246,7 +247,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     // Встать на купюру без прокрутки (например, после листания на странице купюры)
     jumpTo(index) {
       const base = Math.round(state.current);
-      const slot = base + (mod(index - base, items.length));
+      const slot = base + (mod(order().indexOf(index) - base, items.length));
       const near = slot - base > items.length / 2 ? slot - items.length : slot;
       state.current = state.target = near;
     },

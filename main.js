@@ -117,6 +117,17 @@ function rateLine(i) {
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
+// Порядок колеса, башни и листания на странице купюры — по алфавиту на текущем языке.
+// seq — номера купюр по порядку, rank — место купюры в этом порядке
+let seq = [];
+let rank = [];
+function sortCollection() {
+  seq = ITEMS.map((_, i) => i).sort((a, b) => ITEMS[a].name[lang].localeCompare(ITEMS[b].name[lang], lang));
+  rank = [];
+  seq.forEach((item, position) => { rank[item] = position; });
+}
+sortCollection();
+
 const text = (i) => ({
   name: ITEMS[i].name[lang],
   caption: ITEMS[i].caption[lang],
@@ -332,7 +343,7 @@ function start(renderer) {
   let mode = 'intro'; // intro | wheel | map | detail
   let origin = 'wheel'; // откуда открыта страница купюры
   let originRect = null;
-  let current = 0; // главная купюра
+  let current = seq[0]; // главная купюра
   let busy = true; // идёт анимация перехода
 
   const isReduced = () => reducedMotion;
@@ -348,6 +359,7 @@ function start(renderer) {
     isReduced,
     text,
     labels: t,
+    order: () => seq,
     onChange: () => {},
     onHover: () => {},
     onOpen: (i) => openDetail(i, 'wheel'),
@@ -471,6 +483,13 @@ function start(renderer) {
     if (!LANGS.includes(next) || next === lang) return;
     lang = next;
     saveLang(next);
+    // Новый алфавит: колесо и башня остаются на той же купюре, остальные встают по новому порядку
+    sortCollection();
+    if (mode !== 'intro') {
+      const front = deckFront();
+      wheel.jumpTo(front);
+      deckJump(front);
+    }
     applyLanguage();
   }
 
@@ -493,7 +512,7 @@ function start(renderer) {
   // Текстовый список для скринридеров повторяет коллекцию на текущем языке
   function renderList() {
     const list = document.querySelector('.collection');
-    list.replaceChildren(...ITEMS.map((_, i) => {
+    list.replaceChildren(...seq.map((i) => {
       const { name, caption, issuer } = text(i);
       const li = node('li', 'note');
       li.append(node('h2', 'note__name', name), node('p', 'note__caption', caption), node('p', 'note__quote', issuer));
@@ -799,7 +818,7 @@ function start(renderer) {
   function stepDetail(dir) {
     if (busy || mode !== 'detail') return;
     const prev = current;
-    current = mod(current + dir, COUNT);
+    current = seq[mod(rank[current] + dir, COUNT)];
     const Z = CONFIG.zoom;
     const quick = reducedMotion;
 
@@ -886,12 +905,13 @@ function start(renderer) {
   loadRates().then(updateRates);
 
   // Прелоадер: купюра ребром по центру → поворачивается в фас → уезжает к колесу, за ней собирается стопка
-  cards[0].hero = 1;
+  const first = seq[0]; // купюра прелоадера — первая по алфавиту
+  cards[first].hero = 1;
   function intro() {
     const quick = reducedMotion;
     const tl = gsap.timeline({
       onComplete: () => {
-        cards[0].hero = 0;
+        cards[first].hero = 0;
         mode = 'wheel';
         root.dataset.view = 'wheel';
         pose.bind = 'panel';
@@ -933,7 +953,7 @@ function start(renderer) {
   const STEP = 1 / 240;
   const AXES = ['x', 'y', 'z', 'p'];
   const deck = {
-    order: ITEMS.map((_, i) => i),
+    order: [...seq],
     cards: ITEMS.map((_, i) => ({ pos: i, from: i, hold: 0, phase: 'rest', dir: D.exitDir, x: 0, y: 0, z: 0, p: i, v: { x: 0, y: 0, z: 0, p: 0 } })),
     spread: 0,
     spreadV: 0,
@@ -999,7 +1019,7 @@ function start(renderer) {
 
   // Сразу поставить купюру index вперёд, без анимации (возврат со страницы купюры)
   function deckJump(index) {
-    deck.order = ITEMS.map((_, i) => mod(index + i, COUNT));
+    deck.order = ITEMS.map((_, i) => seq[mod(rank[index] + i, COUNT)]);
     deck.order.forEach((i, position) => {
       const card = deck.cards[i];
       Object.assign(card, slot(position), { pos: position, from: position, hold: 0, phase: 'rest', v: { x: 0, y: 0, z: 0, p: 0 } });
@@ -1031,7 +1051,7 @@ function start(renderer) {
 
     // Колесо задаёт, какая купюра должна быть впереди; башня догоняет его по одной
     if (mode === 'wheel' && wheel.index >= 0 && now >= deck.nextShift) {
-      const diff = mod(wheel.index - deckFront(), COUNT);
+      const diff = mod(rank[wheel.index] - rank[deckFront()], COUNT);
       if (diff) {
         shift(diff <= COUNT / 2 ? 1 : -1);
         deck.nextShift = now + (D.queueGap * 1000) / D.speed;
