@@ -704,7 +704,31 @@ function start(renderer) {
     tl.to(map.parts.stage, { xPercent: 100, duration: quick ? 0 : 1.1, ease: 'power3.inOut' }, 0)
       .to(listRows(), { x: -64, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in', stagger: quick ? 0 : 0.008 }, 0)
       .to(fly, { x: 0, duration: quick ? 0 : 1.1, ease: 'none' }, quick ? 0 : 0.2)
-      .fromTo(wheelLayer, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.6, ease: 'power2.out' }, quick ? 0 : 0.7);
+      .add(() => staggerWheel(0, quick), quick ? 0 : 0.55);
+    gsap.set(wheelLayer, { clearProps: 'transform,opacity' });
+    staggerWheel(-1, quick); // строки спрятаны до своей очереди
+  }
+
+  // Страны колеса проявляются сверху вниз, каждая чуть позже предыдущей.
+  // delay < 0 — только спрятать строки (появление запустится позже)
+  function staggerWheel(delay, quick) {
+    const rows = [...wheel.list.children]
+      .filter((li) => Number(li.style.opacity || 1) > 0.01)
+      .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+    rows.forEach((li) => gsap.killTweensOf(li.children));
+    if (quick) {
+      rows.forEach((li) => gsap.set(li.children, { clearProps: 'transform,opacity' }));
+      return;
+    }
+    if (delay < 0) {
+      rows.forEach((li) => gsap.set(li.children, { x: -48, opacity: 0 }));
+      return;
+    }
+    rows.forEach((li, i) => {
+      gsap.fromTo(li.children, { x: -48, opacity: 0 }, {
+        x: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: delay + i * 0.04, clearProps: 'transform,opacity',
+      });
+    });
   }
 
   /* --- Страница купюры --- */
@@ -936,6 +960,7 @@ function start(renderer) {
         pose.bind = null;
         root.classList.remove('is-loading');
         wheel.setActive(true);
+        staggerWheel(0, quick);
         deckIntro();
       })
       .to(pose, {

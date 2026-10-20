@@ -1,5 +1,5 @@
 // Коллекция и тексты интерфейса на двух языках.
-// 46 стран, по одной банкноте от каждой. Порядок — как в колесе.
+// 47 стран, по одной банкноте от каждой. Порядок — как в колесе.
 // region — код страны ISO alpha-2 для карты (EU — все страны еврозоны), currency — код валюты ISO 4217
 // (для курса к доллару), currencyName — её название.
 // src / back — лицо и оборот. Пока картинки нет, сцена рисует заглушку с кодом валюты.
@@ -228,12 +228,12 @@ export const ITEMS = [
     caption: { ru: 'белорусский рубль', en: 'Belarusian Ruble' },
   },
   {
-    id: 'scotland',
+    id: 'united-kingdom',
     region: 'GB',
     currency: 'GBP',
     currencyName: { ru: 'фунт стерлингов', en: 'Pound Sterling' },
     material: 'cotton',
-    name: { ru: 'Шотландия', en: 'Scotland' },
+    name: { ru: 'Великобритания', en: 'United Kingdom' },
     caption: { ru: 'фунт стерлингов', en: 'Pound Sterling' },
   },
   {
@@ -399,7 +399,7 @@ export const ITEMS = [
     currency: 'KGS',
     currencyName: { ru: 'сом', en: 'Som' },
     material: 'cotton',
-    name: { ru: 'Киргизия', en: 'Kyrgyzstan' },
+    name: { ru: 'Кыргызстан', en: 'Kyrgyzstan' },
     caption: { ru: 'сом', en: 'Som' },
   },
   {
@@ -428,6 +428,15 @@ export const ITEMS = [
     material: 'cotton',
     name: { ru: 'Сербия', en: 'Serbia' },
     caption: { ru: 'сербский динар', en: 'Serbian Dinar' },
+  },
+  {
+    id: 'brunei',
+    region: 'BN',
+    currency: 'BND',
+    currencyName: { ru: 'брунейский доллар', en: 'Brunei Dollar' },
+    material: 'polymer',
+    name: { ru: 'Бруней', en: 'Brunei' },
+    caption: { ru: '10 брунейских долларов', en: '10 Brunei Dollars' },
   },
   {
     id: 'bangladesh',

@@ -18,7 +18,7 @@ const COLORS = {
 // Банкнота евро — все страны еврозоны
 const EUROZONE = ['AT', 'BE', 'BG', 'HR', 'CY', 'EE', 'FI', 'FR', 'DE', 'GR', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PT', 'SK', 'SI', 'ES'];
 // Где стоит значок, если центр страны не подходит: [долгота, широта]
-const ANCHORS = { 'european-union': [6, 49], scotland: [-4.2, 56.8] };
+const ANCHORS = { 'european-union': [6, 49], 'united-kingdom': [-1.8, 52.8] };
 
 const CONFIG = {
   start: { lon: 28, lat: 24 }, // центр глобуса при первом показе
