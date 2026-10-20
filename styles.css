@@ -33,7 +33,6 @@
   --close-size: 40px;
   --radius-chip: 4px;
   --radius-switch: 8px;
-  --grid-perspective: 1400px;
 
   /* Слои */
   --z-stage: 0;
@@ -312,15 +311,17 @@ html[data-view="detail"] .masthead { opacity: 0; }
 /* На странице купюры выбор вида не нужен */
 html[data-view="detail"] .switcher { visibility: hidden; }
 
-/* ---------- Колесо и сетка ---------- */
+/* ---------- Колесо и карта ---------- */
 
 .wheel-view,
-.grid-view { display: none; }
+.map-view { display: none; }
 
 .is-webgl[data-view="wheel"] .wheel-view,
-.is-webgl[data-view="grid"] .grid-view,
+.is-webgl[data-view="map"] .map-view,
+.is-webgl.is-transit .wheel-view,
+.is-webgl.is-transit .map-view,
 .is-webgl[data-view="detail"] .wheel-view.is-origin,
-.is-webgl[data-view="detail"] .grid-view.is-origin {
+.is-webgl[data-view="detail"] .map-view.is-origin {
   display: block;
   position: fixed;
   inset: 0;
@@ -336,68 +337,173 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 /* Пока открыта купюра, исходный вид остаётся под ней для обратной анимации */
 .is-webgl[data-view="detail"] .is-origin { pointer-events: none; }
 
-/* Сетка */
+/* Переход колесо ↔ карта: купюры улетают поверх въезжающей карты, лишнее прячется */
+.is-webgl.is-transit .stage { z-index: var(--z-detail); }
+.is-transit .masthead,
+.is-transit .home-rate { opacity: 0; }
+.is-transit .switcher { pointer-events: none; }
 
-.grid-view {
-  perspective: var(--grid-perspective);
+/* На карте логотип и подпись — слева сверху */
+@media (min-width: 721px) {
+  .is-webgl[data-view="map"] .masthead {
+    left: calc(var(--gutter) + env(safe-area-inset-left, 0px));
+    transform: none;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* Карта */
+
+.map-view__globe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   cursor: grab;
 }
 
-.grid-view.is-dragging { cursor: grabbing; }
+.map-view.is-pointing .map-view__globe { cursor: pointer; }
+.map-view.is-dragging,
+.map-view.is-dragging * { cursor: grabbing; }
 
-.grid-view__plane {
+.map-view__badges {
   position: absolute;
   inset: 0;
-  transform-style: preserve-3d;
-  pointer-events: none; /* карточки уходят в −Z, плоскость не должна перекрывать их для клика */
-}
-
-.grid-card {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--card-w);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  will-change: transform;
-  backface-visibility: hidden;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-.grid-card__frame {
-  position: relative;
-  aspect-ratio: 1 / 0.62;
-  overflow: hidden;
-  background: var(--color-card);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-chip);
-  transition: border-color 0.25s;
-}
-
-.grid-card__frame img {
-  position: absolute;
-  inset: 10%;
-  width: 80%;
-  height: 80%;
-  object-fit: contain;
   pointer-events: none;
 }
 
-.grid-card:hover .grid-card__frame { border-color: var(--color-accent); }
-
-.grid-card__meta {
+/* Значок собранной купюры: миниатюра и «Страна, валюта» */
+.map-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  font-size: var(--size-caption);
+  gap: 4px;
+  max-width: 120px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink);
+  font: 600 14px/1 var(--font-text);
+  letter-spacing: var(--tracking-text);
+  text-align: center;
+  cursor: pointer;
+  pointer-events: auto;
+  will-change: transform;
+  transition: opacity 0.25s;
 }
 
-.grid-card__name { color: var(--color-ink); }
+.map-badge.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 
-.grid-card__tag,
+.map-badge__thumb {
+  display: block;
+  width: 40px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 1px;
+  box-shadow: 0 1px 3px rgba(31, 29, 24, 0.35);
+  transition: transform 0.25s;
+}
+
+.map-badge.is-hover .map-badge__thumb { transform: scale(1.15); }
+
+/* Номинал выбранной страны со ссылкой на её страницу */
+.map-chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: stretch;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  background: var(--color-switch-bg);
+  color: var(--color-ink-soft);
+  font: 500 16px/1 var(--font-text);
+  letter-spacing: var(--tracking-text);
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, color 0.2s;
+}
+
+.map-chip.is-shown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.map-chip:hover { color: var(--color-ink); }
+.map-chip__label { padding: 8px 10px; }
+.map-chip__arrow { padding: 8px 10px; border-left: 1px solid var(--color-line); }
+
+/* Подсказка над страной без купюры */
+.map-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--color-switch-bg);
+  color: var(--color-ink);
+  font: 400 14px/1.1 var(--font-text);
+  letter-spacing: var(--tracking-text);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.map-tip.is-shown { opacity: 1; }
+.map-tip__name { font-weight: 600; }
+.map-tip__currency { color: var(--color-ink-soft); }
+.map-tip__note { color: var(--color-ink-soft); opacity: var(--label-opacity); }
+
+/* Список стран по алфавиту */
+.map-view__list {
+  position: absolute;
+  left: calc(var(--gutter) + env(safe-area-inset-left, 0px));
+  top: 200px;
+  bottom: 24px;
+  width: 240px;
+  margin: 0;
+  padding: 24px 0;
+  list-style: none;
+  overflow-y: auto;
+  scrollbar-width: none;
+  touch-action: pan-y;
+  -webkit-mask-image: linear-gradient(transparent, #000 24px, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+
+.map-view__list::-webkit-scrollbar { display: none; }
+
+.map-view__country {
+  display: block;
+  padding: 5px 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink);
+  font: 500 16px/1.1 var(--font-text);
+  letter-spacing: var(--tracking-text);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s, opacity 0.2s;
+}
+
+.map-view__country.is-hover,
+.map-view__country:hover { color: #826d43; }
+.map-view__country.is-selected { font-weight: 700; }
+
 .wheel-chip {
   padding: 3px 8px;
   border-radius: var(--radius-chip);
@@ -822,6 +928,23 @@ html.lenis body { height: auto; }
   .masthead__logo { width: 172px; transform: translate(-8px, 4px); } /* 150px + 15% */
   .masthead__lead { font-size: 12px; }
   .is-webgl .masthead { left: max(16px, env(safe-area-inset-left, 0px)); transform: none; align-items: flex-start; text-align: left; }
+
+  /* Карта на телефоне: глобус сверху, под ним список в две колонки */
+  .map-view__list {
+    top: var(--list-top, 60vh);
+    right: max(16px, env(safe-area-inset-right, 0px));
+    left: max(16px, env(safe-area-inset-left, 0px));
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    padding: 12px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(var(--rows, 23), auto);
+    grid-auto-flow: column;
+    align-content: start;
+    column-gap: 16px;
+  }
+  .map-view__country { font-size: 14px; }
 
   .plate { padding: 28px 20px; }
   .plate__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }

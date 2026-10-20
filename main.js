@@ -3,7 +3,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { gsap } from 'gsap';
 import Lenis from 'lenis';
-import { createGrid, createWheel } from './views.js';
+import { createWheel } from './views.js';
+import { createMap } from './map.js';
 import { ITEMS, UI, LANGS } from './data.js';
 import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
@@ -312,11 +313,12 @@ function start(renderer) {
   const rot = { y: 0, base: 0, flip: Math.PI / 2, vy: 0, dragging: false, scroll: 0, scrollOn: false };
   const tilt = { x: 0, y: 0 };
   const fade = { stack: 0 }; // видимость стопки (кроме главной купюры)
+  const fly = { x: 0 }; // уход стопки вправо при переходе на карту: 0 — на месте, 1 — за экраном
 
   /* --- Слои интерфейса --- */
 
   const wheelLayer = document.querySelector('.wheel-view');
-  const gridLayer = document.querySelector('.grid-view');
+  const mapLayer = document.querySelector('.map-view');
   const hitArea = document.querySelector('.wheel-view__hit');
   const detail = document.querySelector('.detail');
   const detailBody = document.querySelector('.detail__body');
@@ -326,18 +328,19 @@ function start(renderer) {
   const langNav = document.querySelector('.lang');
   const langButtons = langNav.querySelectorAll('[data-lang]');
 
-  let mode = 'intro'; // intro | wheel | grid | detail
+  let mode = 'intro'; // intro | wheel | map | detail
   let origin = 'wheel'; // откуда открыта страница купюры
   let originRect = null;
   let current = 0; // главная купюра
   let busy = true; // идёт анимация перехода
 
   const isReduced = () => reducedMotion;
-  const grid = createGrid(gridLayer, ITEMS, {
-    lerp: CONFIG.lerp,
-    isReduced,
+  const map = createMap(mapLayer, ITEMS, {
     text,
-    onSelect: (i, rect) => openDetail(i, 'grid', rect),
+    labels: t,
+    lang: () => lang,
+    isReduced,
+    onSelect: (i, rect) => openDetail(i, 'map', rect),
   });
   const wheel = createWheel(wheelLayer, ITEMS, {
     lerp: CONFIG.lerp,
@@ -481,7 +484,7 @@ function start(renderer) {
     detail.querySelector('.detail__close').setAttribute('aria-label', ui.close);
     document.querySelector('.fallback').setAttribute('aria-label', ui.collection);
     wheel.refresh();
-    grid.refresh();
+    map.refresh();
     renderList();
     if (!detail.hidden) swapBody(current, true);
   }
@@ -614,36 +617,58 @@ function start(renderer) {
     gsap.fromTo(next, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out', delay: 0.1 });
   }
 
-  /* --- Переключение колесо ↔ сетка --- */
+  /* --- Переключение колесо ↔ карта --- */
 
+  // На карту: купюры башни улетают вправо, карта въезжает справа налево. Обратно — наоборот.
   function switchView(next) {
-    if (busy || next === mode || (mode !== 'wheel' && mode !== 'grid')) return;
+    if (busy || next === mode || (mode !== 'wheel' && mode !== 'map')) return;
     busy = true;
-    const prev = mode;
     const quick = reducedMotion;
     viewButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === next)));
 
-    const out = prev === 'wheel' ? [wheelLayer, canvas] : [gridLayer];
-    gsap.to(out, {
-      opacity: 0,
-      duration: quick ? 0 : 0.3,
-      ease: 'power2.in',
-      onComplete: () => {
-        (prev === 'wheel' ? wheel : grid).setActive(false);
-        mode = next;
-        root.dataset.view = next;
-        (next === 'wheel' ? wheel : grid).setActive(true);
-        // В сетке сцена скрыта; стопку прячем, чтобы при открытии купюры из сетки была видна только она
-        fade.stack = next === 'wheel' ? 1 : 0;
-        const shown = next === 'wheel' ? [wheelLayer, canvas] : [gridLayer];
-        gsap.fromTo(shown, { opacity: 0 }, {
-          opacity: 1,
-          duration: quick ? 0 : 0.5,
-          ease: 'power2.out',
-          onComplete: () => { busy = false; },
+    if (next === 'map') {
+      map.prepare().then(() => {
+        root.classList.add('is-transit');
+        wheel.setActive(false);
+        map.setActive(true);
+        const tl = gsap.timeline({
+          onComplete: () => {
+            mode = 'map';
+            root.dataset.view = 'map';
+            root.classList.remove('is-transit');
+            // На карте сцена не видна; стопку прячем, чтобы при открытии купюры была видна только она
+            fade.stack = 0;
+            fly.x = 0;
+            gsap.set(canvas, { opacity: 0 });
+            gsap.set(wheelLayer, { clearProps: 'transform,opacity' });
+            busy = false;
+          },
         });
+        tl.to(fly, { x: 1, duration: quick ? 0 : 1.1, ease: 'none' }, 0)
+          .to(wheelLayer, { x: -40, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in' }, 0)
+          .fromTo(mapLayer, { xPercent: 100 }, { xPercent: 0, duration: quick ? 0 : 1.2, ease: 'power3.inOut' }, quick ? 0 : 0.15);
+      });
+      return;
+    }
+
+    root.classList.add('is-transit');
+    map.setActive(false);
+    mode = 'wheel';
+    root.dataset.view = 'wheel';
+    wheel.setActive(true);
+    fade.stack = 1;
+    fly.x = 1;
+    gsap.set(canvas, { opacity: 1 });
+    const tl = gsap.timeline({
+      onComplete: () => {
+        root.classList.remove('is-transit');
+        gsap.set(mapLayer, { clearProps: 'transform' });
+        busy = false;
       },
     });
+    tl.to(mapLayer, { xPercent: 100, duration: quick ? 0 : 1.1, ease: 'power3.inOut' }, 0)
+      .to(fly, { x: 0, duration: quick ? 0 : 1.1, ease: 'none' }, quick ? 0 : 0.2)
+      .fromTo(wheelLayer, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.6, ease: 'power2.out' }, quick ? 0 : 0.7);
   }
 
   /* --- Страница купюры --- */
@@ -651,17 +676,17 @@ function start(renderer) {
   const nearestTurn = (a) => Math.round(a / TAU) * TAU;
 
   function openDetail(index, from, rect) {
-    if (busy || (mode !== 'wheel' && mode !== 'grid')) return;
+    if (busy || (mode !== 'wheel' && mode !== 'map')) return;
     busy = true;
     origin = from;
     current = index;
     const quick = reducedMotion;
     const dur = quick ? 0 : CONFIG.moveDuration;
-    const originLayer = from === 'wheel' ? wheelLayer : gridLayer;
+    const originLayer = from === 'wheel' ? wheelLayer : mapLayer;
 
-    // Стартовая позиция: передняя купюра стопки или картинка в карточке сетки
-    if (from === 'grid') {
-      originRect = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, w: rect.width * 0.8 };
+    // Стартовая позиция: передняя купюра стопки или миниатюра в значке на карте
+    if (from === 'map') {
+      originRect = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, w: rect.width };
       Object.assign(pose, originRect);
       gsap.set(canvas, { opacity: 1 });
     } else {
@@ -670,7 +695,7 @@ function start(renderer) {
     pose.bind = null;
     cards.forEach((c, i) => { gsap.killTweensOf(c); c.hero = i === index ? 1 : 0; c.heroIn = false; });
 
-    (from === 'wheel' ? wheel : grid).setActive(false);
+    (from === 'wheel' ? wheel : map).setActive(false);
     originLayer.classList.add('is-origin');
     mode = 'detail';
     root.dataset.view = 'detail';
@@ -696,7 +721,7 @@ function start(renderer) {
     if (from === 'wheel') {
       tl.to(wheelLayer, { x: () => -view.w * 0.6, opacity: 0, duration: quick ? 0 : 0.8, ease: 'power2.inOut' }, 0);
     } else {
-      tl.to(gridLayer, { opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.out' }, 0);
+      tl.to(mapLayer, { opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.out' }, 0);
     }
     tl.to(switcher, { opacity: 0, duration: quick ? 0 : 0.3 }, 0)
       .to(reveal(), { opacity: 1, y: 0, duration: quick ? 0 : 0.6, ease: 'power3.out', stagger: 0.08 }, quick ? 0 : dur * 0.55);
@@ -729,7 +754,7 @@ function start(renderer) {
       deckJump(current);
       wheel.setActive(true);
     } else {
-      grid.setActive(true);
+      map.setActive(true);
     }
 
     const to = toWheel ? panelRect() : originRect;
@@ -737,12 +762,12 @@ function start(renderer) {
       onComplete: () => {
         detail.hidden = true;
         wheelLayer.classList.remove('is-origin');
-        gridLayer.classList.remove('is-origin');
+        mapLayer.classList.remove('is-origin');
         cards.forEach((c) => { c.hero = 0; });
         mode = origin;
         root.dataset.view = origin;
         pose.bind = toWheel ? 'panel' : null;
-        gsap.set([wheelLayer, gridLayer], { clearProps: 'transform' });
+        gsap.set([wheelLayer, mapLayer], { clearProps: 'transform' });
         lenis.scrollTo(0, { immediate: true, force: true });
         window.scrollTo(0, 0);
         busy = false;
@@ -758,7 +783,7 @@ function start(renderer) {
       tl.to(fade, { stack: 1, duration: quick ? 0 : 0.6, ease: 'power2.out' }, quick ? 0 : dur * 0.5)
         .fromTo(wheelLayer, { x: () => -view.w * 0.6, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.8, ease: 'power2.inOut' }, quick ? 0 : dur * 0.3);
     } else {
-      tl.to(gridLayer, { opacity: 1, duration: quick ? 0 : 0.5, ease: 'power2.out' }, quick ? 0 : dur * 0.7)
+      tl.to(mapLayer, { opacity: 1, duration: quick ? 0 : 0.5, ease: 'power2.out' }, quick ? 0 : dur * 0.7)
         .to(canvas, { opacity: 0, duration: quick ? 0 : 0.3 }, quick ? 0 : dur);
     }
   }
@@ -842,7 +867,7 @@ function start(renderer) {
 
   whenFontsReady(ITEMS, () => {
     placeholders.forEach((texture) => { texture.needsUpdate = true; });
-    grid.refresh();
+    map.refresh();
   });
   const homeRate = document.querySelector('.home-rate');
   const detailRate = document.querySelector('.detail__rate');
@@ -864,6 +889,8 @@ function start(renderer) {
         root.dataset.view = 'wheel';
         pose.bind = 'panel';
         busy = false;
+        // Карту готовим заранее, пока на главной ничего не происходит
+        (window.requestIdleCallback ?? setTimeout)(() => map.prepare());
       },
     });
     tl.to(countEl, { yPercent: -40, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in' })
@@ -1029,17 +1056,25 @@ function start(renderer) {
 
   /* --- Кадр --- */
 
+  // Уход башни вправо: передняя купюра срывается первой, дальние — следом
+  function flyOffset(depth) {
+    if (!fly.x) return 0;
+    const local = clamp(fly.x * 1.3 - Math.max(0, depth) * 0.1, 0, 1);
+    const eased = local < 0.5 ? 4 * local ** 3 : 1 - (-2 * local + 2) ** 3 / 2;
+    return eased * view.w * 0.8;
+  }
+
   const damp = (factor, dt) => 1 - Math.pow(1 - factor, dt * 60);
 
   gsap.ticker.add((_time, deltaMs) => {
     const dt = Math.min(deltaMs / 1000, 0.05);
     const still = reducedMotion;
 
-    grid.update(dt);
+    map.update(dt);
     wheel.update(dt);
 
-    // В сетке купюры не видны — не тратим на сцену кадр
-    if (mode === 'grid' && !busy) return;
+    // На карте купюры не видны — не тратим на сцену кадр
+    if (mode === 'map' && !busy) return;
 
     if (pose.bind === 'panel') Object.assign(pose, panelRect());
     else if (pose.bind === 'center') Object.assign(pose, { x: view.w / 2, y: view.h / 2, w: panelRect().w });
@@ -1104,7 +1139,7 @@ function start(renderer) {
       const frontWeight = dc.pos === 0 && dc.phase === 'rest' ? clamp(1 - dc.p, 0, 1) : 0;
 
       // Башня у колеса
-      let x = panel.x + dc.x * towerScale;
+      let x = panel.x + dc.x * towerScale + flyOffset(dc.p);
       let y = panel.y + dc.y * towerScale;
       let z = dc.z * towerScale * k;
       let w = stackW;
