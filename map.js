@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { imageFor } from './placeholder.js';
 
 const COLORS = {
-  water: '#BCB9B4',
+  water: '#A79F91',
   land: '#8B8275', // купюры этой страны ещё нет
   border: '#666055',
   owned: '#948465', // купюра есть
@@ -24,6 +24,7 @@ const CONFIG = {
   start: { lon: 28, lat: 24 }, // центр глобуса при первом показе
   texture: 4096, // ширина текстуры карты; на телефоне вдвое меньше
   maxLat: 70,
+  maxZoom: 1.5, // колесо мыши увеличивает глобус до +50%
   inertia: 0.06, // доля скорости, остающаяся через секунду
   focusDuration: 1.1,
 };
@@ -134,16 +135,31 @@ const FRAGMENT = /* glsl */ `
 
 // text(index) → { name, caption }; labels() → тексты интерфейса; lang() → 'ru' | 'en'
 export function createMap(container, items, { text, labels, lang, isReduced, onSelect }) {
+  // stage — глобус со значками (въезжает справа), list — список (въезжает слева)
+  const stage = el('div', 'map-view__stage');
   const canvas = el('canvas', 'map-view__globe');
   const badgeLayer = el('div', 'map-view__badges');
-  const list = el('ol', 'map-view__list');
   const tip = el('div', 'map-tip');
-  const chip = el('button', 'map-chip');
-  chip.type = 'button';
-  chip.append(el('span', 'map-chip__label'), el('span', 'map-chip__arrow', '↗'));
-  container.append(canvas, badgeLayer, list, tip, chip);
+  stage.append(canvas, badgeLayer, tip);
+  const list = el('ol', 'map-view__list');
+  // Купюра и номинал у страны в списке: при наведении и у выбранной
+  const pick = el('div', 'map-pick');
+  const pickThumb = el('button', 'map-pick__thumb');
+  const pickImg = el('img');
+  pickImg.alt = '';
+  pickImg.draggable = false;
+  pickThumb.append(pickImg);
+  const pickChip = el('button', 'map-pick__chip');
+  const pickArrow = el('button', 'map-pick__arrow', '↗');
+  [pickThumb, pickChip, pickArrow].forEach((b) => {
+    b.type = 'button';
+    b.addEventListener('click', () => { if (pickItem >= 0) open(pickItem, pickImg); });
+  });
+  pick.append(pickThumb, pickChip, pickArrow);
+  container.append(stage, list, pick);
 
-  const view = { w: 1, h: 1, cx: 0, cy: 0, r: 1, small: false };
+  const view = { w: 1, h: 1, cx: 0, cy: 0, r: 1, base: 1, small: false };
+  const zoom = { value: 1, target: 1 };
   const center = { lon: CONFIG.start.lon, lat: CONFIG.start.lat, vlon: 0, vlat: 0 };
   let focus = null; // плавный поворот к выбранной стране
   let active = false;
@@ -151,6 +167,9 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   let hoverItem = -1;
   let selected = -1;
   let tipCountry = -1;
+  let listHover = -1; // страна под курсором в списке
+  let pickItem = -1; // чья купюра показана у списка
+  let pickTimer = 0;
 
   let renderer = null;
   let scene;
@@ -172,7 +191,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     img.alt = '';
     img.draggable = false;
     img.decoding = 'async';
-    node.append(img, el('span', 'map-badge__label'));
+    node.append(img);
     node.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHover(i); });
     node.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setHover(-1); });
     node.addEventListener('click', () => {
@@ -180,15 +199,14 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       open(i);
     });
     badgeLayer.append(node);
-    return { node, img, w: 0, h: 0, x: 0, y: 0, shown: false, facing: 0 };
+    return { node, img, x: 0, y: 0, shown: false, facing: 0 };
   });
+  const BADGE = { w: 40, h: 20 }; // размер миниатюры на карте
 
-  chip.addEventListener('click', () => { if (selected >= 0) open(selected); });
-
-  function open(i) {
+  // from — картинка, из которой вырастает купюра на странице
+  function open(i, from = badges[i].img) {
     if (!active) return;
-    const r = badges[i].img.getBoundingClientRect();
-    onSelect(i, r);
+    onSelect(i, from.getBoundingClientRect());
   }
 
   /* --- Список стран по алфавиту --- */
@@ -204,8 +222,8 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       btn.type = 'button';
       btn.dataset.index = String(i);
       btn.addEventListener('click', () => select(i));
-      btn.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHover(i); });
-      btn.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setHover(-1); });
+      btn.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hoverList(i); });
+      btn.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') leaveList(); });
       li.append(btn);
       return li;
     }));
@@ -215,31 +233,60 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   function markList() {
     list.querySelectorAll('.map-view__country').forEach((b) => {
       const i = Number(b.dataset.index);
-      b.classList.toggle('is-selected', i === selected);
-      b.classList.toggle('is-hover', i === hoverItem && i !== selected);
+      b.classList.toggle('is-open', i === pickItem);
+      b.classList.toggle('is-hover', i === hoverItem);
     });
+  }
+
+  // Наведение на строку списка: страна подсвечивается на карте, справа от названия — купюра и номинал.
+  // Уход со строки — с задержкой, чтобы успеть перевести курсор на купюру или номинал.
+  function hoverList(i) {
+    clearTimeout(pickTimer);
+    listHover = i;
+    setHover(i);
+    updatePick();
+  }
+
+  function leaveList() {
+    clearTimeout(pickTimer);
+    pickTimer = setTimeout(() => {
+      if (hoverItem === listHover) setHover(-1); // курсор мог уже перейти на страну на глобусе
+      listHover = -1;
+      updatePick();
+    }, 160);
+  }
+
+  pick.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') clearTimeout(pickTimer); });
+  pick.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') leaveList(); });
+  list.addEventListener('scroll', () => placePick());
+
+  function updatePick() {
+    const next = listHover >= 0 ? listHover : selected;
+    if (next !== pickItem) {
+      pickItem = next;
+      if (next >= 0) {
+        pickImg.src = imageFor(items[next]);
+        pickChip.textContent = text(next).caption;
+      }
+      markList();
+    }
+    placePick();
+  }
+
+  function placePick() {
+    const btn = pickItem >= 0 ? list.querySelector(`[data-index="${pickItem}"]`) : null;
+    const box = list.getBoundingClientRect();
+    const r = btn?.getBoundingClientRect();
+    const inside = !!r && r.bottom > box.top + 8 && r.top < box.bottom - 8;
+    pick.classList.toggle('is-shown', inside);
+    if (!inside) return;
+    // От строки, а не от названия: название при наведении сдвигается на 8px с анимацией
+    const left = Math.min(btn.parentNode.getBoundingClientRect().left + btn.offsetWidth + 8 + 16, view.w - pick.offsetWidth - 8);
+    pick.style.transform = `translate(${Math.round(left)}px, ${Math.round(r.top + r.height / 2 - pick.offsetHeight / 2)}px)`;
   }
 
   function renderBadges() {
-    const code = lang();
-    badges.forEach((b, i) => {
-      const item = items[i];
-      b.img.src = imageFor(item);
-      const label = b.node.querySelector('.map-badge__label');
-      label.replaceChildren(`${text(i).name},`, el('br'), capitalize(item.currencyName[code]));
-    });
-    measureBadges();
-  }
-
-  function measureBadges() {
-    badges.forEach((b) => {
-      b.w = b.node.offsetWidth;
-      b.h = b.node.offsetHeight;
-    });
-  }
-
-  function renderChip() {
-    chip.querySelector('.map-chip__label').textContent = selected >= 0 ? text(selected).caption : '';
+    badges.forEach((b, i) => { b.img.src = imageFor(items[i]); });
   }
 
   /* --- Выбор и наведение --- */
@@ -252,11 +299,10 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     paintPalette();
   }
 
-  // Выбор из списка: глобус поворачивается к стране, рядом со значком — чип с номиналом
+  // Выбор из списка: глобус поворачивается к стране, на карте остаётся только её купюра
   function select(i) {
     selected = i;
-    renderChip();
-    markList();
+    updatePick();
     paintPalette();
     const [lon, lat] = anchorOf(i);
     const from = { lon: center.lon, lat: center.lat };
@@ -397,7 +443,6 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     globe = new THREE.Mesh(new THREE.SphereGeometry(1, 160, 120), material);
     scene.add(globe);
     renderBadges();
-    renderChip();
     layout();
   }
 
@@ -437,13 +482,13 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       // Телефон: глобус сверху, под ним список
       const top = 112;
       const avail = view.h * 0.6 - top;
-      view.r = Math.min(view.w * 0.47, avail / 2);
+      view.base = Math.min(view.w * 0.47, avail / 2);
       view.cx = view.w / 2;
       view.cy = top + avail / 2;
-      container.style.setProperty('--list-top', `${Math.round(view.cy + view.r + 20)}px`);
+      container.style.setProperty('--list-top', `${Math.round(view.cy + view.base + 20)}px`);
     } else {
       view.cx = view.w * 0.56;
-      view.r = Math.max(120, Math.min(view.h * 0.475, view.cx - 280, view.w - view.cx - 24));
+      view.base = Math.max(120, Math.min(view.h * 0.475, view.cx - 280, view.w - view.cx - 24));
       view.cy = view.h / 2;
       container.style.removeProperty('--list-top');
     }
@@ -453,10 +498,23 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     Object.assign(camera, { left: -view.w / 2, right: view.w / 2, top: view.h / 2, bottom: -view.h / 2 });
     camera.updateProjectionMatrix();
     globe.position.set(view.cx - view.w / 2, view.h / 2 - view.cy, 0);
-    globe.scale.setScalar(view.r);
-    measureBadges();
+    applyZoom();
+    placePick();
+  }
+
+  function applyZoom() {
+    view.r = view.base * zoom.value;
+    if (globe) globe.scale.setScalar(view.r);
     dirty = true;
   }
+
+  // Колесо мыши над глобусом — увеличение до maxZoom
+  stage.addEventListener('wheel', (e) => {
+    if (!active || !world) return;
+    e.preventDefault();
+    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+    zoom.target = clamp(zoom.target * Math.exp(-dy * 0.0015), 1, CONFIG.maxZoom);
+  }, { passive: false });
   window.addEventListener('resize', layout);
 
   /* --- Поворот глобуса --- */
@@ -492,7 +550,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
 
   container.addEventListener('pointerdown', (e) => {
     if (!active || !world || e.button > 0) return;
-    if (e.target.closest('.map-view__list, .map-chip')) return;
+    if (e.target.closest('.map-view__list, .map-pick')) return;
     const inside = Math.hypot(e.clientX - view.cx, e.clientY - view.cy) < view.r;
     if (!inside && !e.target.closest('.map-badge')) return;
     drag.id = e.pointerId;
@@ -552,21 +610,34 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     const who = k >= 0 ? world.owner[k] : -1;
     if (e.pointerType === 'mouse') {
       if (who >= 0) open(who);
+      else deselect(); // клик мимо собранных стран снова показывает все купюры
     } else if (who >= 0) {
-      // Касание: сначала выбор и чип, переход — по чипу или значку
+      // Касание: сначала выбор, переход — по купюре
       select(who);
+      list.querySelector(`[data-index="${who}"]`)?.scrollIntoView({ block: 'nearest' });
       hideTip();
     } else if (k >= 0) {
+      deselect();
       showTip(k, e.clientX, e.clientY);
     } else {
+      deselect();
       hideTip();
     }
   }
   window.addEventListener('pointerup', endDrag);
+  window.addEventListener('keydown', (e) => { if (active && e.key === 'Escape') deselect(); });
+
+  function deselect() {
+    if (selected < 0) return;
+    selected = -1;
+    updatePick();
+    paintPalette();
+    dirty = true;
+  }
   window.addEventListener('pointercancel', endDrag);
 
   function hoverAt(x, y, target) {
-    if (target?.closest?.('.map-badge, .map-view__list, .map-chip')) {
+    if (target?.closest?.('.map-badge, .map-view__list, .map-pick')) {
       hideTip();
       return;
     }
@@ -640,6 +711,11 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       dirty = true;
     }
 
+    if (Math.abs(zoom.target - zoom.value) > 1e-4) {
+      zoom.value += (zoom.target - zoom.value) * (isReduced() ? 1 : damp(0.15, dt));
+      applyZoom();
+    }
+
     // Плавная смена цвета при наведении
     let changed = false;
     const f = isReduced() ? 1 : damp(0.2, dt);
@@ -662,49 +738,23 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     renderer.render(scene, camera);
   }
 
-  // Значки: проекция на экран, обратная сторона скрыта, пересекающиеся — уступают главным
+  // Значки: проекция на экран, обратная сторона скрыта. Подписей нет, чтобы поместились все купюры;
+  // при выборе страны остаётся только её купюра
   function placeBadges() {
-    const order = [];
     badges.forEach((b, i) => {
       world3.copy(anchors[i]).applyQuaternion(globe.quaternion);
       b.facing = world3.z;
       b.x = view.cx + world3.x * view.r;
       b.y = view.cy - world3.y * view.r;
-      if (b.facing > 0.18) order.push(i);
-    });
-    const rank = (i) => (i === selected ? 3 : i === hoverItem ? 2 : 0) + badges[i].facing;
-    order.sort((a, b) => rank(b) - rank(a));
-    const taken = [];
-    const visible = new Set();
-    order.forEach((i) => {
-      const b = badges[i];
-      const box = { l: b.x - b.w / 2, t: b.y - 10, r: b.x + b.w / 2, b: b.y - 10 + b.h };
-      const hit = taken.some((o) => box.l < o.r + 4 && box.r > o.l - 4 && box.t < o.b + 2 && box.b > o.t - 2);
-      if (hit && i !== selected) return;
-      taken.push(box);
-      visible.add(i);
-    });
-    badges.forEach((b, i) => {
-      const show = visible.has(i);
+      const show = b.facing > 0.18 && (selected < 0 || i === selected);
       if (show !== b.shown) {
         b.shown = show;
         b.node.classList.toggle('is-hidden', !show);
       }
       b.node.style.opacity = show ? String(clamp((b.facing - 0.18) / 0.2, 0, 1)) : '';
-      b.node.style.transform = `translate(${b.x - b.w / 2}px, ${b.y - 10}px)`;
+      b.node.style.transform = `translate(${b.x - BADGE.w / 2}px, ${b.y - BADGE.h / 2}px)`;
       b.node.classList.toggle('is-hover', i === hoverItem || i === selected);
     });
-
-    // Чип выбранной страны — над значком, слева
-    const s = selected >= 0 ? badges[selected] : null;
-    const chipShown = !!s && s.shown;
-    chip.classList.toggle('is-shown', chipShown);
-    if (chipShown) {
-      const cw = chip.offsetWidth;
-      const ch = chip.offsetHeight;
-      const left = clamp(s.x + 24 - cw, 8, view.w - cw - 8);
-      chip.style.transform = `translate(${left}px, ${s.y - 18 - ch}px)`;
-    }
   }
 
   function setActive(on) {
@@ -717,15 +767,18 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       drag.id = null;
       container.classList.remove('is-dragging');
       hideTip();
+      clearTimeout(pickTimer);
+      listHover = -1;
       setHover(-1);
     }
+    updatePick();
   }
 
   function refresh() {
     renderList();
+    if (pickItem >= 0) pickChip.textContent = text(pickItem).caption;
     if (world) {
       renderBadges();
-      renderChip();
       tipCountry = -1;
       dirty = true;
     }
@@ -734,5 +787,5 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   renderList();
   layout();
 
-  return { prepare, update, refresh, setActive };
+  return { prepare, update, refresh, setActive, parts: { stage, list } };
 }

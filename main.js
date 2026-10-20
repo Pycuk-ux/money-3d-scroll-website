@@ -15,7 +15,8 @@ import { loadRates, usdPer } from './rates.js';
 const CONFIG = {
   thickness: 0.006, // толщина «бумаги» в долях ширины
   lerp: 0.06, // инерция колеса и сетки: меньше — мягче и дольше доезжает
-  moveDuration: 1.1, // переезд купюры на страницу и обратно
+  moveDuration: 0.6, // переезд купюры на страницу и обратно (ease-in-out cubic)
+  introDuration: 1.1, // переезд купюры из прелоадера к башне
   dragSpeed: 0.01, // рад на пиксель при перевороте
   hoverTilt: THREE.MathUtils.degToRad(5), // наклон к курсору: угол уходит назад на столько
   // Бумага: изгиб от вращения и движения, с пружиной (лёгкий отскок после остановки).
@@ -619,7 +620,10 @@ function start(renderer) {
 
   /* --- Переключение колесо ↔ карта --- */
 
-  // На карту: купюры башни улетают вправо, карта въезжает справа налево. Обратно — наоборот.
+  // На карту: купюры башни улетают вправо, глобус въезжает справа налево, список — слева.
+  // Обратно — наоборот.
+  const listOut = () => -map.parts.list.getBoundingClientRect().right - 24;
+
   function switchView(next) {
     if (busy || next === mode || (mode !== 'wheel' && mode !== 'map')) return;
     busy = true;
@@ -641,12 +645,14 @@ function start(renderer) {
             fly.x = 0;
             gsap.set(canvas, { opacity: 0 });
             gsap.set(wheelLayer, { clearProps: 'transform,opacity' });
+            gsap.set([map.parts.stage, map.parts.list], { clearProps: 'transform' });
             busy = false;
           },
         });
         tl.to(fly, { x: 1, duration: quick ? 0 : 1.1, ease: 'none' }, 0)
           .to(wheelLayer, { x: -40, opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.in' }, 0)
-          .fromTo(mapLayer, { xPercent: 100 }, { xPercent: 0, duration: quick ? 0 : 1.2, ease: 'power3.inOut' }, quick ? 0 : 0.15);
+          .fromTo(map.parts.stage, { xPercent: 100 }, { xPercent: 0, duration: quick ? 0 : 1.2, ease: 'power3.inOut' }, quick ? 0 : 0.15)
+          .fromTo(map.parts.list, { x: listOut }, { x: 0, duration: quick ? 0 : 0.9, ease: 'power3.out' }, quick ? 0 : 0.45);
       });
       return;
     }
@@ -662,11 +668,12 @@ function start(renderer) {
     const tl = gsap.timeline({
       onComplete: () => {
         root.classList.remove('is-transit');
-        gsap.set(mapLayer, { clearProps: 'transform' });
+        gsap.set([map.parts.stage, map.parts.list], { clearProps: 'transform' });
         busy = false;
       },
     });
-    tl.to(mapLayer, { xPercent: 100, duration: quick ? 0 : 1.1, ease: 'power3.inOut' }, 0)
+    tl.to(map.parts.stage, { xPercent: 100, duration: quick ? 0 : 1.1, ease: 'power3.inOut' }, 0)
+      .to(map.parts.list, { x: listOut, duration: quick ? 0 : 0.6, ease: 'power3.in' }, 0)
       .to(fly, { x: 0, duration: quick ? 0 : 1.1, ease: 'none' }, quick ? 0 : 0.2)
       .fromTo(wheelLayer, { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.6, ease: 'power2.out' }, quick ? 0 : 0.7);
   }
@@ -719,7 +726,7 @@ function start(renderer) {
     tl.to(pose, { x: to.x, y: to.y, w: to.w, duration: dur, ease: 'power2.inOut' }, 0)
       .to(fade, { stack: 0, duration: quick ? 0 : 0.5, ease: 'power2.out' }, 0);
     if (from === 'wheel') {
-      tl.to(wheelLayer, { x: () => -view.w * 0.6, opacity: 0, duration: quick ? 0 : 0.8, ease: 'power2.inOut' }, 0);
+      tl.to(wheelLayer, { x: () => -view.w * 0.6, opacity: 0, duration: dur, ease: 'power2.inOut' }, 0);
     } else {
       tl.to(mapLayer, { opacity: 0, duration: quick ? 0 : 0.5, ease: 'power2.out' }, 0);
     }
@@ -776,12 +783,12 @@ function start(renderer) {
 
     tl.to(reveal(), { opacity: 0, y: -16, duration: quick ? 0 : 0.3, ease: 'power2.in' }, 0)
       .to(pose, { x: to.x, y: to.y, w: to.w, duration: dur, ease: 'power2.inOut' }, 0)
-      .to(rot, { y: nearestTurn(rot.y), vy: 0, duration: quick ? 0 : 0.8, ease: 'power2.inOut', onComplete: () => { rot.y = 0; rot.base = 0; } }, 0)
+      .to(rot, { y: nearestTurn(rot.y), vy: 0, duration: dur, ease: 'power2.inOut', onComplete: () => { rot.y = 0; rot.base = 0; } }, 0)
       .to(switcher, { opacity: 1, duration: quick ? 0 : 0.4 }, quick ? 0 : dur * 0.6);
 
     if (toWheel) {
       tl.to(fade, { stack: 1, duration: quick ? 0 : 0.6, ease: 'power2.out' }, quick ? 0 : dur * 0.5)
-        .fromTo(wheelLayer, { x: () => -view.w * 0.6, opacity: 0 }, { x: 0, opacity: 1, duration: quick ? 0 : 0.8, ease: 'power2.inOut' }, quick ? 0 : dur * 0.3);
+        .fromTo(wheelLayer, { x: () => -view.w * 0.6, opacity: 0 }, { x: 0, opacity: 1, duration: dur, ease: 'power2.inOut' }, quick ? 0 : dur * 0.3);
     } else {
       tl.to(mapLayer, { opacity: 1, duration: quick ? 0 : 0.5, ease: 'power2.out' }, quick ? 0 : dur * 0.7)
         .to(canvas, { opacity: 0, duration: quick ? 0 : 0.3 }, quick ? 0 : dur);
@@ -905,7 +912,7 @@ function start(renderer) {
         x: () => panelRect().x,
         y: () => panelRect().y,
         w: () => panelRect().w,
-        duration: quick ? 0 : CONFIG.moveDuration,
+        duration: quick ? 0 : CONFIG.introDuration,
         ease: 'power2.inOut',
       })
       .to(fade, { stack: 1, duration: quick ? 0 : 0.8, ease: 'power2.out' }, quick ? '<' : '<0.6')

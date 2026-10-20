@@ -355,6 +355,11 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 
 /* Карта */
 
+.map-view__stage {
+  position: absolute;
+  inset: 0;
+}
+
 .map-view__globe {
   position: absolute;
   inset: 0;
@@ -373,23 +378,15 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   pointer-events: none;
 }
 
-/* Значок собранной купюры: миниатюра и «Страна, валюта» */
+/* Миниатюра собранной купюры на карте */
 .map-badge {
   position: absolute;
   top: 0;
   left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  max-width: 120px;
+  display: block;
   padding: 0;
   border: 0;
   background: none;
-  color: var(--color-ink);
-  font: 600 14px/1 var(--font-text);
-  letter-spacing: var(--tracking-text);
-  text-align: center;
   cursor: pointer;
   pointer-events: auto;
   will-change: transform;
@@ -401,6 +398,8 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   pointer-events: none;
 }
 
+.map-badge.is-hover { z-index: 1; }
+
 .map-badge__thumb {
   display: block;
   width: 40px;
@@ -411,37 +410,64 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   transition: transform 0.25s;
 }
 
-.map-badge.is-hover .map-badge__thumb { transform: scale(1.15); }
+.map-badge.is-hover .map-badge__thumb { transform: scale(1.25); }
 
-/* Номинал выбранной страны со ссылкой на её страницу */
-.map-chip {
+/* Купюра и номинал справа от страны в списке; клик открывает страницу купюры */
+.map-pick {
   position: absolute;
   top: 0;
   left: 0;
-  display: inline-flex;
-  align-items: stretch;
-  padding: 0;
-  border: 1px solid var(--color-line);
-  border-radius: 6px;
-  background: var(--color-switch-bg);
-  color: var(--color-ink-soft);
-  font: 500 16px/1 var(--font-text);
-  letter-spacing: var(--tracking-text);
-  white-space: nowrap;
-  cursor: pointer;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s, color 0.2s;
+  transition: opacity 0.2s;
 }
 
-.map-chip.is-shown {
+.map-pick.is-shown {
   opacity: 1;
   pointer-events: auto;
 }
 
-.map-chip:hover { color: var(--color-ink); }
-.map-chip__label { padding: 8px 10px; }
-.map-chip__arrow { padding: 8px 10px; border-left: 1px solid var(--color-line); }
+.is-transit .map-pick { opacity: 0; }
+
+.map-pick button {
+  border: 0;
+  font: 500 14px/1 var(--font-text);
+  letter-spacing: var(--tracking-text);
+  cursor: pointer;
+}
+
+.map-pick__thumb {
+  display: block;
+  margin-right: 8px;
+  padding: 0;
+  background: none;
+}
+
+.map-pick__thumb img {
+  display: block;
+  width: 60px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 1px;
+  box-shadow: 0 4px 10px rgba(31, 29, 24, 0.25);
+}
+
+.map-pick__chip,
+.map-pick__arrow {
+  padding: 5px 8px;
+  border-radius: var(--radius-chip);
+  background: var(--color-chip);
+  color: var(--color-ink-soft);
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.map-pick__chip:hover,
+.map-pick__arrow:hover { color: var(--color-ink); }
 
 /* Подсказка над страной без купюры */
 .map-tip {
@@ -488,7 +514,7 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 .map-view__list::-webkit-scrollbar { display: none; }
 
 .map-view__country {
-  display: block;
+  display: inline-block;
   padding: 5px 0;
   border: 0;
   background: none;
@@ -497,12 +523,13 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   letter-spacing: var(--tracking-text);
   text-align: left;
   cursor: pointer;
-  transition: color 0.2s, opacity 0.2s;
+  transition: color 0.2s, transform 0.25s;
 }
 
+/* Наведение и выбранная страна: название темнеет до коричневого и сдвигается вправо */
 .map-view__country.is-hover,
-.map-view__country:hover { color: #826d43; }
-.map-view__country.is-selected { font-weight: 700; }
+.map-view__country.is-open { color: #483920; }
+.map-view__country.is-open { transform: translateX(8px); }
 
 .wheel-chip {
   padding: 3px 8px;
