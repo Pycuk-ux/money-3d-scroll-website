@@ -502,14 +502,24 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   bottom: 24px;
   width: 240px;
   margin: 0;
-  padding: 24px 0;
+  padding: 0;
   list-style: none;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   touch-action: pan-y;
-  -webkit-mask-image: linear-gradient(transparent, #000 24px, #000 calc(100% - 24px), transparent);
-  mask-image: linear-gradient(transparent, #000 24px, #000 calc(100% - 24px), transparent);
+  /* Скроллбара нет. Край, за которым есть ещё страны, уходит в прозрачность —
+     так видно, что список прокручивается. Наверху градиент появляется после начала прокрутки,
+     внизу исчезает, когда список докручен до конца (map.js ставит классы). */
+  --fade: 64px;
+  --fade-top: 0px;
+  --fade-bottom: 0px;
+  -webkit-mask-image: linear-gradient(transparent, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent);
+  mask-image: linear-gradient(transparent, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent);
 }
+
+.map-view__list.has-more-above { --fade-top: var(--fade); }
+.map-view__list.has-more-below { --fade-bottom: var(--fade); }
 
 .map-view__list::-webkit-scrollbar { display: none; }
 
@@ -963,7 +973,6 @@ html.lenis body { height: auto; }
     left: max(16px, env(safe-area-inset-left, 0px));
     bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     width: auto;
-    padding: 12px 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(var(--rows, 23), auto);

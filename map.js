@@ -142,6 +142,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   const tip = el('div', 'map-tip');
   stage.append(canvas, badgeLayer, tip);
   const list = el('ol', 'map-view__list');
+  list.dataset.lenisPrevent = ''; // колесо прокручивает список, а не страницу (Lenis иначе гасит событие)
   // Купюра и номинал у страны в списке: при наведении и у выбранной
   const pick = el('div', 'map-pick');
   const pickThumb = el('button', 'map-pick__thumb');
@@ -228,6 +229,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       return li;
     }));
     markList();
+    markScroll();
   }
 
   function markList() {
@@ -258,7 +260,17 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
 
   pick.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') clearTimeout(pickTimer); });
   pick.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') leaveList(); });
-  list.addEventListener('scroll', () => placePick());
+  list.addEventListener('scroll', () => {
+    placePick();
+    markScroll();
+  }, { passive: true });
+
+  // Есть ли ещё страны выше или ниже видимой части — для градиентов по краям списка
+  function markScroll() {
+    const below = list.scrollHeight - list.clientHeight - list.scrollTop;
+    list.classList.toggle('has-more-above', list.scrollTop > 1);
+    list.classList.toggle('has-more-below', below > 1);
+  }
 
   function updatePick() {
     const next = listHover >= 0 ? listHover : selected;
@@ -500,6 +512,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
     globe.position.set(view.cx - view.w / 2, view.h / 2 - view.cy, 0);
     applyZoom();
     placePick();
+    markScroll();
   }
 
   function applyZoom() {
