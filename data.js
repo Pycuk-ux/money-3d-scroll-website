@@ -399,7 +399,7 @@ export const ITEMS = [
     currency: 'KGS',
     currencyName: { ru: 'сом', en: 'Som' },
     material: 'cotton',
-    name: { ru: 'Кыргызстан', en: 'Kyrgyzstan' },
+    name: { ru: 'Кыргызская Республика', en: 'Kyrgyz Republic' }, // официальное название страны
     caption: { ru: 'сом', en: 'Som' },
   },
   {
