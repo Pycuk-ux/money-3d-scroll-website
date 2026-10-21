@@ -48,6 +48,7 @@ const CONFIG = {
     dim: 0.5, // насколько дальние купюры уходят в цвет фона
     stagger: 0.05, // с, задержка между купюрами, когда башня сдвигается
     queueGap: 0.11, // с, пауза между сменами при быстрой прокрутке через несколько купюр
+    maxHurry: 6, // во сколько раз максимум ускоряется очередь, когда башня отстала от колеса
     exitDir: { x: 0, y: 1 }, // куда уходит передняя купюра: вниз (как в CardSwap); вверх — y: -1
     refWidth: 460, // ширина карточки CardSwap, к которой привязаны px-расстояния
   },
@@ -1031,6 +1032,7 @@ function start(renderer) {
     spread: 0,
     spreadV: 0,
     nextShift: 0,
+    hurry: 1, // текущее ускорение пружин при догоне
     scale: 1,
   };
   const deckFront = () => deck.order[0];
@@ -1061,7 +1063,7 @@ function start(renderer) {
   }
 
   function settleOrder(now) {
-    const stagger = (D.stagger / D.speed) * 1000;
+    const stagger = (D.stagger / D.speed / deck.hurry) * 1000;
     deck.order.forEach((index, position) => {
       const card = deck.cards[index];
       if (card.pos === position) return;
@@ -1122,14 +1124,21 @@ function start(renderer) {
     const now = performance.now();
     const still = reducedMotion;
 
-    // Колесо задаёт, какая купюра должна быть впереди; башня догоняет его по одной
-    if (mode === 'wheel' && wheel.index >= 0 && now >= deck.nextShift) {
+    // Колесо задаёт, какая купюра должна быть впереди; башня догоняет его по одной.
+    // Чем сильнее башня отстала, тем чаще смены и быстрее пружины — после быстрой прокрутки
+    // она догоняет колесо почти сразу, а не листает все купюры с обычной скоростью
+    let backlog = 0;
+    if (mode === 'wheel' && wheel.index >= 0) {
       const diff = mod(rank[wheel.index] - rank[deckFront()], COUNT);
-      if (diff) {
+      backlog = Math.min(diff, COUNT - diff);
+      if (backlog && now >= deck.nextShift) {
         shift(diff <= COUNT / 2 ? 1 : -1);
-        deck.nextShift = now + (D.queueGap * 1000) / D.speed;
+        const hurry = Math.min(D.maxHurry, backlog);
+        deck.nextShift = now + (D.queueGap * 1000) / D.speed / hurry;
       }
     }
+    const hurryTarget = 1 + (Math.min(D.maxHurry, backlog) - 1) * 0.35 * (backlog > 1);
+    deck.hurry += (hurryTarget - deck.hurry) * damp(0.2, dt);
 
     // Раздвижка при наведении
     const spreadTarget = hovered && !still ? D.hoverSpread : 0;
@@ -1137,9 +1146,9 @@ function start(renderer) {
     deck.spreadV += (so * so * (spreadTarget - deck.spread) - 2 * 0.9 * so * deck.spreadV) * dt;
     deck.spread += deck.spreadV * dt;
 
-    const restOmega = TAU * 1.7 * D.speed;
+    const restOmega = TAU * 1.7 * D.speed * deck.hurry;
     const restZeta = still ? 1 : 1 - 0.72 * D.bounce;
-    const moveOmega = TAU * 1.9 * D.speed;
+    const moveOmega = TAU * 1.9 * D.speed * deck.hurry;
     deck.cards.forEach((card, index) => {
       const target = targetOf(card, index, now);
       const moving = card.phase === 'exit' || card.phase === 'enter';
