@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import { imageFor } from './placeholder.js';
+import { sound } from './sound.js';
 
 const COLORS = {
   water: '#A79F91',
@@ -313,6 +314,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   // Уход со строки — с задержкой, чтобы успеть перевести курсор на купюру или номинал.
   function hoverList(i) {
     clearTimeout(pickTimer);
+    if (i !== listHover) sound.tick(); // тот же щелчок, что при прокрутке колеса
     listHover = i;
     setHover(i);
     updatePick();
