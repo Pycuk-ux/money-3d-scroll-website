@@ -1,5 +1,6 @@
-// Звуки интерфейса без файлов: щелчок колеса и шелест купюры синтезируются в Web Audio один раз
-// при включении. Звук выключен по умолчанию, выбор хранится в localStorage.
+// Звуки интерфейса: щелчок колеса и шелест купюры. Файлы загружаются и декодируются один раз
+// при включении звука и играют через Web Audio без задержки.
+// Звук выключен по умолчанию, выбор хранится в localStorage.
 // Браузер разрешает звук только после действия пользователя — до первого клика или нажатия
 // клавиши звуки молча пропускаются.
 
@@ -20,37 +21,23 @@ function save() {
   try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch { /* приватный режим */ }
 }
 
-// Буфер из функции sample(t) → [-1, 1]
-function render(seconds, sample) {
-  const rate = ctx.sampleRate;
-  const buffer = ctx.createBuffer(1, Math.ceil(seconds * rate), rate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = sample(i / rate, i);
-  return buffer;
-}
+// Файлы звуков: щелчки храповика (assets/sounds/tick-*.mp3 — три отдельных щелчка из одной записи,
+// чтобы прокрутка не звучала одинаково) и шелест бумаги для переворота купюры
+const FILES = {
+  tick: ['assets/sounds/tick-1.mp3', 'assets/sounds/tick-2.mp3', 'assets/sounds/tick-3.mp3'],
+  flip: ['assets/sounds/flip.mp3'],
+};
 
-function build() {
-  // Щелчок: короткий всплеск шума и высокий тон, оба гаснут за несколько миллисекунд
-  let prev = 0;
-  buffers.tick = render(0.045, (t) => {
-    const white = Math.random() * 2 - 1;
-    const click = (white - prev) * 0.5; // разность соседних — остаются только высокие частоты
-    prev = white;
-    return click * Math.exp(-t / 0.0035) * 0.7 + Math.sin(2 * Math.PI * 2300 * t) * Math.exp(-t / 0.006) * 0.35;
-  });
-
-  // Шелест бумаги: шум с мягкой огибающей и редкими потрескиваниями волокон
-  const T = 0.32;
-  let low = 0;
-  let last = 0;
-  buffers.flip = render(T, (t) => {
-    const white = Math.random() * 2 - 1;
-    low += (white - low) * 0.35; // срезаем самый верх, чтобы не шипело
-    const air = low - last * 0.6;
-    last = low;
-    const env = Math.sin(Math.PI * Math.min(1, t / T)) ** 2 * Math.exp(-t / 0.22);
-    const crackle = Math.random() < 0.004 ? (Math.random() * 2 - 1) * 0.9 : 0;
-    return (air * 0.9 + crackle) * env;
+function load() {
+  Object.entries(FILES).forEach(([name, urls]) => {
+    buffers[name] = [];
+    urls.forEach((url) => {
+      fetch(url)
+        .then((r) => r.arrayBuffer())
+        .then((data) => ctx.decodeAudioData(data))
+        .then((buffer) => { buffers[name].push(buffer); })
+        .catch(() => { /* без звука, но сайт работает */ });
+    });
   });
 }
 
@@ -62,7 +49,7 @@ function ensure() {
   master = ctx.createGain();
   master.gain.value = VOLUME;
   master.connect(ctx.destination);
-  build();
+  load();
   return ctx;
 }
 
@@ -73,9 +60,10 @@ function unlock() {
 ['pointerdown', 'keydown', 'touchstart'].forEach((type) => window.addEventListener(type, unlock, { passive: true }));
 
 function play(name, { volume = 1, rate = 1 } = {}) {
-  if (!enabled || !ctx || ctx.state !== 'running') return;
+  const list = buffers[name];
+  if (!enabled || !ctx || ctx.state !== 'running' || !list?.length) return;
   const source = ctx.createBufferSource();
-  source.buffer = buffers[name];
+  source.buffer = list[Math.floor(Math.random() * list.length)];
   source.playbackRate.value = rate;
   const gain = ctx.createGain();
   gain.gain.value = volume;
