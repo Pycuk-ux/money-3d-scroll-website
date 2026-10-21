@@ -674,7 +674,7 @@ function start(renderer) {
         wheel.setActive(false);
         map.setActive(true);
         moveMasthead(true, quick);
-        sound.riffle();
+        sound.riffle(quick ? 0 : 0.3); // в такт купюрам, которые срываются вправо
         sound.globe(true, quick ? 0 : 0.15); // глобус въезжает через 0.15 с
         const tl = gsap.timeline({
           onComplete: () => {
@@ -706,7 +706,7 @@ function start(renderer) {
     root.classList.add('is-transit');
     map.setActive(false);
     moveMasthead(false, quick);
-    sound.riffle(quick ? 0 : 0.2); // вместе с возвращением купюр (fly стартует через 0.2 с)
+    sound.riffle(quick ? 0 : 0.6); // в такт купюрам, которые прилетают обратно
     sound.globe(false);
     mode = 'wheel';
     root.dataset.view = 'wheel';
