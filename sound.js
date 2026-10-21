@@ -26,7 +26,12 @@ function save() {
 const FILES = {
   tick: ['assets/sounds/tick-1.mp3', 'assets/sounds/tick-2.mp3', 'assets/sounds/tick-3.mp3'],
   flip: ['assets/sounds/flip.mp3'],
+  // Обратный свист: нарастает к пику (через 0.245 с от начала файла) и обрывается — купюра подлетает.
+  // whoosh-out — тот же звук задом наперёд: резкое начало и затухание — купюра улетает
+  whooshIn: ['assets/sounds/whoosh-in.mp3'],
+  whooshOut: ['assets/sounds/whoosh-out.mp3'],
 };
+const WHOOSH_PEAK = 0.245;
 
 function load() {
   Object.entries(FILES).forEach(([name, urls]) => {
@@ -59,7 +64,7 @@ function unlock() {
 }
 ['pointerdown', 'keydown', 'touchstart'].forEach((type) => window.addEventListener(type, unlock, { passive: true }));
 
-function play(name, { volume = 1, rate = 1 } = {}) {
+function play(name, { volume = 1, rate = 1, delay = 0 } = {}) {
   const list = buffers[name];
   if (!enabled || !ctx || ctx.state !== 'running' || !list?.length) return;
   const source = ctx.createBufferSource();
@@ -68,7 +73,7 @@ function play(name, { volume = 1, rate = 1 } = {}) {
   const gain = ctx.createGain();
   gain.gain.value = volume;
   source.connect(gain).connect(master);
-  source.start();
+  source.start(ctx.currentTime + Math.max(0, delay));
 }
 
 export const sound = {
@@ -88,5 +93,13 @@ export const sound = {
   // Купюра перевернулась на другую сторону
   flip() {
     play('flip', { rate: 0.9 + Math.random() * 0.2 });
+  },
+  // Купюра подлетает к экрану за duration секунд: пик свиста — ближе к концу полёта
+  whooshIn(duration) {
+    play('whooshIn', { delay: duration * 0.85 - WHOOSH_PEAK });
+  },
+  // Купюра улетает обратно
+  whooshOut() {
+    play('whooshOut');
   },
 };

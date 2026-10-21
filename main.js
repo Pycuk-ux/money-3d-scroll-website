@@ -797,6 +797,7 @@ function start(renderer) {
     lenis.scrollTo(0, { immediate: true, force: true });
 
     const to = detailRect();
+    sound.whooshIn(dur);
     const tl = gsap.timeline({
       onComplete: () => {
         pose.bind = 'detail';
@@ -823,6 +824,7 @@ function start(renderer) {
     if (busy || mode !== 'detail') return;
     busy = true;
     lenis.stop();
+    sound.whooshOut();
     runClose();
   }
 
