@@ -370,6 +370,8 @@ function start(renderer) {
   hitArea.addEventListener('click', () => openDetail(frontIndex(), 'wheel'));
   viewButtons.forEach((b) => b.addEventListener('click', () => switchView(b.dataset.view)));
   langButtons.forEach((b) => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+  // Щелчок на нажатие любой кнопки: переключатели, чипы, стрелки, закрытие, список и значки карты
+  document.addEventListener('click', (e) => { if (e.target.closest?.('button')) sound.click(); });
   const soundButton = document.querySelector('.sound__toggle');
   const showSound = () => soundButton.setAttribute('aria-pressed', String(sound.enabled));
   soundButton.addEventListener('click', () => {
