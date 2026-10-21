@@ -9,6 +9,7 @@ import { ITEMS, UI, LANGS } from './data.js';
 import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
 import { loadRates, usdPer } from './rates.js';
+import { sound } from './sound.js';
 
 /* ---------- Настройки ---------- */
 
@@ -320,6 +321,7 @@ function start(renderer) {
   const pose = { x: 0, y: 0, w: 1, bind: 'center' };
   const rot = { y: 0, base: 0, flip: Math.PI / 2, vy: 0, dragging: false, scroll: 0, scrollOn: false };
   const tilt = { x: 0, y: 0 };
+  let flipSide = null; // какой стороной купюра на странице повёрнута к зрителю — для звука
   const fade = { stack: 0 }; // видимость стопки (кроме главной купюры)
   const fly = { x: 0 }; // уход стопки вправо при переходе на карту: 0 — на месте, 1 — за экраном
 
@@ -356,7 +358,8 @@ function start(renderer) {
     text,
     labels: t,
     order: () => seq,
-    onChange: () => {},
+    // Щелчок на каждую смену строки — только когда колесо крутит пользователь
+    onChange: () => { if (mode === 'wheel' && !busy) sound.tick(Math.abs(wheel.velocity)); },
     onHover: () => {},
     onOpen: (i) => openDetail(i, 'wheel'),
   });
@@ -366,6 +369,13 @@ function start(renderer) {
   hitArea.addEventListener('click', () => openDetail(frontIndex(), 'wheel'));
   viewButtons.forEach((b) => b.addEventListener('click', () => switchView(b.dataset.view)));
   langButtons.forEach((b) => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+  const soundButton = document.querySelector('.sound__toggle');
+  const showSound = () => soundButton.setAttribute('aria-pressed', String(sound.enabled));
+  soundButton.addEventListener('click', () => {
+    sound.set(!sound.enabled);
+    showSound();
+  });
+  showSound();
   detail.querySelector('.detail__close').addEventListener('click', closeDetail);
   detail.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => stepDetail(Number(b.dataset.step))));
 
@@ -487,6 +497,7 @@ function start(renderer) {
     root.lang = lang;
     langButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     langNav.setAttribute('aria-label', ui.language);
+    soundButton.setAttribute('aria-label', ui.sound);
     switcher.setAttribute('aria-label', ui.modes);
     viewButtons.forEach((b) => { b.textContent = ui[b.dataset.view]; });
     document.querySelectorAll('[data-i18n]').forEach((n) => { n.textContent = ui[n.dataset.i18n].replaceAll('{n}', COUNT); });
@@ -1207,6 +1218,15 @@ function start(renderer) {
         rot.vy = 0;
         rot.y += (Math.round(rot.y / Math.PI) * Math.PI - rot.y) * damp(0.08, dt);
       }
+    }
+
+    // Шелест, когда купюра на странице поворачивается к зрителю другой стороной (ребро — π/2)
+    if (mode === 'detail') {
+      const side = Math.round((rot.y + rot.scroll) / Math.PI);
+      if (flipSide !== null && side !== flipSide && !busy) sound.flip();
+      flipSide = side;
+    } else {
+      flipSide = null;
     }
 
     const k = view.worldH / view.h; // мировых единиц на пиксель

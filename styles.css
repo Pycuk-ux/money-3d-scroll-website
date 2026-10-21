@@ -223,7 +223,17 @@ html.is-flipping * {
   background: var(--color-chip);
 }
 
-/* Правый верхний угол: вид коллекции и язык */
+/* Переключатель звука: волны — звук включён, крестик — выключен */
+.segmented .sound__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 9px;
+}
+.sound__toggle[aria-pressed="true"] .sound__off,
+.sound__toggle[aria-pressed="false"] .sound__waves { display: none; }
+
+/* Правый верхний угол: вид коллекции, язык и звук */
 .controls {
   position: fixed;
   top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
