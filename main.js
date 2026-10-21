@@ -675,6 +675,7 @@ function start(renderer) {
         map.setActive(true);
         moveMasthead(true, quick);
         sound.riffle();
+        sound.globe(true, quick ? 0 : 0.15); // глобус въезжает через 0.15 с
         const tl = gsap.timeline({
           onComplete: () => {
             mode = 'map';
@@ -706,6 +707,7 @@ function start(renderer) {
     map.setActive(false);
     moveMasthead(false, quick);
     sound.riffle(quick ? 0 : 0.2); // вместе с возвращением купюр (fly стартует через 0.2 с)
+    sound.globe(false);
     mode = 'wheel';
     root.dataset.view = 'wheel';
     wheel.setActive(true);

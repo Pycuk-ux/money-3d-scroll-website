@@ -28,6 +28,9 @@ const FILES = {
   flip: ['assets/sounds/flip.mp3'],
   click: ['assets/sounds/click.mp3'], // нажатие любой кнопки
   riffle: ['assets/sounds/riffle.mp3'], // пересчёт пачки, ускоренный вдвое: башня улетает и возвращается
+  // Мягкий свист глобуса, подогнан под длину въезда (1.2 с) и, задом наперёд, ухода (1.1 с)
+  globeIn: ['assets/sounds/globe-in.mp3'],
+  globeOut: ['assets/sounds/globe-out.mp3'],
   // Обратный свист: нарастает к пику (через 0.245 с от начала файла) и обрывается — купюра подлетает.
   // whoosh-out — тот же звук задом наперёд: резкое начало и затухание — купюра улетает
   whooshIn: ['assets/sounds/whoosh-in.mp3'],
@@ -95,6 +98,10 @@ export const sound = {
   // Купюры башни улетают на карту или возвращаются с неё
   riffle(delay = 0) {
     play('riffle', { delay, volume: 0.8 });
+  },
+  // Глобус въезжает на экран / уезжает
+  globe(entering, delay = 0) {
+    play(entering ? 'globeIn' : 'globeOut', { delay, volume: 0.8 });
   },
   // Нажатие кнопки
   click() {
