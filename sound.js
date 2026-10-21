@@ -27,6 +27,7 @@ const FILES = {
   tick: ['assets/sounds/tick-1.mp3', 'assets/sounds/tick-2.mp3', 'assets/sounds/tick-3.mp3'],
   flip: ['assets/sounds/flip.mp3'],
   click: ['assets/sounds/click.mp3'], // нажатие любой кнопки
+  riffle: ['assets/sounds/riffle.mp3'], // пересчёт пачки, ускоренный вдвое: башня улетает и возвращается
   // Обратный свист: нарастает к пику (через 0.245 с от начала файла) и обрывается — купюра подлетает.
   // whoosh-out — тот же звук задом наперёд: резкое начало и затухание — купюра улетает
   whooshIn: ['assets/sounds/whoosh-in.mp3'],
@@ -90,6 +91,10 @@ export const sound = {
     if (now - lastTick < 35) return;
     lastTick = now;
     play('tick', { volume: 0.6 + 0.4 * Math.min(1, strength), rate: 0.95 + Math.random() * 0.1 });
+  },
+  // Купюры башни улетают на карту или возвращаются с неё
+  riffle(delay = 0) {
+    play('riffle', { delay, volume: 0.8 });
   },
   // Нажатие кнопки
   click() {
