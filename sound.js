@@ -27,7 +27,9 @@ const FILES = {
   tick: ['assets/sounds/tick-1.mp3', 'assets/sounds/tick-2.mp3', 'assets/sounds/tick-3.mp3'],
   flip: ['assets/sounds/flip.mp3'],
   click: ['assets/sounds/click.mp3'], // нажатие любой кнопки
-  riffle: ['assets/sounds/riffle.mp3'], // пересчёт пачки, ускоренный вдвое: башня улетает и возвращается
+  // Шелест купюр башни: riffle-out — улетают на карту, riffle-in — та же запись задом наперёд, возвращаются
+  riffleOut: ['assets/sounds/riffle-out.mp3'],
+  riffleIn: ['assets/sounds/riffle-in.mp3'],
   // Мягкий свист глобуса, подогнан под длину въезда (1.2 с) и, задом наперёд, ухода (1.1 с)
   globeIn: ['assets/sounds/globe-in.mp3'],
   globeOut: ['assets/sounds/globe-out.mp3'],
@@ -95,9 +97,9 @@ export const sound = {
     lastTick = now;
     play('tick', { volume: 0.6 + 0.4 * Math.min(1, strength), rate: 0.95 + Math.random() * 0.1 });
   },
-  // Купюры башни улетают на карту или возвращаются с неё
-  riffle(delay = 0) {
-    play('riffle', { delay, volume: 0.8 });
+  // Купюры башни улетают на карту (leaving) или возвращаются с неё
+  riffle(leaving, delay = 0) {
+    play(leaving ? 'riffleOut' : 'riffleIn', { delay, volume: 0.8 });
   },
   // Глобус въезжает на экран / уезжает
   globe(entering, delay = 0) {
