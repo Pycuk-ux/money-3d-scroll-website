@@ -6,6 +6,8 @@
 // caption — номинал; пока он неизвестен, показывается название валюты.
 // details — текст страницы купюры; если его нет, страница показывает основные данные.
 
+import { DETAILS } from './details.js';
+
 export const ITEMS = [
   {
     id: 'ukraine',
@@ -942,6 +944,9 @@ export const ITEMS = [
   },
 ];
 
+// Тексты страниц из details.js
+ITEMS.forEach((item) => { if (DETAILS[item.id]) item.details = DETAILS[item.id]; });
+
 export const UI = {
   ru: {
     modes: 'Вид коллекции',
@@ -951,6 +956,7 @@ export const UI = {
     countries: 'Страны коллекции',
     language: 'Язык',
     sound: 'Звук',
+    story: 'Как она ко мне попала',
     close: 'Закрыть',
     prev: 'К предыдущей',
     next: 'К следующей',
@@ -974,6 +980,7 @@ export const UI = {
     countries: 'Countries in the collection',
     language: 'Language',
     sound: 'Sound',
+    story: 'How it got to me',
     close: 'Close',
     prev: 'Previous',
     next: 'Next',

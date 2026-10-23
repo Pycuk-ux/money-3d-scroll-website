@@ -550,7 +550,12 @@ function start(renderer) {
       facts.append(fact);
     });
     plate.append(facts);
-    if (d?.summary) {
+    // Как купюра попала в коллекцию: подпись, короткий заголовок и сама история
+    if (d?.story) {
+      const story = node('div', 'plate__summary plate__story');
+      story.append(node('p', 'label', ui.story), node('h2', 'plate__story-title', d.story[0]), node('p', '', d.story[1]));
+      plate.append(story);
+    } else if (d?.summary) {
       const summary = node('div', 'plate__summary');
       summary.append(node('p', 'label', d.summary[0]), node('p', '', d.summary[1]));
       plate.append(summary);

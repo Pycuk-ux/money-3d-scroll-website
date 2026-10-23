@@ -861,6 +861,16 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 
 .plate__summary p:last-child { font-size: 1.125rem; line-height: 1.4; font-weight: 600; }
 
+/* История о том, как купюра попала в коллекцию: заголовок крупнее, сам текст обычный */
+.plate__story-title {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: var(--tracking-head);
+}
+.plate__story p:last-child { font-weight: 400; }
+
 /* Разделы текста */
 .detail-sections {
   width: min(var(--text-width), 100%);
