@@ -1,8 +1,9 @@
 # Markdown с текстами купюр → details.js. Структура страницы — как в исходном файле,
 # «История в одном предложении» заменяется на story (как купюра попала в коллекцию).
 import json, re, sys
+# src = '-' — только привести к единому виду то, что уже есть в details.js
 src, out = sys.argv[1], sys.argv[2]
-md = open(src, encoding='utf-8').read()
+md = open(src, encoding='utf-8').read() if src != '-' else ''
 IDS = ['armenia', 'azerbaijan', 'belarus', 'bosnia-and-herzegovina', 'brazil']
 TITLES = {
   'ru': ['Драм — Армения', 'Манат — Азербайджан', 'Белорусский рубль — Беларусь', 'Конвертируемая марка — Босния и Герцеговина', 'Реал — Бразилия'],
@@ -55,19 +56,63 @@ def parse(block, lang, idx):
         sec['list' if kind == 'list' else 'people' if kind == 'people' else 'text'] = items
     return d
 
-ru, en = md.split('# English version')
-ru = ru.split('# Русская версия')[1]
+# Единый вид страницы для всех купюр:
+# - в плашке только эмитент, валюта, материал (с большой буквы) и размер;
+# - «Три интересных факта про дизайн» (или «Несколько…», если фактов не три);
+# - «Дизайн, авторы, художники» без строк вида «информация не найдена».
+FACTS = {'ru': ['Эмитент', 'Валюта', 'Материал', 'Размер'], 'en': ['Issuer', 'Currency', 'Material', 'Size']}
+CURRENCY = {  # если валюты нет в фактах исходника
+  'ukraine': {'ru': 'украинская гривна (UAH)', 'en': 'Ukrainian hryvnia (UAH)'},
+  'bangladesh': {'ru': 'бангладешская така (BDT)', 'en': 'Bangladeshi taka (BDT)'},
+}
+FACTS_TITLE = {'ru': ('Три интересных факта про дизайн', 'Несколько интересных фактов про дизайн'),
+               'en': ('Three interesting design facts', 'A few interesting design facts')}
+PEOPLE_TITLE = {'ru': 'Дизайн, авторы, художники', 'en': 'Design, authors, artists'}
+NOT_FOUND = ('информация', 'no information')
+
+def normalize(id_, lang, d):
+    facts = dict((k, v) for k, v in d['facts'])
+    if FACTS[lang][1] not in facts and id_ in CURRENCY:
+        facts[FACTS[lang][1]] = CURRENCY[id_][lang]
+    d['facts'] = [[k, facts[k][:1].upper() + facts[k][1:] if k == FACTS[lang][2] else facts[k]] for k in FACTS[lang] if k in facts]
+    d.pop('summary', None)
+    for sec in d['sections']:
+        if 'list' in sec:
+            sec['title'] = FACTS_TITLE[lang][0 if len(sec['list']) == 3 else 1]
+        if 'people' in sec:
+            sec['title'] = PEOPLE_TITLE[lang]
+            sec['people'] = [p for p in sec['people'] if not p[1].lower().startswith(NOT_FOUND)]
+    return d
+
 result = {}
-for lang, part in (('ru', ru), ('en', en)):
+parts = []
+if md:
+    ru, en = md.split('# English version')
+    parts = [('ru', ru.split('# Русская версия')[1]), ('en', en)]
+for lang, part in parts:
     blocks = re.split(r'\n## \d\d\. ', part)[1:]
     assert len(blocks) == 5, len(blocks)
     for i, b in enumerate(blocks):
         d = parse(b, lang, i)
         if IDS[i] in STORY:
             d['story'] = STORY[IDS[i]][lang]
-        result.setdefault(IDS[i], {})[lang] = d
-head = ('// Тексты страниц купюр. data.js подключает их к купюрам по id. Формат тот же, что у details в data.js,\n'
-        '// плюс story — текст «Как она ко мне попала»; пока истории нет, плашки на странице нет.\n'
-        '// Собрано из markdown скриптом scripts/details-from-md.py — новые страны удобно добавлять так же.\n\n')
+        result.setdefault(IDS[i], {})[lang] = normalize(IDS[i], lang, d)
+# Новые страны дописываются к уже имеющимся в details.js
+try:
+    old = open(out, encoding='utf-8').read()
+    existing = json.loads(old[old.index('{'):old.rindex('}') + 1])
+except (FileNotFoundError, ValueError):
+    existing = {}
+for id_, langs in result.items():  # истории «как попала» не теряются при повторной сборке
+    for lang, d in langs.items():
+        if 'story' not in d and existing.get(id_, {}).get(lang, {}).get('story'):
+            d['story'] = existing[id_][lang]['story']
+existing.update(result)
+result = {id_: {lang: normalize(id_, lang, d) for lang, d in langs.items()} for id_, langs in existing.items()}
+head = ('// Тексты страниц купюр, все в одном месте: data.js подключает их к купюрам по id.\n'
+        '// facts — эмитент, валюта, материал, размер; story — «Как купюра оказалась у меня» (пока её нет,\n'
+        '// блока на странице нет); sections — стороны, концепция, факты о дизайне, авторы, история; sources.\n'
+        '// Собирается скриптом scripts/details-from-md.py: python3 scripts/details-from-md.py <file.md> details.js\n'
+        '// добавляет страны из markdown, а с «-» вместо файла только приводит всё к единому виду.\n\n')
 open(out, 'w', encoding='utf-8').write(head + 'export const DETAILS = ' + json.dumps(result, ensure_ascii=False, indent=2) + ';\n')
 print({k: [len(v['ru']['sections']), len(v['en']['sections']), len(v['ru']['facts'])] for k, v in result.items()})
