@@ -61,6 +61,8 @@ const CONFIG = {
   scrollSpin: { turns: 1, startAt: 0.05 },
   stackDrop: 44, // px: на столько стопка у колеса ниже центра экрана (≈ 2.75rem)
   rateGap: 64, // px от нижнего края передней купюры до строки курса на главной
+  portraitDrop: 32, // телефон: башня ниже на 2rem
+  portraitRateLift: 8, // телефон: курс ближе к купюре на 0.5rem
   fov: 32,
   cameraZ: 5,
   maxTexture: 1024,
@@ -300,7 +302,7 @@ function start(renderer) {
   // Место стопки у колеса: справа на десктопе, сверху на телефоне
   function panelRect() {
     return view.portrait
-      ? { x: view.w * 0.5, y: view.h * 0.28, w: view.w * 0.74 }
+      ? { x: view.w * 0.5, y: view.h * 0.28 + CONFIG.portraitDrop, w: view.w * 0.74 }
       : { x: view.w * 0.72, y: view.h * 0.5 + CONFIG.stackDrop, w: Math.min(view.w * 0.34, 600) * 1.05 }; // +5%
   }
 
@@ -1183,7 +1185,9 @@ function start(renderer) {
     if (!fly.x) return 0;
     const local = clamp(fly.x * 1.3 - Math.max(0, depth) * 0.1, 0, 1);
     const eased = local < 0.5 ? 4 * local ** 3 : 1 - (-2 * local + 2) ** 3 / 2;
-    return eased * view.w * 0.8;
+    // До полного ухода за правый край экрана — на телефоне башня шире, ей лететь дальше
+    const panel = panelRect();
+    return eased * (view.w - panel.x + panel.w * 0.6 + 40);
   }
 
   const damp = (factor, dt) => 1 - Math.pow(1 - factor, dt * 60);
@@ -1365,7 +1369,8 @@ function start(renderer) {
     }
     const r = panelRect();
     const h = r.w / cards[front].aspect;
-    homeRate.style.transform = `translate(${r.x}px, ${r.y + h / 2 + CONFIG.rateGap}px) translateX(-50%)`;
+    const gap = CONFIG.rateGap - (view.portrait ? CONFIG.portraitRateLift : 0);
+    homeRate.style.transform = `translate(${r.x}px, ${r.y + h / 2 + gap}px) translateX(-50%)`;
   }
 
   // Прозрачная кнопка поверх передней купюры: клик открывает её страницу

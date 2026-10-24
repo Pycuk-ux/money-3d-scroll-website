@@ -26,6 +26,7 @@ const CONFIG = {
   texture: 4096, // ширина текстуры карты; на телефоне вдвое меньше
   maxLat: 70,
   maxZoom: 1.5, // колесо мыши увеличивает глобус до +50%
+  maxPinch: 1.2, // два пальца на телефоне — до +20%
   inertia: 0.06, // доля скорости, остающаяся через секунду
   focusDuration: 1.1,
 };
@@ -145,7 +146,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   const flag = el('div', 'map-flag');
   const flagIn = el('div', 'map-flag__in');
   const flagChip = el('button', 'map-pick__chip');
-  const flagArrow = el('button', 'map-pick__arrow', '↗');
+  const flagArrow = el('button', 'map-pick__arrow', '↗\uFE0E'); // \uFE0E — стрелка текстом, не эмодзи
   [flagChip, flagArrow].forEach((b) => {
     b.type = 'button';
     b.addEventListener('click', () => { if (flagItem >= 0) open(flagItem); });
@@ -163,7 +164,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   pickImg.draggable = false;
   pickThumb.append(pickImg);
   const pickChip = el('button', 'map-pick__chip');
-  const pickArrow = el('button', 'map-pick__arrow', '↗');
+  const pickArrow = el('button', 'map-pick__arrow', '↗\uFE0E');
   [pickThumb, pickChip, pickArrow].forEach((b) => {
     b.type = 'button';
     b.addEventListener('click', () => { if (pickItem >= 0) open(pickItem, pickImg); });
@@ -632,9 +633,28 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
 
   const drag = { id: null, x: 0, y: 0, moved: false, t: 0 };
 
+  // Два пальца на глобусе — увеличение до maxPinch и обратно; поворот на это время замирает
+  const touches = new Map();
+  let pinch = null;
+  const spread = () => {
+    const [a, b] = [...touches.values()];
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  };
+
   container.addEventListener('pointerdown', (e) => {
     if (!active || !world || e.button > 0) return;
     if (e.target.closest('.map-view__list, .map-pick')) return;
+    if (e.pointerType === 'touch') {
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (touches.size === 2) {
+        pinch = { from: spread(), zoom: zoom.target };
+        drag.id = null;
+        drag.moved = true; // это не касание по стране
+        center.vlon = 0;
+        center.vlat = 0;
+        return;
+      }
+    }
     const inside = Math.hypot(e.clientX - view.cx, e.clientY - view.cy) < view.r;
     if (!inside && !e.target.closest('.map-badge')) return;
     drag.id = e.pointerId;
@@ -649,6 +669,13 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
 
   window.addEventListener('pointermove', (e) => {
     if (!active || !world) return;
+    if (touches.has(e.pointerId)) {
+      touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && touches.size === 2) {
+        zoom.target = clamp(pinch.zoom * (spread() / pinch.from), 1, CONFIG.maxPinch);
+        return;
+      }
+    }
     if (drag.id === e.pointerId) {
       const dx = e.clientX - drag.x;
       const dy = e.clientY - drag.y;
@@ -677,6 +704,11 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   });
 
   function endDrag(e) {
+    touches.delete(e.pointerId);
+    if (touches.size < 2 && pinch) {
+      pinch = null;
+      setTimeout(() => { drag.moved = false; }, 0);
+    }
     if (drag.id !== e.pointerId) return;
     drag.id = null;
     container.classList.remove('is-dragging');
@@ -847,7 +879,16 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
       b.node.style.transform = `translate(${b.x - BADGE.w / 2}px, ${b.y - BADGE.h / 2}px)`;
       b.node.classList.toggle('is-hover', i === hoverItem || i === selected);
     });
-      placeFlag();
+      if (view.small) syncFlag();
+    placeFlag();
+  }
+
+  // Телефон: наведения нет, поэтому у выбранной страны плашка с номиналом висит над купюрой
+  // на глобусе всё время, пока купюра видна
+  function syncFlag() {
+    const want = selected >= 0 && badges[selected].shown ? selected : -1;
+    if (want >= 0 && (flagItem !== want || !flag.classList.contains('is-shown'))) showFlag(want);
+    else if (want < 0 && flagItem >= 0) hideFlag();
   }
 
   function setActive(on) {

@@ -45,7 +45,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     const name = el('span', 'wheel-item__name');
     const tags = el('span', 'wheel-item__tags');
     const caption = el('span', 'wheel-chip');
-    const open = el('button', 'wheel-chip wheel-chip--open', '↗');
+    const open = el('button', 'wheel-chip wheel-chip--open', '↗\uFE0E'); // стрелка текстом, не эмодзи
     open.type = 'button';
     open.tabIndex = -1;
     tags.append(caption, open);
@@ -69,15 +69,16 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     geo.lineH = portrait ? font * 1.12 * 1.25 : font * 1.12 + rem * 0.5;
     geo.r = Math.max(h * 0.95, 640);
-    geo.cy = h * (portrait ? 0.68 : 0.5);
+    // Телефон: активная страна — верхняя строка списка, как заголовок; остальные идут под ней
+    geo.cy = portrait ? h * 0.68 - 2 * geo.lineH : h * 0.5;
     geo.cx = (portrait ? 20 : Math.max(24, w * 0.075)) - geo.r;
     // На телефоне купюра стоит над колесом — верхние строки гаснут быстрее
     // Десктоп: строки гаснут к краю экрана — у края почти ноль (кривая в fadeOpacity)
     const toEdge = ((h / 2) / geo.lineH) * 0.85;
     geo.fadeUp = portrait ? 0.48 : 1 / toEdge;
     geo.fadeDown = portrait ? 0.105 : 1 / toEdge;
-    geo.rowsUp = portrait ? 2 : Infinity; // сколько строк видно над главной
-    geo.rowsDown = portrait ? 4 : Infinity; // и под ней
+    geo.rowsUp = portrait ? 0 : Infinity; // сколько строк видно над главной
+    geo.rowsDown = portrait ? 6 : Infinity; // и под ней
     // Телефон: крайние видимые строки сверху и снизу одинаково бледные
     geo.edgeOpacity = 0.3;
     if (portrait) {
@@ -129,7 +130,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
         row.li.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}rad) translateY(-50%)`;
       }
       const fadeOpacity = geo.flat
-        ? 1 - (1 - geo.edgeOpacity) * Math.min(1, dist / limit) // главная 100% → крайняя edgeOpacity
+        ? 1 - (1 - geo.edgeOpacity) * Math.min(1, dist / Math.max(limit, 0.5)) // главная 100% → крайняя edgeOpacity
         : Math.max(0, 1 - Math.max(0, dist - 0.5) * fade) ** 2;
       row.li.style.opacity = String(fadeOpacity * edge);
       row.li.classList.toggle('is-active', dist < 0.5);

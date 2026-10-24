@@ -1034,6 +1034,10 @@ html.lenis body { height: auto; }
     column-gap: 16px;
   }
   .map-view__country { font-size: 14px; }
+  /* У выбранной страны в списке — только купюра; номинал висит над её миниатюрой на глобусе */
+  .map-pick .map-pick__chip,
+  .map-pick .map-pick__arrow,
+  .map-flag .map-pick__arrow { display: none; }
 
   .plate { padding: 28px 20px; }
   .plate__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
