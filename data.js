@@ -213,7 +213,7 @@ export const ITEMS = [
     region: 'HK',
     currency: 'HKD',
     currencyName: { ru: 'гонконгский доллар', en: 'Hong Kong Dollar' },
-    material: 'polymer',
+    material: 'cotton',
     name: { ru: 'Гонконг', en: 'Hong Kong' },
     src: 'assets/objects/hong-kong-front.webp',
     back: 'assets/objects/hong-kong-back.webp',

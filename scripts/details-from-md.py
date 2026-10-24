@@ -115,4 +115,4 @@ head = ('// Тексты страниц купюр, все в одном мес�
         '// Собирается скриптом scripts/details-from-md.py: python3 scripts/details-from-md.py <file.md> details.js\n'
         '// добавляет страны из markdown, а с «-» вместо файла только приводит всё к единому виду.\n\n')
 open(out, 'w', encoding='utf-8').write(head + 'export const DETAILS = ' + json.dumps(result, ensure_ascii=False, indent=2) + ';\n')
-print({k: [len(v['ru']['sections']), len(v['en']['sections']), len(v['ru']['facts'])] for k, v in result.items()})
+print(len(result), 'стран:', ', '.join(f"{k} ({'+'.join(v)})" for k, v in result.items()))
