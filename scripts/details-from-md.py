@@ -69,6 +69,11 @@ FACTS_TITLE = {'ru': ('Три интересных факта про дизай�
                'en': ('Three interesting design facts', 'A few interesting design facts')}
 PEOPLE_TITLE = {'ru': 'Дизайн, авторы, художники', 'en': 'Design, authors, artists'}
 NOT_FOUND = ('информация', 'no information')
+# Эмитент, если в исходнике он сложнее одного названия (сменил имя и т.п.) — нынешнее название
+ISSUER = {
+  'brunei': {'ru': 'Центральный банк Брунея-Даруссалама', 'en': 'Brunei Darussalam Central Bank'},
+  'saudi-arabia': {'ru': 'Центральный банк Саудовской Аравии', 'en': 'Saudi Central Bank'},
+}
 
 def normalize(id_, lang, d):
     if 'facts' not in d:  # страница пока только с историей — плашка возьмёт основные данные купюры
@@ -76,7 +81,13 @@ def normalize(id_, lang, d):
     facts = dict((k, v) for k, v in d['facts'])
     if FACTS[lang][1] not in facts and id_ in CURRENCY:
         facts[FACTS[lang][1]] = CURRENCY[id_][lang]
-    d['facts'] = [[k, facts[k][:1].upper() + facts[k][1:] if k == FACTS[lang][2] else facts[k]] for k in FACTS[lang] if k in facts]
+    # Эмитент — без названия на другом языке в скобках (для этого есть вторая языковая версия)
+    issuer = FACTS[lang][0]
+    if issuer in facts:
+        facts[issuer] = ISSUER.get(id_, {}).get(lang) or re.sub(r'\s*\([^)]*\)', '', facts[issuer]).strip()
+    # Валюта и материал — с заглавной буквы
+    cap = (FACTS[lang][1], FACTS[lang][2])
+    d['facts'] = [[k, facts[k][:1].upper() + facts[k][1:] if k in cap else facts[k]] for k in FACTS[lang] if k in facts]
     d.pop('summary', None)
     for sec in d['sections']:
         if 'list' in sec:

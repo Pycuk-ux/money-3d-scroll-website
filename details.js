@@ -11,11 +11,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Украины (НБУ)"
+          "Национальный банк Украины"
         ],
         [
           "Валюта",
-          "украинская гривна (UAH)"
+          "Украинская гривна (UAH)"
         ],
         [
           "Материал",
@@ -146,7 +146,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Ukraine (NBU)"
+          "National Bank of Ukraine"
         ],
         [
           "Currency",
@@ -283,11 +283,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Бангладеш (Bangladesh Bank)"
+          "Банк Бангладеш"
         ],
         [
           "Валюта",
-          "бангладешская така (BDT)"
+          "Бангладешская така (BDT)"
         ],
         [
           "Материал",
@@ -549,7 +549,7 @@ export const DETAILS = {
         ],
         [
           "Валюта",
-          "армянский драм (AMD)"
+          "Армянский драм (AMD)"
         ],
         [
           "Материал",
@@ -743,11 +743,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Азербайджана (Azərbaycan Milli Bankı)"
+          "Национальный банк Азербайджана"
         ],
         [
           "Валюта",
-          "азербайджанский манат (AZN)"
+          "Азербайджанский манат (AZN)"
         ],
         [
           "Материал",
@@ -859,7 +859,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Azerbaijan (Azərbaycan Milli Bankı)"
+          "National Bank of Azerbaijan"
         ],
         [
           "Currency",
@@ -981,7 +981,7 @@ export const DETAILS = {
         ],
         [
           "Валюта",
-          "белорусский рубль (BYN)"
+          "Белорусский рубль (BYN)"
         ],
         [
           "Материал",
@@ -1223,7 +1223,7 @@ export const DETAILS = {
         ],
         [
           "Валюта",
-          "конвертируемая марка (BAM)"
+          "Конвертируемая марка (BAM)"
         ],
         [
           "Материал",
@@ -1340,7 +1340,7 @@ export const DETAILS = {
         ],
         [
           "Currency",
-          "convertible mark (BAM)"
+          "Convertible mark (BAM)"
         ],
         [
           "Material",
@@ -1455,11 +1455,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Бразилии (Banco Central do Brasil)"
+          "Центральный банк Бразилии"
         ],
         [
           "Валюта",
-          "бразильский реал (BRL)"
+          "Бразильский реал (BRL)"
         ],
         [
           "Материал",
@@ -1559,7 +1559,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Central Bank of Brazil (Banco Central do Brasil)"
+          "Central Bank of Brazil"
         ],
         [
           "Currency",
@@ -1665,11 +1665,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Денежно-кредитное управление Брунея-Даруссалама (Autoriti Monetari Brunei Darussalam), ныне Центральный банк Брунея-Даруссалама (Brunei Darussalam Central Bank)"
+          "Центральный банк Брунея-Даруссалама"
         ],
         [
           "Валюта",
-          "брунейский доллар (BND)"
+          "Брунейский доллар (BND)"
         ],
         [
           "Материал",
@@ -1749,7 +1749,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Autoriti Monetari Brunei Darussalam (Monetary Authority of Brunei Darussalam), now Brunei Darussalam Central Bank"
+          "Brunei Darussalam Central Bank"
         ],
         [
           "Currency",
@@ -1835,11 +1835,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Камбоджи (National Bank of Cambodia)"
+          "Национальный банк Камбоджи"
         ],
         [
           "Валюта",
-          "камбоджийский риель (KHR)"
+          "Камбоджийский риель (KHR)"
         ],
         [
           "Размер",
@@ -1955,11 +1955,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Народный банк Китая (中国人民银行)"
+          "Народный банк Китая"
         ],
         [
           "Валюта",
-          "китайский юань (CNY)"
+          "Китайский юань (CNY)"
         ],
         [
           "Размер",
@@ -2045,7 +2045,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "People's Bank of China (中国人民银行)"
+          "People's Bank of China"
         ],
         [
           "Currency",
@@ -2137,11 +2137,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Чешский национальный банк (Česká národní banka)"
+          "Чешский национальный банк"
         ],
         [
           "Валюта",
-          "чешская крона (CZK)"
+          "Чешская крона (CZK)"
         ],
         [
           "Материал",
@@ -2256,7 +2256,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Czech National Bank (Česká národní banka)"
+          "Czech National Bank"
         ],
         [
           "Currency",
@@ -2377,11 +2377,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Египта (Central Bank of Egypt)"
+          "Центральный банк Египта"
         ],
         [
           "Валюта",
-          "египетский фунт (EGP)"
+          "Египетский фунт (EGP)"
         ]
       ],
       "sections": [
@@ -2543,11 +2543,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Европейский центральный банк / Евросистема (European Central Bank)"
+          "Европейский центральный банк / Евросистема"
         ],
         [
           "Валюта",
-          "евро (EUR)"
+          "Евро (EUR)"
         ],
         [
           "Материал",
@@ -2751,11 +2751,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Грузии (საქართველოს ეროვნული ბანკი)"
+          "Национальный банк Грузии"
         ],
         [
           "Валюта",
-          "грузинский лари (GEL)"
+          "Грузинский лари (GEL)"
         ]
       ],
       "sections": [
@@ -2833,7 +2833,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Georgia (საქართველოს ეროვნული ბანკი)"
+          "National Bank of Georgia"
         ],
         [
           "Currency",
@@ -2917,11 +2917,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Ганы (Bank of Ghana)"
+          "Банк Ганы"
         ],
         [
           "Валюта",
-          "ганский седи (GHS)"
+          "Ганский седи (GHS)"
         ]
       ],
       "sections": [
@@ -3099,11 +3099,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Правительство Специального административного района Гонконг (Government of the Hong Kong SAR)"
+          "Правительство Специального административного района Гонконг"
         ],
         [
           "Валюта",
-          "гонконгский доллар (HKD)"
+          "Гонконгский доллар (HKD)"
         ],
         [
           "Материал",
@@ -3281,11 +3281,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Резервный банк Индии (Reserve Bank of India)"
+          "Резервный банк Индии"
         ],
         [
           "Валюта",
-          "индийская рупия (INR)"
+          "Индийская рупия (INR)"
         ],
         [
           "Материал",
@@ -3473,11 +3473,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Индонезии (Bank Indonesia)"
+          "Банк Индонезии"
         ],
         [
           "Валюта",
-          "индонезийская рупия (IDR)"
+          "Индонезийская рупия (IDR)"
         ],
         [
           "Материал",
@@ -3663,11 +3663,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный Банк Республики Казахстан (Қазақстан Ұлттық Банкі)"
+          "Национальный Банк Республики Казахстан"
         ],
         [
           "Валюта",
-          "казахстанский тенге (KZT)"
+          "Казахстанский тенге (KZT)"
         ],
         [
           "Размер",
@@ -3749,7 +3749,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of the Republic of Kazakhstan (Қазақстан Ұлттық Банкі)"
+          "National Bank of the Republic of Kazakhstan"
         ],
         [
           "Currency",
@@ -3837,11 +3837,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Кыргызской Республики (Кыргыз Республикасынын Улуттук банкы)"
+          "Национальный банк Кыргызской Республики"
         ],
         [
           "Валюта",
-          "киргизский сом (KGS)"
+          "Киргизский сом (KGS)"
         ],
         [
           "Материал",
@@ -3927,7 +3927,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of the Kyrgyz Republic (Кыргыз Республикасынын Улуттук банкы)"
+          "National Bank of the Kyrgyz Republic"
         ],
         [
           "Currency",
@@ -4019,11 +4019,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Китая, отделение в Макао (Banco da China, Sucursal de Macau)"
+          "Банк Китая, отделение в Макао"
         ],
         [
           "Валюта",
-          "патака Макао (MOP)"
+          "Патака Макао (MOP)"
         ]
       ],
       "sections": [
@@ -4101,7 +4101,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Bank of China, Macau Branch (Banco da China, Sucursal de Macau)"
+          "Bank of China, Macau Branch"
         ],
         [
           "Currency",
@@ -4185,11 +4185,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Негара Малайзия (Bank Negara Malaysia)"
+          "Банк Негара Малайзия"
         ],
         [
           "Валюта",
-          "малайзийский ринггит (MYR)"
+          "Малайзийский ринггит (MYR)"
         ],
         [
           "Материал",
@@ -4367,11 +4367,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Мексики (Banco de México)"
+          "Банк Мексики"
         ],
         [
           "Валюта",
-          "мексиканское песо (MXN)"
+          "Мексиканское песо (MXN)"
         ],
         [
           "Материал",
@@ -4457,7 +4457,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Bank of Mexico (Banco de México)"
+          "Bank of Mexico"
         ],
         [
           "Currency",
@@ -4549,11 +4549,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Монголии (Монголбанк)"
+          "Банк Монголии"
         ],
         [
           "Валюта",
-          "монгольский тугрик (MNT)"
+          "Монгольский тугрик (MNT)"
         ],
         [
           "Материал",
@@ -4639,7 +4639,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Bank of Mongolia (Mongolbank)"
+          "Bank of Mongolia"
         ],
         [
           "Currency",
@@ -4731,11 +4731,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Непал Растра Банк (Nepal Rastra Bank)"
+          "Непал Растра Банк"
         ],
         [
           "Валюта",
-          "непальская рупия (NPR)"
+          "Непальская рупия (NPR)"
         ]
       ],
       "sections": [
@@ -4877,11 +4877,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Филиппин (Bangko Sentral ng Pilipinas)"
+          "Центральный банк Филиппин"
         ],
         [
           "Валюта",
-          "филиппинское песо (PHP)"
+          "Филиппинское песо (PHP)"
         ],
         [
           "Материал",
@@ -5051,11 +5051,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Польши (Narodowy Bank Polski)"
+          "Национальный банк Польши"
         ],
         [
           "Валюта",
-          "польский злотый (PLN)"
+          "Польский злотый (PLN)"
         ],
         [
           "Материал",
@@ -5154,7 +5154,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Poland (Narodowy Bank Polski)"
+          "National Bank of Poland"
         ],
         [
           "Currency",
@@ -5259,11 +5259,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Румынии (Banca Naţională a României)"
+          "Национальный банк Румынии"
         ],
         [
           "Валюта",
-          "румынский лей (RON)"
+          "Румынский лей (RON)"
         ],
         [
           "Материал",
@@ -5349,7 +5349,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Romania (Banca Naţională a României)"
+          "National Bank of Romania"
         ],
         [
           "Currency",
@@ -5441,11 +5441,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Российской Федерации (Банк России)"
+          "Центральный банк Российской Федерации"
         ],
         [
           "Валюта",
-          "российский рубль (RUB)"
+          "Российский рубль (RUB)"
         ],
         [
           "Материал",
@@ -5531,7 +5531,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Central Bank of the Russian Federation (Bank of Russia)"
+          "Central Bank of the Russian Federation"
         ],
         [
           "Currency",
@@ -5623,11 +5623,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Агентство денежного обращения Саудовской Аравии (Saudi Arabian Monetary Agency, SAMA; ныне — Центральный банк Саудовской Аравии)"
+          "Центральный банк Саудовской Аравии"
         ],
         [
           "Валюта",
-          "саудовский риял (SAR)"
+          "Саудовский риял (SAR)"
         ],
         [
           "Материал",
@@ -5709,7 +5709,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Saudi Arabian Monetary Agency (SAMA; now the Saudi Central Bank)"
+          "Saudi Central Bank"
         ],
         [
           "Currency",
@@ -5797,11 +5797,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Народный банк Сербии (Народна банка Србије)"
+          "Народный банк Сербии"
         ],
         [
           "Валюта",
-          "сербский динар (RSD)"
+          "Сербский динар (RSD)"
         ],
         [
           "Материал",
@@ -5900,7 +5900,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Serbia (Народна банка Србије)"
+          "National Bank of Serbia"
         ],
         [
           "Currency",
@@ -6005,11 +6005,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Денежно-кредитное управление Сингапура (Monetary Authority of Singapore)"
+          "Денежно-кредитное управление Сингапура"
         ],
         [
           "Валюта",
-          "сингапурский доллар (SGD)"
+          "Сингапурский доллар (SGD)"
         ],
         [
           "Материал",
@@ -6221,11 +6221,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Южноафриканский резервный банк (South African Reserve Bank)"
+          "Южноафриканский резервный банк"
         ],
         [
           "Валюта",
-          "южноафриканский рэнд (ZAR)"
+          "Южноафриканский рэнд (ZAR)"
         ],
         [
           "Материал",
@@ -6427,11 +6427,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Кореи (Bank of Korea, 한국은행)"
+          "Банк Кореи"
         ],
         [
           "Валюта",
-          "южнокорейская вона (KRW)"
+          "Южнокорейская вона (KRW)"
         ],
         [
           "Материал",
@@ -6542,7 +6542,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Bank of Korea (한국은행)"
+          "Bank of Korea"
         ],
         [
           "Currency",
@@ -6659,11 +6659,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Шри-Ланки (Central Bank of Sri Lanka)"
+          "Центральный банк Шри-Ланки"
         ],
         [
           "Валюта",
-          "шри-ланкийская рупия (LKR)"
+          "Шри-ланкийская рупия (LKR)"
         ],
         [
           "Материал",
@@ -6857,11 +6857,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Национальный банк Таджикистана (Бонки миллии Тоҷикистон)"
+          "Национальный банк Таджикистана"
         ],
         [
           "Валюта",
-          "таджикский сомони (TJS)"
+          "Таджикский сомони (TJS)"
         ],
         [
           "Материал",
@@ -6937,7 +6937,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "National Bank of Tajikistan (Bonki milliyi Tojikiston)"
+          "National Bank of Tajikistan"
         ],
         [
           "Currency",
@@ -7019,11 +7019,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Таиланда (Bank of Thailand)"
+          "Банк Таиланда"
         ],
         [
           "Валюта",
-          "тайский бат (THB)"
+          "Тайский бат (THB)"
         ]
       ],
       "sections": [
@@ -7157,11 +7157,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Тринидада и Тобаго (Central Bank of Trinidad and Tobago)"
+          "Центральный банк Тринидада и Тобаго"
         ],
         [
           "Валюта",
-          "доллар Тринидада и Тобаго (TTD)"
+          "Доллар Тринидада и Тобаго (TTD)"
         ]
       ],
       "sections": [
@@ -7319,11 +7319,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Турецкой Республики (Türkiye Cumhuriyet Merkez Bankası)"
+          "Центральный банк Турецкой Республики"
         ],
         [
           "Валюта",
-          "турецкая лира (TRY)"
+          "Турецкая лира (TRY)"
         ],
         [
           "Материал",
@@ -7422,7 +7422,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Central Bank of the Republic of Türkiye (Türkiye Cumhuriyet Merkez Bankası)"
+          "Central Bank of the Republic of Türkiye"
         ],
         [
           "Currency",
@@ -7527,11 +7527,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Объединённых Арабских Эмиратов (Central Bank of the UAE)"
+          "Центральный банк Объединённых Арабских Эмиратов"
         ],
         [
           "Валюта",
-          "дирхам ОАЭ (AED)"
+          "Дирхам ОАЭ (AED)"
         ],
         [
           "Материал",
@@ -7701,11 +7701,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Королевский банк Шотландии (The Royal Bank of Scotland plc)"
+          "Королевский банк Шотландии"
         ],
         [
           "Валюта",
-          "фунт стерлингов (GBP)"
+          "Фунт стерлингов (GBP)"
         ],
         [
           "Материал",
@@ -7917,11 +7917,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Федеральная резервная система США (Federal Reserve System)"
+          "Федеральная резервная система США"
         ],
         [
           "Валюта",
-          "доллар США (USD)"
+          "Доллар США (USD)"
         ],
         [
           "Материал",
@@ -8099,11 +8099,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Центральный банк Республики Узбекистан (Ўзбекистон Республикаси Марказий банки)"
+          "Центральный банк Республики Узбекистан"
         ],
         [
           "Валюта",
-          "узбекский сум (UZS)"
+          "Узбекский сум (UZS)"
         ],
         [
           "Материал",
@@ -8185,7 +8185,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Central Bank of the Republic of Uzbekistan (Ўзбекистон Республикаси Марказий банки)"
+          "Central Bank of the Republic of Uzbekistan"
         ],
         [
           "Currency",
@@ -8273,11 +8273,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Государственный банк Вьетнама (Ngân hàng Nhà nước Việt Nam)"
+          "Государственный банк Вьетнама"
         ],
         [
           "Валюта",
-          "вьетнамский донг (VND)"
+          "Вьетнамский донг (VND)"
         ],
         [
           "Материал",
@@ -8359,7 +8359,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "State Bank of Vietnam (Ngân hàng Nhà nước Việt Nam)"
+          "State Bank of Vietnam"
         ],
         [
           "Currency",
@@ -8447,11 +8447,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Резервный банк Зимбабве (Reserve Bank of Zimbabwe)"
+          "Резервный банк Зимбабве"
         ],
         [
           "Валюта",
-          "зимбабвийский доллар (ZWN)"
+          "Зимбабвийский доллар (ZWN)"
         ]
       ],
       "sections": [
@@ -8613,11 +8613,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк Республики Колумбия (Banco de la República)"
+          "Банк Республики Колумбия"
         ],
         [
           "Валюта",
-          "колумбийский песо (COP)"
+          "Колумбийский песо (COP)"
         ],
         [
           "Материал",
@@ -8706,7 +8706,7 @@ export const DETAILS = {
       "facts": [
         [
           "Issuer",
-          "Bank of the Republic of Colombia (Banco de la República)"
+          "Bank of the Republic of Colombia"
         ],
         [
           "Currency",
@@ -8801,11 +8801,11 @@ export const DETAILS = {
       "facts": [
         [
           "Эмитент",
-          "Банк аль-Магриб (Bank Al-Maghrib)"
+          "Банк аль-Магриб"
         ],
         [
           "Валюта",
-          "марокканский дирхам (MAD)"
+          "Марокканский дирхам (MAD)"
         ],
         [
           "Материал",
