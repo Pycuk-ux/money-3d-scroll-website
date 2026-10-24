@@ -30,3 +30,6 @@ export function usdPer(code) {
 }
 
 export const ratesTimestamp = () => data?.timestamp ?? null;
+
+// Курсы загружены — значит, отсутствие валюты в них означает «нет данных», а не «ещё не пришло»
+export const ratesLoaded = () => !!data?.rates;

@@ -8,7 +8,7 @@ import { createMap } from './map.js';
 import { ITEMS, UI, LANGS } from './data.js';
 import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
-import { loadRates, usdPer } from './rates.js';
+import { loadRates, usdPer, ratesLoaded } from './rates.js';
 import { sound } from './sound.js';
 
 /* ---------- Настройки ---------- */
@@ -111,7 +111,9 @@ const t = () => UI[lang];
 function rateLine(i) {
   const code = ITEMS[i]?.currency;
   const usd = code && usdPer(code);
-  if (!usd) return '';
+  // Курсы загружены, но этой валюты в них нет (как у старого доллара Зимбабве) — пишем об этом,
+  // а не оставляем пустое место
+  if (!usd) return code && ratesLoaded() ? `1 ${code} = ${t().noData}` : '';
   const value = usd >= 1
     ? usd.toFixed(2)
     : usd.toLocaleString('en-US', { maximumSignificantDigits: 3, maximumFractionDigits: 10 });
@@ -323,7 +325,10 @@ function start(renderer) {
   const pose = { x: 0, y: 0, w: 1, bind: 'center' };
   const rot = { y: 0, base: 0, flip: Math.PI / 2, vy: 0, dragging: false, scroll: 0, scrollOn: false };
   const tilt = { x: 0, y: 0 };
-  let flipSide = null; // какой стороной купюра на странице повёрнута к зрителю — для звука
+  // Звук переворота: rot.y и прокрутка в прошлом кадре — шелест только когда сторону сменило перетаскивание
+  let flipSide = false;
+  let flipY = 0;
+  let flipScroll = 0;
   const fade = { stack: 0 }; // видимость стопки (кроме главной купюры)
   const fly = { x: 0 }; // уход стопки вправо при переходе на карту: 0 — на месте, 1 — за экраном
 
@@ -368,7 +373,10 @@ function start(renderer) {
 
   const frontIndex = () => deckFront();
 
-  hitArea.addEventListener('click', () => openDetail(frontIndex(), 'wheel'));
+  hitArea.addEventListener('click', () => {
+    if (flipMoved) { flipMoved = false; return; } // это был переворот, а не нажатие
+    openDetail(frontIndex(), 'wheel');
+  });
   viewButtons.forEach((b) => b.addEventListener('click', () => switchView(b.dataset.view)));
   langButtons.forEach((b) => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
   // Щелчок на нажатие любой кнопки: переключатели, чипы, стрелки, закрытие, список и значки карты
@@ -428,12 +436,16 @@ function start(renderer) {
   });
   document.addEventListener('pointerleave', () => { pointer.mouse = false; });
 
+  // Переворот перетаскиванием: на странице купюры — за саму купюру, на колесе — за переднюю
+  // купюру башни (поверх неё лежит кнопка-ссылка, поэтому клик после перетаскивания гасится)
   let drag = null;
+  let flipMoved = false;
   window.addEventListener('pointerdown', (e) => {
-    if (mode !== 'detail' || busy || e.button !== 0 || !isOverHero(e.clientX, e.clientY)) return;
-    if (e.target.closest('button, a')) return;
+    if (busy || e.button !== 0 || !isOverHero(e.clientX, e.clientY)) return;
+    if (mode === 'wheel' ? e.target !== hitArea : mode !== 'detail' || e.target.closest('button, a')) return;
     e.preventDefault();
-    drag = { id: e.pointerId, x: e.clientX, t: performance.now() };
+    drag = { id: e.pointerId, x: e.clientX, sx: e.clientX, t: performance.now() };
+    flipMoved = false;
     // Переворот не дальше чем на 180° в любую сторону от стороны, видимой в начале
     rot.base = Math.round(rot.y / Math.PI) * Math.PI;
     rot.dragging = true;
@@ -444,6 +456,7 @@ function start(renderer) {
     if (!drag || e.pointerId !== drag.id) return;
     const now = performance.now();
     const delta = (e.clientX - drag.x) * CONFIG.dragSpeed;
+    if (Math.abs(e.clientX - drag.sx) > 6) flipMoved = true;
     rot.y = clamp(rot.y + delta, rot.base - Math.PI, rot.base + Math.PI);
     rot.vy = delta / Math.max(0.001, (now - drag.t) / 1000);
     drag.x = e.clientX;
@@ -1233,8 +1246,14 @@ function start(renderer) {
       placeHomeRate();
     }
 
-    // Переворот на странице: инерция и доводка до лица или оборота
-    if (mode === 'detail' && !busy && !rot.dragging) {
+    // На колесе переворот принадлежит передней купюре: сменилась передняя — снова лицом
+    if (mode === 'wheel' && rot.front !== deckFront()) {
+      rot.front = deckFront();
+      if (!rot.dragging) Object.assign(rot, { y: 0, vy: 0, base: 0 });
+    }
+
+    // Переворот: инерция и доводка до лица или оборота (страница купюры и колесо)
+    if ((mode === 'detail' || mode === 'wheel') && !busy && !rot.dragging) {
       const flung = rot.y + rot.vy * dt;
       rot.y = clamp(flung, rot.base - Math.PI, rot.base + Math.PI);
       if (rot.y !== flung) rot.vy = 0; // бросок упёрся в 180° — дальше не крутится
@@ -1245,13 +1264,18 @@ function start(renderer) {
       }
     }
 
-    // Шелест, когда купюра на странице поворачивается к зрителю другой стороной (ребро — π/2)
-    if (mode === 'detail') {
-      const side = Math.round((rot.y + rot.scroll) / Math.PI);
-      if (flipSide !== null && side !== flipSide && !busy) sound.flip();
-      flipSide = side;
+    // Шелест, когда купюра поворачивается к зрителю другой стороной (ребро — π/2) от перетаскивания.
+    // Поворот от прокрутки страницы — без звука
+    if (mode === 'detail' || mode === 'wheel') {
+      // Сторона сменилась именно от rot.y (прокрутку берём прошлого кадра, чтобы её вклад не считался)
+      const before = Math.round((flipY + flipScroll) / Math.PI);
+      const after = Math.round((rot.y + flipScroll) / Math.PI);
+      if (flipSide && before !== after && !busy) sound.flip();
+      flipSide = true;
+      flipY = rot.y;
+      flipScroll = rot.scroll;
     } else {
-      flipSide = null;
+      flipSide = false;
     }
 
     const k = view.worldH / view.h; // мировых единиц на пиксель
@@ -1278,7 +1302,7 @@ function start(renderer) {
       let z = dc.z * towerScale * k;
       let w = stackW;
       let rx = tilt.x * frontWeight;
-      let ry = tilt.y * frontWeight;
+      let ry = (tilt.y + (mode === 'wheel' ? rot.y : 0)) * frontWeight;
       let opacity = clamp(D.visibleCards - dc.p, 0, 1) * fade.stack;
       // Дальние купюры уходят в цвет фона (как тень dim в CardSwap)
       let haze = D.dim * 0.62 * clamp(dc.p / Math.max(1, D.visibleCards - 1), 0, 1);
