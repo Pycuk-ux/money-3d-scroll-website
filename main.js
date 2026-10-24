@@ -564,10 +564,10 @@ function start(renderer) {
       facts.append(fact);
     });
     plate.append(facts);
-    // Как купюра попала в коллекцию: заголовок и сама история обычным текстом
+    // Как купюра попала в коллекцию: подпись как у фактов плашки и сама история обычным текстом
     if (d?.story) {
       const story = node('div', 'plate__summary plate__story');
-      story.append(node('h2', 'plate__story-title', ui.story), node('p', '', d.story));
+      story.append(node('p', 'label', ui.story), node('p', '', d.story));
       plate.append(story);
     } else if (d?.summary) {
       const summary = node('div', 'plate__summary');
