@@ -577,8 +577,8 @@ function start(renderer) {
     box.append(plate);
 
     const sections = node('div', 'detail-sections');
-    if (!d) sections.append(node('p', 'detail-placeholder', ui.placeholder));
-    d?.sections.forEach((sec) => {
+    if (!d?.sections?.length) sections.append(node('p', 'detail-placeholder', ui.placeholder));
+    d?.sections?.forEach((sec) => {
       const el = node('section', 'detail-section');
       el.append(node('h2', '', sec.title));
       if (sec.list) {

@@ -71,6 +71,8 @@ PEOPLE_TITLE = {'ru': 'Дизайн, авторы, художники', 'en': 'D
 NOT_FOUND = ('информация', 'no information')
 
 def normalize(id_, lang, d):
+    if 'facts' not in d:  # страница пока только с историей — плашка возьмёт основные данные купюры
+        return d
     facts = dict((k, v) for k, v in d['facts'])
     if FACTS[lang][1] not in facts and id_ in CURRENCY:
         facts[FACTS[lang][1]] = CURRENCY[id_][lang]
