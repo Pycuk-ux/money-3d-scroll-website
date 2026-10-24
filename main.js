@@ -1193,13 +1193,23 @@ function start(renderer) {
   /* --- Кадр --- */
 
   // Уход башни вправо: передняя купюра срывается первой, дальние — следом
+  function flyLocal(depth) {
+    return clamp(fly.x * 1.3 - Math.max(0, depth) * 0.1, 0, 1);
+  }
+
   function flyOffset(depth) {
     if (!fly.x) return 0;
-    const local = clamp(fly.x * 1.3 - Math.max(0, depth) * 0.1, 0, 1);
+    const local = flyLocal(depth);
     const eased = local < 0.5 ? 4 * local ** 3 : 1 - (-2 * local + 2) ** 3 / 2;
-    // До полного ухода за правый край экрана — на телефоне башня шире, ей лететь дальше
+    // С запасом за правый край: дальние купюры в перспективе сдвигаются меньше, им нужно лететь дальше
     const panel = panelRect();
-    return eased * (view.w - panel.x + panel.w * 0.6 + 40);
+    return eased * (view.w - panel.x + panel.w) * 1.4;
+  }
+
+  // Купюра гаснет на последней трети полёта — исчезает в движении, а не разом в конце
+  function flyFade(depth) {
+    if (!fly.x) return 1;
+    return 1 - clamp((flyLocal(depth) - 0.6) / 0.4, 0, 1);
   }
 
   const damp = (factor, dt) => 1 - Math.pow(1 - factor, dt * 60);
@@ -1303,7 +1313,7 @@ function start(renderer) {
       let w = stackW;
       let rx = tilt.x * frontWeight;
       let ry = (tilt.y + (mode === 'wheel' ? rot.y : 0)) * frontWeight;
-      let opacity = clamp(D.visibleCards - dc.p, 0, 1) * fade.stack;
+      let opacity = clamp(D.visibleCards - dc.p, 0, 1) * fade.stack * flyFade(dc.p);
       // Дальние купюры уходят в цвет фона (как тень dim в CardSwap)
       let haze = D.dim * 0.62 * clamp(dc.p / Math.max(1, D.visibleCards - 1), 0, 1);
 
