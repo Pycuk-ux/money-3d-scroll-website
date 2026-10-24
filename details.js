@@ -369,12 +369,12 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bb.org.bd/en/index.php/currency/fiftytaka",
-                "Bangladesh Bank — 50 Taka Banknotes",
+                "Банк Бангладеш — банкноты 50 так",
                 "официальные описания лицевой и оборотной сторон, даты выпуска и варианты дизайна"
               ],
               [
                 "https://beautifulbangladesh.gov.bd/loc/dhaka/93",
-                "Bangladesh Tourism Board — National Martyrs' Memorial",
+                "Туристический совет Бангладеш — Национальный мемориал мучеников",
                 "историческое значение мемориала, архитектура и автор проекта"
               ]
             ]
@@ -384,7 +384,7 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.banknotes.com/bd56.htm",
-                "Banknotes.com — Bangladesh 50 Taka, 2011",
+                "Banknotes.com — Бангладеш, 50 так, 2011",
                 "каталог банкноты, описание изображений и характеристики"
               ],
               [
@@ -399,7 +399,7 @@ export const DETAILS = {
               ],
               [
                 "https://en.numista.com/208208",
-                "Numista — 50 Taka (2011–2022)",
+                "Numista — 50 так (2011–2022)",
                 "изображения, основные характеристики и описание банкноты"
               ]
             ]
@@ -846,7 +846,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.pmgnotes.com/priceguide/world-note-prices.aspx?deid=1816956&subcat=2005-issue",
-                "PMG — Azerbaijan 1 Manat, 2005"
+                "PMG — Азербайджан, 1 манат, 2005"
               ]
             ]
           }
@@ -1720,23 +1720,23 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bdcb.gov.bn/currency/security-features",
-                "Brunei Darussalam Central Bank — Security Features"
+                "Центральный банк Брунея-Даруссалама — защитные признаки"
               ],
               [
                 "https://ambd.gov.bn/security-features-of-brunei-darussalam-polymer-bank-notes",
-                "Autoriti Monetari Brunei Darussalam — Security Features of Brunei Darussalam Polymer Bank Notes"
+                "Денежно-кредитное управление Брунея-Даруссалама — защитные признаки полимерных банкнот Брунея-Даруссалама"
               ],
               [
                 "https://www.bdcb.gov.bn/consumer/financial-education/central-bank/10-years-in-review",
-                "Brunei Darussalam Central Bank — 10 Years in Review"
+                "Центральный банк Брунея-Даруссалама — обзор за 10 лет"
               ],
               [
                 "https://www.seacen.org/brunei-darussalam-establishes-the-autoriti-monetari-brunei-darussalam-ambd/",
-                "SEACEN — Brunei Darussalam Establishes the Autoriti Monetari Brunei Darussalam"
+                "SEACEN — в Брунее-Даруссаламе создано Денежно-кредитное управление Брунея-Даруссалама"
               ],
               [
                 "https://en.numista.com/catalogue/note203614.html",
-                "Numista — 10 Ringgit (Brunei)"
+                "Numista — 10 ринггитов (Бруней)"
               ]
             ]
           }
@@ -1873,7 +1873,7 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.nbc.gov.kh/english/about_the_bank/banknotes_in_circulation.php",
-                "National Bank of Cambodia — Banknotes in Circulation"
+                "Национальный банк Камбоджи — банкноты в обращении"
               ],
               [
                 "https://www.realbanknotes.com/banknote/2755-Cambodia-p56a-10000-Riels-from-2001",
@@ -2223,19 +2223,19 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.cnb.cz/en/banknotes-and-coins/banknotes/100-czk-version-1997/",
-                "Czech National Bank — 100 CZK version 1997"
+                "Чешский национальный банк — 100 крон образца 1997 года"
               ],
               [
                 "https://www.cnb.cz/en/banknotes-and-coins/banknotes/protective-elements-czk-100-1997-and-1995-version/",
-                "Czech National Bank — Protective elements, CZK 100 (1997 and 1995 versions)"
+                "Чешский национальный банк — защитные элементы банкноты 100 крон (образцы 1997 и 1995 годов)"
               ],
               [
                 "https://www.cnb.cz/en/cnb-news/press-releases/CZK-100-to-CZK-2000-banknotes-with-thin-silvery-thread-no-longer-valid",
-                "Czech National Bank — CZK 100 to CZK 2,000 banknotes with thin silvery thread no longer valid"
+                "Чешский национальный банк — банкноты от 100 до 2 000 крон с тонкой серебристой нитью больше не действительны"
               ],
               [
                 "https://www.cnb.cz/cs/cnb-news/tiskove-zpravy/CNB-vydava-nove-vzory-bankovek-100-Kc-a-200-Kc/",
-                "ČNB — ČNB vydává nové vzory bankovek 100 Kč a 200 Kč"
+                "ЧНБ — ЧНБ выпускает новые образцы банкнот 100 и 200 крон"
               ],
               [
                 "https://www.epravo.cz/top/zakony/sbirka-zakonu/sb/1993/158",
@@ -2243,7 +2243,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.epravo.cz/top/zakony/sbirka-zakonu/sb/1997/236",
-                "Vyhláška ČNB č. 236/1997 Sb. o vydání bankovek po 100 Kč vzoru 1997"
+                "Постановление ЧНБ № 236/1997 Сб. о выпуске банкнот 100 крон образца 1997 года"
               ]
             ]
           }
@@ -2808,7 +2808,7 @@ export const DETAILS = {
             "links": [
               [
                 "https://nbg.gov.ge/en/georgian-money",
-                "National Bank of Georgia — Georgian Money"
+                "Национальный банк Грузии — грузинские деньги"
               ],
               [
                 "https://nbg.gov.ge/en/media/news/national-bank-of-georgia-starts-releasing-upgraded-lari-banknotes-in-circulation",
@@ -2816,7 +2816,7 @@ export const DETAILS = {
               ],
               [
                 "https://nbg.gov.ge/en/media/news/upgraded-lari-banknotes-win-international-award",
-                "NBG — Upgraded Lari Banknotes Win International Award"
+                "НБГ — обновлённые банкноты лари получили международную награду"
               ],
               [
                 "https://nbg.gov.ge/en/media/news/on-the-issuance-of-5-and-20-lari-banknotes-of-2021-emission-in-circulation",
@@ -2974,27 +2974,27 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bog.gov.gh/bank-notes-coins/features-of-currency-notes/",
-                "Bank of Ghana — Features of Currency Notes"
+                "Банк Ганы — особенности денежных знаков"
               ],
               [
                 "https://www.modernghana.com/news/270290/bank-of-ghana-to-introduce-gh2-note.html",
-                "Modern Ghana — Bank of Ghana to introduce GH¢2 note (2010)"
+                "Modern Ghana — Банк Ганы введёт банкноту 2 седи (2010)"
               ],
               [
                 "https://www.modernghana.com/news/275386/new-gh2-cedi-note-out-on-friday.html",
-                "Modern Ghana — New GH¢2 cedi note out on Friday (2010)"
+                "Modern Ghana — новая банкнота 2 седи выходит в пятницу (2010)"
               ],
               [
                 "https://globalvoices.org/2010/05/18/ghana-new-two-ghana-cedis-notes-unveiled/",
-                "Global Voices — Ghana: New Two Ghana Cedis Notes Unveiled"
+                "Global Voices — Гана: представлены новые банкноты 2 седи"
               ],
               [
                 "https://citinewsroom.com/2021/09/bank-of-ghana-to-phase-out-gh%c2%a21-and-gh%c2%a22-notes-soon/",
-                "Citi Newsroom — Bank of Ghana to phase out GH¢1 and GH¢2 notes (2021)"
+                "Citi Newsroom — Банк Ганы выведет из обращения банкноты 1 и 2 седи (2021)"
               ],
               [
                 "https://en.numista.com/203462",
-                "Numista — 2 Cedis (Ghana)"
+                "Numista — 2 седи (Гана)"
               ]
             ]
           }
@@ -3160,11 +3160,11 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.hkma.gov.hk/eng/key-functions/money/hong-kong-currency/notes/design-security-features-of-ten-dollar-paper-note/",
-                "HKMA — Ten-Dollar Paper Note"
+                "Валютное управление Гонконга — бумажная банкнота 10 долларов"
               ],
               [
                 "https://www.hkma.gov.hk/eng/news-and-media/press-releases/2002/06/20020628-3/",
-                "HKMA — Hong Kong's new $10 note (28.06.2002)"
+                "Валютное управление Гонконга — новая банкнота Гонконга 10 долларов (28.06.2002)"
               ],
               [
                 "https://www.info.gov.hk/gia/general/200206/28/0628187.htm",
@@ -3172,7 +3172,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.hkma.gov.hk/eng/key-functions/money/hong-kong-currency/notes/",
-                "HKMA — Notes"
+                "Валютное управление Гонконга — банкноты"
               ],
               [
                 "https://en.numista.com/catalogue/note203464.html",
@@ -3347,11 +3347,11 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=44533",
-                "Reserve Bank of India — RBI to Issue New Design ₹100 Denomination Banknote (19.07.2018)"
+                "Резервный банк Индии — РБИ выпустит банкноту ₹100 нового дизайна (19.07.2018)"
               ],
               [
                 "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=46387",
-                "Reserve Bank of India — Issue of ₹100 banknotes bearing the signature of Shri Shaktikanta Das (26.02.2019)"
+                "Резервный банк Индии — выпуск банкнот ₹100 с подписью Шактиканты Даса (26.02.2019)"
               ],
               [
                 "https://paisaboltahai.rbi.org.in/rupees-one-hundred.aspx",
@@ -3359,11 +3359,11 @@ export const DETAILS = {
               ],
               [
                 "https://www.rbi.org.in/commonman/Upload/English/FAQs/PDFs/INDIANCURRENCY15042025.pdf",
-                "Reserve Bank of India — Indian Currency FAQ (2025)"
+                "Резервный банк Индии — вопросы и ответы об индийской валюте (2025)"
               ],
               [
                 "https://whc.unesco.org/en/decisions/6111/",
-                "UNESCO World Heritage Centre — Decision 38 COM 8B.25: Rani-ki-Vav"
+                "Центр всемирного наследия ЮНЕСКО — решение 38 COM 8B.25: Рани-ки-Вав"
               ]
             ]
           }
@@ -3542,7 +3542,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.bi.go.id/id/publikasi/laporan/Documents/5_LPI2016-Bagian-III.pdf",
-                "Bank Indonesia — Laporan Perekonomian Indonesia 2016, Bagian III"
+                "Банк Индонезии — доклад об экономике Индонезии за 2016 год, часть III"
               ],
               [
                 "https://www.bi.go.id/id/publikasi/peraturan/Pages/PBI_241122.aspx",
@@ -3550,7 +3550,7 @@ export const DETAILS = {
               ],
               [
                 "https://cdn.setneg.go.id/_multimedia/document/20171205/1147Penerima_Gelar_Pahlawan_Nasional_1959-2017.pdf",
-                "Kementerian Sekretariat Negara RI — Penerima Gelar Pahlawan Nasional 1959–2017"
+                "Министерство государственного секретариата Индонезии — лауреаты звания «Национальный герой» 1959–2017"
               ],
               [
                 "https://www.bi.go.id/id/rupiah/gambar-uang/Detail-Uang.aspx?Bahan=Kertas&ID=4",
@@ -4250,15 +4250,15 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bnm.gov.my/-/launch-of-malaysia-s-new-currency-series",
-                "Bank Negara Malaysia — Launch of Malaysia's New Currency Series (2011)"
+                "Банк Негара Малайзия — запуск новой серии денежных знаков Малайзии (2011)"
               ],
               [
                 "https://www.bnm.gov.my/-/currency/banknotes/rm1",
-                "Bank Negara Malaysia — RM1"
+                "Банк Негара Малайзия — 1 ринггит"
               ],
               [
                 "https://www.bnm.gov.my/-/bank-negara-malaysia-to-issue-new-series-of-banknotes-and-coins",
-                "Bank Negara Malaysia — Bank Negara Malaysia to Issue New Series of Banknotes and Coins"
+                "Банк Негара Малайзия — Банк Негара Малайзия выпустит новую серию банкнот и монет"
               ],
               [
                 "https://www.bnm.gov.my/web/bnm-bank-notes/frequently-asked-questions-faqs-",
@@ -4432,19 +4432,19 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.banxico.org.mx/billetes-y-monedas/billete-20-pesos-familia-f-ci.html",
-                "Banco de México — Billete de 20 pesos de la familia F"
+                "Банк Мексики — банкнота 20 песо серии F (на испанском)"
               ],
               [
                 "https://www.banxico.org.mx/banknotes-and-coins/20-peso-banknote-circulation-.html",
-                "Banco de México — 20-peso banknote F"
+                "Банк Мексики — банкнота 20 песо серии F (на английском)"
               ],
               [
                 "https://www.banxico.org.mx/banknotes-and-coins/clear-window-security-banco-m.html",
-                "Banco de México — Clear window (защитный элемент)"
+                "Банк Мексики — прозрачное окно (защитный элемент)"
               ],
               [
                 "https://www.banxico.org.mx/billetes-y-monedas/en-proceso-retiro-circulacion.html",
-                "Banco de México — Банкноты в процессе изъятия"
+                "Банк Мексики — банкноты в процессе изъятия из обращения"
               ]
             ]
           }
@@ -4614,15 +4614,15 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.mongolbank.mn/en/banknote",
-                "Bank of Mongolia — Banknote"
+                "Банк Монголии — банкноты"
               ],
               [
                 "https://www.mongolbank.mn/en/p/1392",
-                "Bank of Mongolia — History of Modern Mongolian currency TOGROG"
+                "Банк Монголии — история современной монгольской валюты тугрик"
               ],
               [
                 "https://www.mongolbank.mn/en/p/1391",
-                "Bank of Mongolia — History of Mongolian currency"
+                "Банк Монголии — история монгольской валюты"
               ],
               [
                 "https://en.numista.com/207160",
@@ -4778,11 +4778,11 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.nrb.org.np/banknotes-security-features/",
-                "Nepal Rastra Bank — Bank Notes Security Features"
+                "Непал Растра Банк — защитные признаки банкнот"
               ],
               [
                 "https://www.nrb.org.np/ofg/notes-and-coins-of-nepal/",
-                "Nepal Rastra Bank — Notes and Coins of Nepal (Golden Jubilee publication)"
+                "Непал Растра Банк — банкноты и монеты Непала (юбилейное издание к 50-летию)"
               ],
               [
                 "https://www.collegenp.com/news/nepal-rastra-bank-circulated-rs-20-denomination-banknotes",
@@ -4790,7 +4790,7 @@ export const DETAILS = {
               ],
               [
                 "https://en.wikipedia.org/wiki/Nepalese_twenty-rupee_note",
-                "Wikipedia — Nepalese twenty-rupee note"
+                "Википедия — банкнота 20 непальских рупий"
               ]
             ]
           }
@@ -4938,11 +4938,11 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bsp.gov.ph/SitePages/CoinsAndNotes/NewGenerationCurrencyBanknotes.aspx",
-                "Bangko Sentral ng Pilipinas — New Generation Currency Banknotes"
+                "Центральный банк Филиппин — банкноты серии New Generation Currency"
               ],
               [
                 "https://www.bsp.gov.ph/SitePages/CoinsAndNotes/NewGenerationCurrencyBanknotesFeatures.aspx",
-                "Bangko Sentral ng Pilipinas — Security Features"
+                "Центральный банк Филиппин — защитные признаки"
               ],
               [
                 "https://www.bsp.gov.ph/Media_and_Research/Publications/BS10_A2.pdf",
@@ -4950,7 +4950,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.bsp.gov.ph/Pages/MediaAndResearch/PublicationsAndReports/regular_bsrevjul02.aspx",
-                "Bangko Sentral — Abaca in Philippine Banknotes"
+                "Центральный банк Филиппин — абака в филиппинских банкнотах"
               ]
             ]
           }
@@ -5125,23 +5125,23 @@ export const DETAILS = {
             "links": [
               [
                 "https://nbp.pl/en/coins-and-banknotes/banknotes-issued/10-zloty/",
-                "Narodowy Bank Polski — 10 złoty"
+                "Национальный банк Польши — 10 злотых"
               ],
               [
                 "https://nbp.pl/banknoty-i-monety/banknoty-obiegowe/10-zl/",
-                "Narodowy Bank Polski — Banknot obiegowy 10 zł"
+                "Национальный банк Польши — оборотная банкнота 10 злотых"
               ],
               [
                 "https://nbp.pl/wp-content/uploads/2023/03/Zabezpieczenia-Internet.pdf",
-                "NBP — Zabezpieczenia polskich banknotów (PDF)"
+                "НБП — защитные признаки польских банкнот (PDF)"
               ],
               [
                 "https://nbp.pl/wp-content/uploads/2022/11/bankoteka-20-en.pdf",
-                "NBP — Bankoteka No 20 (2019)"
+                "НБП — Bankoteka № 20 (2019)"
               ],
               [
                 "https://nbp.pl/en/coins-and-banknotes/banknotes/",
-                "Narodowy Bank Polski — Banknotes"
+                "Национальный банк Польши — банкноты"
               ]
             ]
           }
@@ -5688,11 +5688,11 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.sama.gov.sa/en-US/Currency/Pages/FifthIssue.aspx",
-                "SAMA — Fifth Issue"
+                "Центральный банк Саудовской Аравии — пятый выпуск"
               ],
               [
                 "https://www.sama.gov.sa/en-us/currency/pages/securityfeature.aspx",
-                "SAMA — Security Features for Fifth Issue"
+                "Центральный банк Саудовской Аравии — защитные признаки пятого выпуска"
               ],
               [
                 "https://rulebook.sama.gov.sa/en/entiresection/6789",
@@ -5875,7 +5875,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.nbs.rs/en/novac-i-placanja/novcanice/",
-                "National Bank of Serbia — Banknotes"
+                "Национальный банк Сербии — банкноты"
               ],
               [
                 "https://www.nbs.rs/export/sites/NBS_site/documents/propisi/propisi-trz/opticaj_50_dinara_2011.pdf",
@@ -6083,15 +6083,15 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.mas.gov.sg/currency/circulation-currency/circulation-currency-notes",
-                "Monetary Authority of Singapore — Circulation Currency: Notes"
+                "Денежно-кредитное управление Сингапура — денежные знаки в обращении: банкноты"
               ],
               [
                 "https://www.mas.gov.sg/news/media-releases/2007/mas-issues-5dollars-polymer-notes",
-                "Monetary Authority of Singapore — MAS Issues $5 Polymer Notes (2007)"
+                "Денежно-кредитное управление Сингапура — MAS выпускает полимерные банкноты 5 долларов (2007)"
               ],
               [
                 "https://www.mas.gov.sg/currency/circulation-currency/identifying-genuine-currency/singapore-polymer-notes-security-features",
-                "Monetary Authority of Singapore — Singapore Polymer Notes: Security Features"
+                "Денежно-кредитное управление Сингапура — полимерные банкноты Сингапура: защитные признаки"
               ],
               [
                 "https://www.nas.gov.sg/archivesonline/data/pdfdoc/1999090901.htm",
@@ -6099,7 +6099,7 @@ export const DETAILS = {
               ],
               [
                 "https://en.numista.com/203037",
-                "Numista — 5 Dollars (Singapore, polymer)"
+                "Numista — 5 долларов (Сингапур, полимер)"
               ]
             ]
           }
@@ -6286,15 +6286,15 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.resbank.co.za/en/home/what-we-do/banknotes-and-coin/Banknotes",
-                "South African Reserve Bank — Banknotes"
+                "Южноафриканский резервный банк — банкноты"
               ],
               [
                 "http://banknotes.resbank.co.za/banknotes",
-                "SARB — Mandela banknotes"
+                "ЮАРБ — банкноты с портретом Манделы"
               ],
               [
                 "http://banknotes.resbank.co.za/security",
-                "SARB — Security features"
+                "ЮАРБ — защитные признаки"
               ],
               [
                 "https://www.gov.za/news/media-statements/south-african-reserve-bank-unveils-new-banknotes-05-sep-2012",
@@ -6306,11 +6306,11 @@ export const DETAILS = {
               ],
               [
                 "https://www.sanews.gov.za/south-africa/marcus-first-use-new-mandela-notes",
-                "SAnews — Marcus first to use new Mandela notes"
+                "SAnews — Маркус первым расплатился новыми банкнотами с Манделой"
               ],
               [
                 "https://www.resbank.co.za/content/dam/sarb/what-we-do/banknotes-and-coin/2023/SARB%20Currency%20Booklet.pdf",
-                "SARB — Currency Booklet 2023 (PDF)"
+                "ЮАРБ — буклет о денежных знаках 2023 (PDF)"
               ]
             ]
           }
@@ -6505,23 +6505,23 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bok.or.kr/eng/main/contents.do?menuNo=400175",
-                "Bank of Korea — 1,000 won"
+                "Банк Кореи — 1 000 вон"
               ],
               [
                 "https://www.bok.or.kr/eng/main/contents.do?menuNo=400121",
-                "Bank of Korea — Banknotes 2006 ~"
+                "Банк Кореи — банкноты с 2006 года"
               ],
               [
                 "https://www.bok.or.kr/eng/main/contents.do?menuNo=400171",
-                "Bank of Korea — Summary of Security Features"
+                "Банк Кореи — обзор защитных признаков"
               ],
               [
                 "https://www.bok.or.kr/eng/main/contents.do?menuNo=400112",
-                "Bank of Korea — Introduction to Banknotes"
+                "Банк Кореи — знакомство с банкнотами"
               ],
               [
                 "https://www.bok.or.kr/portal/main/contents.do?menuNo=200017",
-                "한국은행 — 현용은행권"
+                "Банк Кореи — банкноты в обращении"
               ],
               [
                 "https://www.khs.go.kr/cop/bbs/selectBoardArticle.do?nttId=60589&bbsId=BBSMSTR_1214&mn=NS_01_24",
@@ -6724,23 +6724,23 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.cbsl.gov.lk/en/notes-coins/notes-and-coins/current-note-series",
-                "Central Bank of Sri Lanka — Current Note Series"
+                "Центральный банк Шри-Ланки — текущая серия банкнот"
               ],
               [
                 "https://www.cbsl.gov.lk/en/notes-coins/notes-and-coins/security-features-of-notes",
-                "Central Bank of Sri Lanka — Security Features of Notes"
+                "Центральный банк Шри-Ланки — защитные признаки банкнот"
               ],
               [
                 "https://www.cbsl.gov.lk/en/faq/currency",
-                "Central Bank of Sri Lanka — Currency FAQs"
+                "Центральный банк Шри-Ланки — вопросы и ответы о денежных знаках"
               ],
               [
                 "https://www.cbsl.gov.lk/sites/default/files/cbslweb_documents/publications/otherpub/60th_anniversary_currency_issued_by_the_Central_bank_of_sri_lanka.pdf",
-                "Central Bank of Sri Lanka — Currency issued by the Central Bank of Sri Lanka (60th anniversary volume)"
+                "Центральный банк Шри-Ланки — денежные знаки, выпущенные Центральным банком Шри-Ланки (издание к 60-летию)"
               ],
               [
                 "https://www.cbsl.gov.lk/sites/default/files/cbslweb_documents/statistics/mbt/Monthly_Bulletin_February_2011.pdf",
-                "Central Bank of Sri Lanka — Monthly Bulletin, February 2011"
+                "Центральный банк Шри-Ланки — ежемесячный бюллетень, февраль 2011"
               ],
               [
                 "https://en.numista.com/205392",
@@ -6920,7 +6920,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.nbt.tj/en/banknotes_coins/banknotes.php",
-                "National Bank of Tajikistan — Banknotes (EN)"
+                "Национальный банк Таджикистана — банкноты (англ.)"
               ],
               [
                 "https://www.realbanknotes.com/banknote/40611-Tajikistan-p16a-10-Somoni-from-1999",
@@ -7066,15 +7066,15 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.bot.or.th/en/our-roles/banknotes/History-and-Series-of-Banknote-And-Commemorative/banknotes-series/banknote-series12.html",
-                "Bank of Thailand — Series 12"
+                "Банк Таиланда — 12-я серия"
               ],
               [
                 "https://www.bot.or.th/th/our-roles/banknotes/History-and-Series-of-Banknote-And-Commemorative/banknotes-series/banknote-series12.html",
-                "ธนาคารแห่งประเทศไทย — ธนบัตรแบบ 12"
+                "Банк Таиланда — банкноты 12-й серии"
               ],
               [
                 "https://www.bot.or.th/en/our-roles/banknotes/History-and-Series-of-Banknote-And-Commemorative/banknotes-series.html",
-                "Bank of Thailand — Circulating Banknotes"
+                "Банк Таиланда — банкноты в обращении"
               ]
             ]
           }
@@ -7208,7 +7208,7 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.central-bank.org.tt/currency/about-notes-and-coins/upgraded-1-dollar-note",
-                "Central Bank of Trinidad and Tobago — Upgraded $1 note"
+                "Центральный банк Тринидада и Тобаго — обновлённая банкнота 1 доллар"
               ],
               [
                 "https://central-bank.org.tt/sites/default/files/press_releases/currency%20notes%20security%20features%20notice.pdf",
@@ -7216,7 +7216,7 @@ export const DETAILS = {
               ],
               [
                 "https://www.central-bank.org.tt/completion-transition-polymer-banknotes/",
-                "Central Bank of Trinidad and Tobago — Completion of Transition to Polymer Banknotes"
+                "Центральный банк Тринидада и Тобаго — завершение перехода на полимерные банкноты"
               ],
               [
                 "https://www.finance.gov.tt/2021/06/04/completion-of-transition-to-polymer-bank-notes/",
@@ -7224,7 +7224,7 @@ export const DETAILS = {
               ],
               [
                 "https://en.numista.com/204244",
-                "Numista — 1 Dollar (Trinidad and Tobago)"
+                "Numista — 1 доллар (Тринидад и Тобаго)"
               ]
             ]
           }
@@ -7393,23 +7393,23 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.tcmb.gov.tr/wps/wcm/connect/EN/TCMB+EN/Main+Menu/Banknotes/Banknotes+in+Circulation+and+Their+Security+Features/2-Series-Turkish-Lira/20+Turkish+Lira",
-                "TCMB — 20 Turkish Lira, 2nd series"
+                "ЦБ Турции — 20 турецких лир, 2-я серия (на английском)"
               ],
               [
                 "https://tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Banknotlar/Dolasimdaki+Banknotlar/2.+Tertip+Banknotlar/20+Turk+Lirasi",
-                "TCMB — 20 Türk Lirası, 2. Tertip"
+                "ЦБ Турции — 20 турецких лир, 2-я серия (на турецком)"
               ],
               [
                 "https://www.tcmb.gov.tr/wps/wcm/connect/EN/TCMB+EN/Main+Menu/Banknotes/General+Information+on+Banknotes/Banknote+Characters",
-                "TCMB — Banknote Characters on E9 Emission Group"
+                "ЦБ Турции — персонажи банкнот эмиссионной группы E9"
               ],
               [
                 "https://sanalmuze.tcmb.gov.tr/wps/wcm/connect/9ea932ef-006f-43d1-a38e-c00ea773962a/E9_cv_en.pdf?MOD=AJPERES&CONVERT_TO=url&CACHEID=ROOTWORKSPACE-9ea932ef-006f-43d1-a38e-c00ea773962a-px.HjsE",
-                "TCMB Virtual Museum — Banknote Characters on E9 (PDF)"
+                "Виртуальный музей ЦБ Турции — персонажи банкнот E9 (PDF)"
               ],
               [
                 "https://www.tcmb.gov.tr/wps/wcm/connect/TR/TCMB+TR/Main+Menu/Banknotlar/Dolasimdaki+Banknotlar/1.Tertip+Banknotlar/20+Turk+Lirasi",
-                "TCMB — 20 Türk Lirası, 1. Tertip"
+                "ЦБ Турции — 20 турецких лир, 1-я серия"
               ]
             ]
           }
@@ -7775,11 +7775,11 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.natwestgroup.com/heritage/subjects/banknotes/current-issue-banknotes/current-royal-bank-of-scotland-5-pound-note.html",
-                "NatWest Group Heritage Hub — Current Royal Bank of Scotland £5 note"
+                "NatWest Group Heritage Hub — действующая банкнота 5 фунтов Королевского банка Шотландии"
               ],
               [
                 "https://www.natwestgroup.com/heritage/subjects/banknotes/current-issue-banknotes.html",
-                "NatWest Group Heritage Hub — Current issue banknotes"
+                "NatWest Group Heritage Hub — банкноты текущего выпуска"
               ],
               [
                 "https://ostreet.co.uk/project/rbs-peoples-money-design/",
@@ -7787,15 +7787,15 @@ export const DETAILS = {
               ],
               [
                 "https://www.scottishfinancialnews.com/articles/new-rbs-fiver-to-feature-a-woman-for-first-time",
-                "Scottish Financial News — New RBS fiver to feature a woman for first time"
+                "Scottish Financial News — на новой пятифунтовой банкноте RBS впервые изображена женщина"
               ],
               [
                 "https://coinweek.com/royal-bank-scotland-issues-new-5-polymer-note/",
-                "CoinWeek — Royal Bank of Scotland Issues New £5 Polymer Note"
+                "CoinWeek — Королевский банк Шотландии выпускает новую полимерную банкноту 5 фунтов"
               ],
               [
                 "https://en.wikipedia.org/wiki/The_Royal_Bank_of_Scotland_%C2%A35_note",
-                "Wikipedia — The Royal Bank of Scotland £5 note"
+                "Википедия — банкнота 5 фунтов Королевского банка Шотландии"
               ]
             ]
           }
@@ -7982,19 +7982,19 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.uscurrency.gov/denominations/1",
-                "U.S. Currency Education Program — $1 Note"
+                "Программа просвещения о валюте США — банкнота 1 доллар"
               ],
               [
                 "https://www.bep.gov/currency/how-money-is-made/",
-                "Bureau of Engraving and Printing — How Money is Made"
+                "Бюро гравировки и печати — как делают деньги"
               ],
               [
                 "https://www.bep.gov/currency/circulating-currency/1-note",
-                "Bureau of Engraving and Printing — $1 Note"
+                "Бюро гравировки и печати — банкнота 1 доллар"
               ],
               [
                 "https://www.uscurrency.gov/denominations",
-                "U.S. Currency Education Program — The Seven Denominations"
+                "Программа просвещения о валюте США — семь номиналов"
               ]
             ]
           }
@@ -8346,7 +8346,7 @@ export const DETAILS = {
               ],
               [
                 "https://sbv.gov.vn/en/vietnamese-currency",
-                "State Bank of Vietnam — Vietnamese Currency"
+                "Государственный банк Вьетнама — вьетнамская валюта"
               ]
             ]
           }
@@ -8504,19 +8504,19 @@ export const DETAILS = {
             "links": [
               [
                 "https://www.rbz.co.zw/documents/Regulations_Acts/acts/rbz_act.pdf",
-                "Reserve Bank of Zimbabwe — Reserve Bank of Zimbabwe Act [Chapter 22:15]"
+                "Резервный банк Зимбабве — Закон о Резервном банке Зимбабве [глава 22:15]"
               ],
               [
                 "https://www.rbz.co.zw/documents/Regulations_Acts/SIs/SI_109_2008.pdf",
-                "Reserve Bank of Zimbabwe — S.I. 109 of 2008, Currency Revaluation"
+                "Резервный банк Зимбабве — постановление S.I. 109 от 2008 года о деноминации валюты"
               ],
               [
                 "https://data.fitzmuseum.cam.ac.uk/id/object/176420",
-                "Fitzwilliam Museum, Cambridge — Zimbabwe, 25 million dollars bearer cheque, 2008 (CM.586-2008)"
+                "Музей Фицуильяма, Кембридж — Зимбабве, чек на предъявителя на 25 миллионов долларов, 2008 (CM.586-2008)"
               ],
               [
                 "https://en.numista.com/207514",
-                "Numista — 25 000 000 Dollars (Bearer Cheque) 2008"
+                "Numista — 25 000 000 долларов (чек на предъявителя), 2008"
               ]
             ]
           }
