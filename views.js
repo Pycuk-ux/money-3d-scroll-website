@@ -90,6 +90,7 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
       progress.style.top = '';
       progress.style.height = '';
     }
+    geo.font = font;
     list.style.setProperty('--wheel-font', `${font}px`);
   }
 
@@ -244,6 +245,8 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     get velocity() { return state.target - state.current; },
     // Непрерывная позиция колеса: по ней едет стопка купюр
     get position() { return state.current; },
+    // Где стоит список: левый край, центр активной строки, шаг строк и размер шрифта (px)
+    get geometry() { return { left: geo.left, cy: geo.cy, lineH: geo.lineH, font: geo.font, flat: geo.flat }; },
     get index() { return activeIndex; },
     refresh() {
       rows.forEach((row) => { row.index = -1; });

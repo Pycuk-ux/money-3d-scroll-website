@@ -62,7 +62,6 @@ const CONFIG = {
   stackDrop: 44, // px: на столько стопка у колеса ниже центра экрана (≈ 2.75rem)
   rateGap: 64, // px от нижнего края передней купюры до строки курса на главной
   portraitDrop: 32, // телефон: башня ниже на 2rem
-  portraitRateLift: 8, // телефон: курс ближе к купюре на 0.5rem
   fov: 32,
   cameraZ: 5,
   maxTexture: 1024,
@@ -1367,10 +1366,19 @@ function start(renderer) {
       homeRateIndex = front;
       homeRate.textContent = rateLine(front);
     }
+    // Место курса не зависит от высоты передней купюры, иначе строка прыгает при листании
+    const g = wheel.geometry;
+    if (g.flat) {
+      // Телефон: над списком стран, по его левому краю; до активной страны — тот же просвет,
+      // что между названиями
+      const gap = g.lineH - g.font;
+      homeRate.style.transform = `translate(${g.left}px, ${g.cy - g.font / 2 - gap}px) translateY(-100%)`;
+      return;
+    }
+    // Десктоп: под башней, по самой высокой купюре коллекции
     const r = panelRect();
-    const h = r.w / cards[front].aspect;
-    const gap = CONFIG.rateGap - (view.portrait ? CONFIG.portraitRateLift : 0);
-    homeRate.style.transform = `translate(${r.x}px, ${r.y + h / 2 + gap}px) translateX(-50%)`;
+    const h = r.w / Math.min(...cards.map((c) => c.aspect));
+    homeRate.style.transform = `translate(${r.x}px, ${r.y + h / 2 + CONFIG.rateGap}px) translateX(-50%)`;
   }
 
   // Прозрачная кнопка поверх передней купюры: клик открывает её страницу
