@@ -10,6 +10,7 @@ import { initDither } from './dither.js';
 import { placeholderCanvas, whenFontsReady } from './placeholder.js';
 import { loadRates, usdPer, ratesLoaded } from './rates.js';
 import { sound } from './sound.js';
+import { track, trackNote } from './analytics.js';
 
 /* ---------- Настройки ---------- */
 
@@ -385,6 +386,7 @@ function start(renderer) {
   const showSound = () => soundButton.setAttribute('aria-pressed', String(sound.enabled));
   soundButton.addEventListener('click', () => {
     sound.set(!sound.enabled);
+    track('sound', { on: sound.enabled });
     showSound();
   });
   showSound();
@@ -400,6 +402,7 @@ function start(renderer) {
   function openAbout() {
     if (aboutOpen || busy || mode === 'intro') return;
     aboutOpen = true;
+    track('about-open');
     renderAboutLink();
     about.hidden = false;
     root.classList.add('is-about');
@@ -748,6 +751,7 @@ function start(renderer) {
     if (busy || next === mode || (mode !== 'wheel' && mode !== 'map')) return;
     busy = true;
     const quick = reducedMotion;
+    track('view', { view: next });
     viewButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === next)));
 
     if (next === 'map') {
@@ -853,11 +857,19 @@ function start(renderer) {
 
   const nearestTurn = (a) => Math.round(a / TAU) * TAU;
 
+  // Аналитика: просмотр страницы купюры (как отдельная страница /#id) и событие с источником
+  function noteView(index, from) {
+    const item = ITEMS[index];
+    trackNote(item.id, `${item.name.en} — ${item.caption.en}`);
+    track('note-open', { country: item.id, from });
+  }
+
   function openDetail(index, from, rect) {
     if (busy || (mode !== 'wheel' && mode !== 'map')) return;
     busy = true;
     origin = from;
     current = index;
+    noteView(index, from);
     const quick = reducedMotion;
     const dur = quick ? 0 : CONFIG.moveDuration;
     const originLayer = from === 'wheel' ? wheelLayer : mapLayer;
@@ -973,6 +985,7 @@ function start(renderer) {
     if (busy || mode !== 'detail') return;
     const prev = current;
     current = seq[mod(rank[current] + dir, COUNT)];
+    noteView(current, dir > 0 ? 'next' : 'prev');
     const Z = CONFIG.zoom;
     const quick = reducedMotion;
 

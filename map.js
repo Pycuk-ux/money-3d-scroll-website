@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { imageFor } from './placeholder.js';
 import { sound } from './sound.js';
+import { track } from './analytics.js';
 
 const COLORS = {
   water: '#A79F91',
@@ -386,6 +387,7 @@ export function createMap(container, items, { text, labels, lang, isReduced, onS
   // Выбор из списка: глобус поворачивается к стране, на карте остаётся только её купюра
   function select(i) {
     selected = i;
+    track('map-select', { country: items[i].id });
     updatePick();
     paintPalette();
     const [lon, lat] = anchorOf(i);
