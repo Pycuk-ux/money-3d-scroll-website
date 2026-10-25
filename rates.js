@@ -3,16 +3,16 @@
 
 export const RATES = {
   endpoint: '/api/rates',
-  // Запрос идёт только на этих хостах: на claude.ai и при `npx serve` функции /api нет.
-  // Добавь сюда свой домен, когда подключишь его к Vercel.
-  hosts: ['vercel.app'],
+  // Где функции /api точно нет: локальный `npx serve` и превью на claude.ai.
+  // На любом другом адресе — vercel.app или свой домен — курсы запрашиваются.
+  skipHosts: ['localhost', '127.0.0.1', 'claude.ai', 'claudeusercontent.com'],
 };
 
 let data = null;
 
 export async function loadRates() {
   const host = location.hostname;
-  if (!RATES.hosts.some((h) => host === h || host.endsWith(`.${h}`))) return null;
+  if (location.protocol === 'file:' || RATES.skipHosts.some((h) => host === h || host.endsWith(`.${h}`))) return null;
   try {
     const res = await fetch(RATES.endpoint);
     if (!res.ok) return null;

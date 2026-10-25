@@ -24,4 +24,4 @@ npx serve
 4. Settings → Environment Variables: `OXR_APP_ID` = твой App ID.
 5. Deploy. Проверить функцию: `https://<проект>.vercel.app/api/rates`.
 
-Браузер обращается к `/api/rates` только на хостах из `RATES.hosts` в `rates.js`. Если подключишь свой домен, добавь его туда.
+Браузер обращается к `/api/rates` на любом адресе — vercel.app или своём домене. Пропускаются только локальный сервер и превью на claude.ai (`RATES.skipHosts` в `rates.js`).
