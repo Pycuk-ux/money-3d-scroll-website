@@ -550,7 +550,8 @@ export const UI = {
     socials: 'Соцсети',
     aboutText: [
       'Привет, я Руслан, UX/UI-дизайнер в финтехе. В этой коллекции пересекаются несколько дорогих мне вещей.',
-      'Дизайн и финтех — моя профессиональная сфера. За последние 7 лет я прошёл путь от джуниора до независимого дизайнера. В моём портфолио — мобильное приложение одного из крупнейших американских банков, сайты для единорога, интерфейсы для инвестиционных стартапов на посевном раунде и криптопроекты. И я продолжаю расти и двигаться вперёд.',
+      'Дизайн и финтех — моя профессиональная сфера. За последние 7 лет я прошёл большой путь от джуниор-дизайнера до независимого дизайнера со значком Top Rated Plus на Upwork.',
+      'В моём портфолио — мобильное приложение Discover, одного из крупнейших американских банков, сайты для единорога inDrive, интерфейсы для инвестиционных стартапов на посевном раунде и криптопроекты. И я продолжаю расти и двигаться вперёд.',
       'Путешествия — я побывал в 20 странах, путешествовал с рюкзаком, жил в трёх странах, был волонтёром FIFA и UEFA. Часть банкнот я добавил в коллекцию сам, какими-то со мной поделились друзья, коллеги и люди, которых я встречал в своих путешествиях или в чьих путешествиях встречался я. А какие-то я выменял на чаевые в барах.',
       'Как дизайнеру и просто любопытному человеку, мне интересно смотреть, как страны представляют себя через предмет, который миллионы людей каждый день держат в руках, не задумываясь, какая титаническая работа за ним стоит: сколько людей и согласований нужно, чтобы купюры получились безопасными, защищёнными и уникальными. Кто их выпустил? Кто придумал, как они будут выглядеть? Как устроен этот процесс? И ещё много интересных вопросов, которые открываются, когда погружаешься в любую сферу глубже.',
       'Спасибо за внимание! Подписывайся на меня в соцсетях — давай оставаться на связи.',
@@ -584,7 +585,8 @@ export const UI = {
     socials: 'Social media',
     aboutText: [
       'Hi, I’m Ruslan, a fintech UX/UI designer. This collection is where a few things I care about come together.',
-      'Design and fintech are my profession. Over the past 7 years I’ve gone from junior to independent designer. My portfolio includes the mobile app of one of the largest US banks, websites for a unicorn, interfaces for seed-stage investment startups and crypto projects. And I keep growing and moving forward.',
+      'Design and fintech are my profession. Over the past 7 years I’ve come a long way, from junior designer to independent designer with a Top Rated Plus badge on Upwork.',
+      'My portfolio includes the mobile app of Discover, one of the largest US banks, websites for the unicorn inDrive, interfaces for seed-stage investment startups and crypto projects. And I keep growing and moving forward.',
       'Travel — I’ve been to 20 countries, backpacked, lived in three countries and volunteered for FIFA and UEFA. I added some of these banknotes to the collection myself; others were shared with me by friends, colleagues and people I met on my travels, or whose travels I happened to be part of. And a few I traded for tips in bars.',
       'As a designer and a curious person, I love seeing how countries present themselves through an object millions of people hold every day without thinking about the enormous work behind it: how many people and approvals it takes to make banknotes safe, secure and unique. Who issued them? Who decided how they would look? How does the whole process work? And many more questions that open up once you dive deeper into any field.',
       'Thanks for reading! Follow me on social media — let’s stay in touch.',
