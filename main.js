@@ -389,6 +389,62 @@ function start(renderer) {
   });
   showSound();
   detail.querySelector('.detail__close').addEventListener('click', closeDetail);
+
+  /* --- Обо мне: окно вырастает из правого нижнего угла, где кнопка --- */
+
+  const about = document.querySelector('.about');
+  const aboutPanel = about.querySelector('.about__panel');
+  const aboutClose = about.querySelector('.about__close');
+  let aboutOpen = false;
+
+  function openAbout() {
+    if (aboutOpen || busy || (mode !== 'wheel' && mode !== 'map')) return;
+    aboutOpen = true;
+    about.hidden = false;
+    root.classList.add('is-about');
+    aboutPanel.scrollTop = 0;
+    const quick = reducedMotion;
+    gsap.killTweensOf([aboutPanel, aboutClose]);
+    // Окно раскрывается по ширине и высоте от своего правого нижнего угла
+    gsap.fromTo(aboutPanel,
+      { clipPath: 'inset(100% 0% 0% 100% round 24px)' },
+      // В конце маску снимаем, иначе она обрезает тень окна
+      { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: quick ? 0 : 0.8, ease: 'power3.inOut', clearProps: 'clipPath' });
+    gsap.fromTo(aboutPanel.children, { y: 24, opacity: 0 },
+      { y: 0, opacity: 1, duration: quick ? 0 : 0.6, ease: 'power3.out', stagger: quick ? 0 : 0.06, delay: quick ? 0 : 0.35 });
+    gsap.fromTo(aboutClose, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: quick ? 0 : 0.4, ease: 'power2.out', delay: quick ? 0 : 0.5 });
+    aboutClose.focus({ preventScroll: true });
+  }
+
+  function closeAbout() {
+    if (!aboutOpen) return;
+    aboutOpen = false;
+    const quick = reducedMotion;
+    gsap.killTweensOf([aboutPanel, aboutClose, ...aboutPanel.children]);
+    gsap.to(aboutClose, { opacity: 0, duration: quick ? 0 : 0.2 });
+    gsap.fromTo(aboutPanel, { clipPath: 'inset(0% 0% 0% 0% round 24px)' }, {
+      clipPath: 'inset(100% 0% 0% 100% round 24px)',
+      duration: quick ? 0 : 0.6,
+      ease: 'power3.inOut',
+      onComplete: () => {
+        about.hidden = true;
+        root.classList.remove('is-about');
+      },
+    });
+  }
+
+  document.querySelector('.about-link').addEventListener('click', openAbout);
+  aboutClose.addEventListener('click', closeAbout);
+  about.querySelector('.about__backdrop').addEventListener('click', closeAbout);
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAbout(); });
+
+  function renderAbout() {
+    const ui = t();
+    about.querySelector('.about__text').replaceChildren(...ui.aboutText.map((p) => node('p', '', p)));
+    aboutPanel.setAttribute('aria-label', ui.about);
+    aboutClose.setAttribute('aria-label', ui.close);
+    about.querySelector('.about__socials').setAttribute('aria-label', ui.socials);
+  }
   detail.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => stepDetail(Number(b.dataset.step))));
 
   window.addEventListener('keydown', (e) => {
@@ -519,6 +575,7 @@ function start(renderer) {
     viewButtons.forEach((b) => { b.textContent = ui[b.dataset.view]; });
     document.querySelectorAll('[data-i18n]').forEach((n) => { n.textContent = ui[n.dataset.i18n].replaceAll('{n}', COUNT); });
     detail.querySelector('.detail__close').setAttribute('aria-label', ui.close);
+    renderAbout();
     document.querySelector('.fallback').setAttribute('aria-label', ui.collection);
     wheel.refresh();
     map.refresh();

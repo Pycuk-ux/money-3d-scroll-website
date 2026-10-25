@@ -987,6 +987,132 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   white-space: nowrap;
 }
 
+/* ---------- Обо мне ---------- */
+
+.about-link { display: none; }
+
+.is-webgl:not(.is-loading):is([data-view="wheel"], [data-view="map"]) .about-link {
+  display: block;
+  position: fixed;
+  right: calc(var(--gutter) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-ui);
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink);
+  font: 500 1.125rem/1.2 var(--font-text);
+  letter-spacing: var(--tracking-text);
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.about-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.is-transit .about-link,
+.is-about .about-link { opacity: 0; pointer-events: none; }
+
+/* На телефоне крестик окна встаёт на место заголовка — заголовок прячем */
+@media (max-width: 720px) {
+  .is-about .masthead { opacity: 0; }
+}
+
+.about {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+}
+
+.about[hidden] { display: none; }
+
+/* Прозрачная подложка: клик мимо окна закрывает его */
+.about__backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.about__close {
+  position: absolute;
+  top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
+  left: calc(50% - var(--close-size) / 2);
+  z-index: 1;
+  width: var(--close-size);
+  height: var(--close-size);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--color-ink);
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+.about__close:hover { background: var(--color-ink); color: var(--color-bg); }
+
+.about__panel {
+  position: absolute;
+  left: 50%;
+  --about-top: calc(var(--gutter) + var(--close-size) + 32px + env(safe-area-inset-top, 0px));
+  --about-bottom: calc(var(--gutter) + 40px + env(safe-area-inset-bottom, 0px));
+  top: var(--about-top);
+  width: min(1000px, calc(100% - 2 * var(--gutter)));
+  max-height: calc(100% - var(--about-top) - var(--about-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 20px 20px 36px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  border-radius: 24px;
+  background: #e4d9c6;
+  box-shadow: 0 30px 80px rgba(31, 29, 24, 0.22), 0 0 0 1px rgba(31, 29, 24, 0.06);
+  color: var(--color-ink);
+}
+
+.about__panel::-webkit-scrollbar { display: none; }
+
+.about__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1496 / 552;
+  object-fit: cover;
+  border-radius: 16px;
+  flex-shrink: 0;
+}
+
+.about__text {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  letter-spacing: var(--tracking-text);
+}
+
+.about__text p { margin: 0; }
+
+.about__socials {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.about__socials a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #1e170c;
+  transition: background 0.2s;
+}
+
+.about__socials a:hover { background: rgba(31, 29, 24, 0.08); }
+.about__socials svg { width: 40px; height: 40px; }
+
 /* ---------- Lenis ---------- */
 
 html.lenis,
@@ -1027,6 +1153,21 @@ html.lenis body { height: auto; }
     column-gap: 16px;
   }
   .map-view__country { font-size: 14px; }
+
+  /* Обо мне: кнопка справа от переключателя видов, окно почти на весь экран */
+  .is-webgl:not(.is-loading):is([data-view="wheel"], [data-view="map"]) .about-link {
+    bottom: calc(var(--gutter) + 10px + env(safe-area-inset-bottom, 0px));
+    font-size: 0.875rem;
+  }
+  .about__panel {
+    --about-top: calc(var(--gutter) + var(--close-size) + 16px + env(safe-area-inset-top, 0px));
+    --about-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding: 12px 12px 28px;
+    gap: 20px;
+    border-radius: 20px;
+  }
+  .about__photo { aspect-ratio: 4 / 3; border-radius: 12px; }
+  .about__text { font-size: 1rem; }
   /* У выбранной страны в списке — только купюра; номинал висит над её миниатюрой на глобусе */
   .map-pick .map-pick__chip,
   .map-pick .map-pick__arrow,

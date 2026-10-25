@@ -82,10 +82,10 @@ export function createWheel(container, items, { lerp, isReduced, text, labels, o
     // Телефон: крайние видимые строки сверху и снизу одинаково бледные
     geo.edgeOpacity = 0.3;
     if (portrait) {
-      // Прогресс параллелен списку: от верха последнего названия сверху до 32px над низом экрана
+      // Прогресс параллелен списку: от верха активного названия до кнопки «Обо мне» внизу
       const top = geo.cy - geo.rowsUp * geo.lineH - font * 0.5;
       progress.style.top = `${top}px`;
-      progress.style.height = `${Math.max(80, h - 32 - top)}px`;
+      progress.style.height = `${Math.max(80, h - 72 - top)}px`;
     } else {
       progress.style.top = '';
       progress.style.height = '';
