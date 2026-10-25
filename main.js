@@ -45,7 +45,7 @@ const CONFIG = {
     speed: 1, // общая скорость пружин и очереди
     bounce: 0.35, // упругость: 0 — без отскока, 1 — сильный
     hoverSpread: 0.12, // насколько башня раздвигается при наведении
-    dim: 0.5, // насколько дальние купюры уходят в цвет фона
+    dim: 0.35, // насколько дальние купюры уходят в цвет фона
     stagger: 0.05, // с, задержка между купюрами, когда башня сдвигается
     queueGap: 0.11, // с, пауза между сменами при быстрой прокрутке через несколько купюр
     maxHurry: 6, // во сколько раз максимум ускоряется очередь, когда башня отстала от колеса
@@ -68,14 +68,14 @@ const CONFIG = {
   maxPixelRatio: 2,
   // Поверхности без металла: хлопково-льняная бумага и полимер
   surfaces: {
-    cotton: { roughness: 0.82, sheen: 0.35, clearcoat: 0, clearcoatRoughness: 0.3, bumpScale: 0.6 },
+    cotton: { roughness: 0.82, sheen: 0.12, clearcoat: 0, clearcoatRoughness: 0.3, bumpScale: 0.6 },
     polymer: { roughness: 0.32, sheen: 0, clearcoat: 0.35, clearcoatRoughness: 0.25, bumpScale: 0.05 },
   },
   sheenColor: 0xfff6e8,
   fiberRepeat: 2.2,
   paperColor: 0xe9dfcc,
-  envIntensity: 0.9,
-  rectIntensity: 1.3, // блик, который скользит при наклоне
+  envIntensity: 0.6, // ниже — купюры ближе к цветам фото, без высветления
+  rectIntensity: 0.8, // блик, который скользит при наклоне
   exposure: 1,
 };
 
