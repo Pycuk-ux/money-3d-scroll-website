@@ -991,12 +991,13 @@ html[data-view="detail"] .switcher { visibility: hidden; }
 
 .about-link { display: none; }
 
-.is-webgl:not(.is-loading):is([data-view="wheel"], [data-view="map"]) .about-link {
+/* Видна всегда и лежит выше всего, в том числе открытого окна */
+.is-webgl:not(.is-loading) .about-link {
   display: block;
   position: fixed;
   right: calc(var(--gutter) + env(safe-area-inset-right, 0px));
   bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
-  z-index: var(--z-ui);
+  z-index: calc(var(--z-grain) + 1);
   padding: 4px 0;
   border: 0;
   background: none;
@@ -1004,17 +1005,9 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   font: 500 1.125rem/1.2 var(--font-text);
   letter-spacing: var(--tracking-text);
   cursor: pointer;
-  transition: opacity 0.3s;
 }
 
 .about-link:hover { text-decoration: underline; text-underline-offset: 4px; }
-.is-transit .about-link,
-.is-about .about-link { opacity: 0; pointer-events: none; }
-
-/* На телефоне крестик окна встаёт на место заголовка — заголовок прячем */
-@media (max-width: 720px) {
-  .is-about .masthead { opacity: 0; }
-}
 
 .about {
   position: fixed;
@@ -1030,32 +1023,13 @@ html[data-view="detail"] .switcher { visibility: hidden; }
   inset: 0;
 }
 
-.about__close {
-  position: absolute;
-  top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
-  left: calc(50% - var(--close-size) / 2);
-  z-index: 1;
-  width: var(--close-size);
-  height: var(--close-size);
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--color-ink);
-  border-radius: 50%;
-  background: var(--color-bg);
-  color: var(--color-ink);
-  cursor: pointer;
-}
-
-.about__close:hover { background: var(--color-ink); color: var(--color-bg); }
-
 .about__panel {
   position: absolute;
   left: 50%;
-  --about-top: calc(var(--gutter) + var(--close-size) + 32px + env(safe-area-inset-top, 0px));
-  --about-bottom: calc(var(--gutter) + 40px + env(safe-area-inset-bottom, 0px));
+  --about-top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
+  --about-bottom: calc(var(--gutter) + 48px + env(safe-area-inset-bottom, 0px)); /* место для кнопки «Закрыть» */
   top: var(--about-top);
-  width: min(1000px, calc(100% - 2 * var(--gutter)));
+  width: min(640px, calc(100% - 2 * var(--gutter)));
   max-height: calc(100% - var(--about-top) - var(--about-bottom));
   transform: translateX(-50%);
   display: flex;
@@ -1160,8 +1134,8 @@ html.lenis body { height: auto; }
     font-size: 0.875rem;
   }
   .about__panel {
-    --about-top: calc(var(--gutter) + var(--close-size) + 16px + env(safe-area-inset-top, 0px));
-    --about-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    --about-top: calc(16px + env(safe-area-inset-top, 0px));
+    --about-bottom: calc(var(--gutter) + 48px + env(safe-area-inset-bottom, 0px));
     padding: 12px 12px 28px;
     gap: 20px;
     border-radius: 20px;

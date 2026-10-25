@@ -394,17 +394,18 @@ function start(renderer) {
 
   const about = document.querySelector('.about');
   const aboutPanel = about.querySelector('.about__panel');
-  const aboutClose = about.querySelector('.about__close');
+  const aboutLink = document.querySelector('.about-link');
   let aboutOpen = false;
 
   function openAbout() {
-    if (aboutOpen || busy || (mode !== 'wheel' && mode !== 'map')) return;
+    if (aboutOpen || busy || mode === 'intro') return;
     aboutOpen = true;
+    renderAboutLink();
     about.hidden = false;
     root.classList.add('is-about');
     aboutPanel.scrollTop = 0;
     const quick = reducedMotion;
-    gsap.killTweensOf([aboutPanel, aboutClose]);
+    gsap.killTweensOf(aboutPanel);
     // Окно раскрывается по ширине и высоте от своего правого нижнего угла
     gsap.fromTo(aboutPanel,
       { clipPath: 'inset(100% 0% 0% 100% round 24px)' },
@@ -412,16 +413,15 @@ function start(renderer) {
       { clipPath: 'inset(0% 0% 0% 0% round 24px)', duration: quick ? 0 : 0.8, ease: 'power3.inOut', clearProps: 'clipPath' });
     gsap.fromTo(aboutPanel.children, { y: 24, opacity: 0 },
       { y: 0, opacity: 1, duration: quick ? 0 : 0.6, ease: 'power3.out', stagger: quick ? 0 : 0.06, delay: quick ? 0 : 0.35 });
-    gsap.fromTo(aboutClose, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: quick ? 0 : 0.4, ease: 'power2.out', delay: quick ? 0 : 0.5 });
-    aboutClose.focus({ preventScroll: true });
+
   }
 
   function closeAbout() {
     if (!aboutOpen) return;
     aboutOpen = false;
+    renderAboutLink();
     const quick = reducedMotion;
-    gsap.killTweensOf([aboutPanel, aboutClose, ...aboutPanel.children]);
-    gsap.to(aboutClose, { opacity: 0, duration: quick ? 0 : 0.2 });
+    gsap.killTweensOf([aboutPanel, ...aboutPanel.children]);
     gsap.fromTo(aboutPanel, { clipPath: 'inset(0% 0% 0% 0% round 24px)' }, {
       clipPath: 'inset(100% 0% 0% 100% round 24px)',
       duration: quick ? 0 : 0.6,
@@ -433,8 +433,14 @@ function start(renderer) {
     });
   }
 
-  document.querySelector('.about-link').addEventListener('click', openAbout);
-  aboutClose.addEventListener('click', closeAbout);
+  // Одна кнопка открывает и закрывает: при открытом окне на ней «Закрыть»
+  aboutLink.addEventListener('click', () => (aboutOpen ? closeAbout() : openAbout()));
+
+  function renderAboutLink() {
+    const ui = t();
+    aboutLink.textContent = aboutOpen ? ui.close : ui.about;
+    aboutLink.setAttribute('aria-expanded', String(aboutOpen));
+  }
   about.querySelector('.about__backdrop').addEventListener('click', closeAbout);
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAbout(); });
 
@@ -442,13 +448,13 @@ function start(renderer) {
     const ui = t();
     about.querySelector('.about__text').replaceChildren(...ui.aboutText.map((p) => node('p', '', p)));
     aboutPanel.setAttribute('aria-label', ui.about);
-    aboutClose.setAttribute('aria-label', ui.close);
+    renderAboutLink();
     about.querySelector('.about__socials').setAttribute('aria-label', ui.socials);
   }
   detail.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => stepDetail(Number(b.dataset.step))));
 
   window.addEventListener('keydown', (e) => {
-    if (mode !== 'detail') return;
+    if (mode !== 'detail' || aboutOpen) return; // Esc при открытом «Обо мне» закрывает только его
     if (e.key === 'Escape') closeDetail();
     else if (e.key === 'ArrowLeft') stepDetail(-1);
     else if (e.key === 'ArrowRight') stepDetail(1);
