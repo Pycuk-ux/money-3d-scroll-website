@@ -1,6 +1,6 @@
 // Звуки интерфейса: щелчок колеса и шелест купюры. Файлы загружаются и декодируются один раз
 // при включении звука и играют через Web Audio без задержки.
-// Звук выключен по умолчанию, выбор хранится в localStorage.
+// Звук выключен по умолчанию, выбор хранится в localStorage; если он был включён, файлы грузятся сразу.
 // Браузер разрешает звук только после действия пользователя — до первого клика или нажатия
 // клавиши звуки молча пропускаются.
 
@@ -65,11 +65,24 @@ function ensure() {
   return ctx;
 }
 
-// Первое действие пользователя «размораживает» звук, если он был включён в прошлый раз
+// Первое действие пользователя «размораживает» звук, если он был включён в прошлый раз.
+// Браузер разрешает звук только после настоящего жеста: на телефоне это отпускание пальца
+// (pointerup / touchend / click), на компьютере — нажатие мыши или клавиши. Прокрутка колесом
+// жестом не считается, поэтому до первого клика или касания сайт молчит.
+let unlockedAt = -Infinity; // когда звук «разморозил» жест — нажатие кнопки звука в этот же момент его не выключает
 function unlock() {
-  if (enabled) ensure()?.resume();
+  if (!enabled) return;
+  const c = ensure();
+  if (c && c.state !== 'running') {
+    unlockedAt = performance.now();
+    c.resume();
+  }
 }
-['pointerdown', 'keydown', 'touchstart'].forEach((type) => window.addEventListener(type, unlock, { passive: true }));
+['pointerdown', 'pointerup', 'mousedown', 'touchend', 'click', 'keydown'].forEach((type) => window.addEventListener(type, unlock, { passive: true, capture: true }));
+
+// Звук был включён в прошлый раз — файлы загружаются сразу (контекст пока «заморожен»),
+// чтобы первый же жест сразу дал звук, а не ждал загрузки
+if (enabled) ensure();
 
 function play(name, { volume = 1, rate = 1, delay = 0 } = {}) {
   const list = buffers[name];
@@ -85,6 +98,9 @@ function play(name, { volume = 1, rate = 1, delay = 0 } = {}) {
 
 export const sound = {
   get enabled() { return enabled; },
+  // Включён, но браузер ещё не разрешил звук (не было клика или касания)
+  get locked() { return enabled && (!ctx || ctx.state !== 'running' || performance.now() - unlockedAt < 600); },
+  unlock,
   set(value) {
     enabled = value;
     save();

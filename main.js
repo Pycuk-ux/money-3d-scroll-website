@@ -385,6 +385,12 @@ function start(renderer) {
   const soundButton = document.querySelector('.sound__toggle');
   const showSound = () => soundButton.setAttribute('aria-pressed', String(sound.enabled));
   soundButton.addEventListener('click', () => {
+    // Звук включён с прошлого раза, но браузер его ещё не разрешил: первое нажатие на кнопку
+    // его «размораживает», а не выключает
+    if (sound.locked) {
+      sound.unlock();
+      return;
+    }
     sound.set(!sound.enabled);
     track('sound', { on: sound.enabled });
     showSound();
